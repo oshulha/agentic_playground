@@ -186,3 +186,5 @@ class RocketChatBase:
     def info(self, **kwargs):
         """Information about the Rocket.Chat server."""
         return self.call_api_get("info", api_path="/api/", kwargs=kwargs)
+    
+    

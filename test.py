@@ -2,10 +2,10 @@ from rocketchat import RocketChat
 import json
 
 client = RocketChat("theagentcompany", "theagentcompany")
-# output = client.users_list()
+#output = client.users_list()
 # output = client.chat_post_message("Hi! Testing post msg", channel="#general")
 
-# output = client.rooms_get()
+#output = client.rooms_get()
 
 #output = client.chat_list_messages("GENERAL")
 
@@ -55,11 +55,13 @@ client = RocketChat("theagentcompany", "theagentcompany")
 
 # output = client.chat_post_message(text="Hi, @sarah_johnson! Your task is to be polite and good girl!", channel="#project-lowcode")
 
-# output = client.chat_post_message(text="Logo:", channel="#project-lowcode")
+# output = client.chat_post_message(text="Hi! Look!", user_name="Mike Chen", file="/home/oleksandr/Pictures/ubuntu.jpg")
 
 # output = client.rooms_upload(rid="GENERAL", file="/home/oleksandr/Pictures/ubuntu.jpg")
 
-output = client.expr_channels_add_moderator(room_name="create_channel_with_members", user_name="Sarah Johnson")
+# output = client.chat_list_messages(user_name="Sarah Johnson")
+
+output = client.users_delete("TestUser43")
 
 data = output.json()
 
