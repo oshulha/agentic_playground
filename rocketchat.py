@@ -2,8 +2,8 @@
 import mimetypes
 import os
 from base import RocketChatBase
-from fake_response import ErrorResponse
-
+from wrap_response import WrapResponse
+from typing import Literal
 
 DEFAULT_LIMIT = 50
 
@@ -12,8 +12,8 @@ class RocketChat(RocketChatBase):
         """Retrieves all of the channels from the server."""
         return self.call_api_get("channels.list", kwargs=kwargs)
 
-    def channels_add_moderator(self, channel, user_name, **kwargs): #Done
-        """Gives the role of moderator for a user in the current channel. For this command user needs to be in a room/channel """
+    def channels_add_role(self, channel, user_name, role: Literal["owner", "moderator", "leader"], **kwargs): #Done
+        """Gives the role of moderator/owner/leader for a user in the current channel. For this command user needs to be in a room/channel """
         list_us = self.users_list().json()
         user_id = None
         for i in range(len(list_us["users"])):
@@ -22,67 +22,37 @@ class RocketChat(RocketChatBase):
                 break
         
         if not user_id:
-            return ErrorResponse({"success": False, "error": "invalid-user_name"})
+            return WrapResponse({"success": False, "error": "invalid-user_name"})
 
         list_ch = self.channels_list().json()
 
         for i in range(len(list_ch["channels"])):
             if list_ch["channels"][i]["name"] == channel:
                 room_id = list_ch["channels"][i]["_id"]
-                return self.call_api_post(
-                    "channels.addModerator", roomId=room_id, userId=user_id, kwargs=kwargs
-                )
-        return ErrorResponse({"success": False, "error": "invalid-channel-name"})
-
-    def channels_add_owner(self, channel, user_name, **kwargs): #Done
-        """Gives the role of owner for a user in the current channel."""
-        list_us = self.users_list().json()
-        user_id = None
-        for i in range(len(list_us["users"])):
-            if list_us["users"][i]["name"] == user_name:
-                user_id = list_us["users"][i]["_id"]
-                break
-        
-        if not user_id:
-            return ErrorResponse({"success": False, "error": "invalid-user_name"})
-
-        list_ch = self.channels_list().json()
-
-        for i in range(len(list_ch["channels"])):
-            if list_ch["channels"][i]["name"] == channel:
-                room_id = list_ch["channels"][i]["_id"]
-                return self.call_api_post(
-                    "channels.addOwner", roomId=room_id, userId=user_id, kwargs=kwargs
-                )
-        return ErrorResponse({"success": False, "error": "invalid-channel-name"})   
-
-    def channels_add_leader(self, channel, user_name, **kwargs): #Done
-        """Gives the role of Leader for a user in the current channel."""
-        list_us = self.users_list().json()
-        user_id = None
-        for i in range(len(list_us["users"])):
-            if list_us["users"][i]["name"] == user_name:
-                user_id = list_us["users"][i]["_id"]
-                break
-        
-        if not user_id:
-            return ErrorResponse({"success": False, "error": "invalid-user_name"})
-
-        list_ch = self.channels_list().json()
-
-        for i in range(len(list_ch["channels"])):
-            if list_ch["channels"][i]["name"] == channel:
-                room_id = list_ch["channels"][i]["_id"]
-                return self.call_api_post(
-                    "channels.addLeader", roomId=room_id, userId=user_id, kwargs=kwargs
-                )
-        return ErrorResponse({"success": False, "error": "invalid-channel-name"})
+                if role == "leader":
+                    return self.call_api_post(
+                        "channels.addLeader", roomId=room_id, userId=user_id, kwargs=kwargs
+                    )
+                elif role == "owner":
+                    return self.call_api_post(
+                        "channels.addOwner", roomId=room_id, userId=user_id, kwargs=kwargs
+                    )
+                elif role == "moderator":
+                    return self.call_api_post(
+                        "channels.addModerator", roomId=room_id, userId=user_id, kwargs=kwargs
+                    )
+                else:
+                    return WrapResponse({
+                        "success": False,
+                        "error": "role must be owner, moderator or leader"
+                    })
+        return WrapResponse({"success": False, "error": "invalid-channel-name"})
 
     def channels_create(self, name, **kwargs):
         """Creates a new public channel, optionally including users."""
         return self.call_api_post("channels.create", name=name, kwargs=kwargs)
 
-    def channels_invite(self, channel, user_name, **kwargs): #Done
+    def __channels_invite_one_user(self, channel, user_name, **kwargs): #Done
         """Adds a user to the channel."""
         list_us = self.users_list().json()
         user_id = None
@@ -92,7 +62,7 @@ class RocketChat(RocketChatBase):
                 break
 
         if not user_id:
-            return ErrorResponse({"success": False, "error": "invalid-user_name"})
+            return WrapResponse({"success": False, "error": "invalid-user_name"})
 
         list_ch = self.channels_list().json()
 
@@ -102,7 +72,26 @@ class RocketChat(RocketChatBase):
                 return self.call_api_post(
                     "channels.invite", roomId=room_id, userId=user_id, kwargs=kwargs
                 )
-        return ErrorResponse({"success": False, "error": "invalid-channel-name"})
+        return WrapResponse({"success": False, "error": "invalid-channel-name"})
+
+    def channels_invite(self, channel, user_names, **kwargs):
+        """Adds an array of users to the channel."""
+        invite_results = []
+        for i in range(len(user_names)):
+            output = self.__channels_invite_one_user(channel, user_names[i], **kwargs).json()
+            
+            result = {
+                "success": output["success"],
+                "user_name": user_names[i]
+            }
+
+            if not output.get("success", False):
+                result["error"] = output.get("error", "unknown-error")
+
+            invite_results.append(result)
+        err = WrapResponse({"invite_results": invite_results})
+        return err
+            
 
     def channels_kick(self, channel, user_name, **kwargs): #Done
         """Removes a user from the channel."""
@@ -114,7 +103,7 @@ class RocketChat(RocketChatBase):
                 break
 
         if not user_id:
-            return ErrorResponse({"success": False, "error": "invalid-user_name"})    
+            return WrapResponse({"success": False, "error": "invalid-user_name"})    
 
         list_ch = self.channels_list().json()
 
@@ -124,7 +113,7 @@ class RocketChat(RocketChatBase):
                 return self.call_api_post(
                     "channels.kick", roomId=room_id, userId=user_id, kwargs=kwargs
                 )
-        return ErrorResponse({"success": False, "error": "invalid-channel-name"})
+        return WrapResponse({"success": False, "error": "invalid-channel-name"})
 
     def channels_delete(self, channel, **kwargs): #Done
         """Delete a public channel."""
@@ -149,7 +138,7 @@ class RocketChat(RocketChatBase):
                     break
             
             if not user:
-                return ErrorResponse({"success": False, "error": "invalid-user_name"})
+                return WrapResponse({"success": False, "error": "invalid-user_name"})
 
             if text:
                 return self.call_api_post(
@@ -165,7 +154,7 @@ class RocketChat(RocketChatBase):
             return self.call_api_post(
                 "chat.postMessage", channel=channel, kwargs=kwargs
             )
-        return ErrorResponse({"success": False, "error": "user_name or channel required"})
+        return WrapResponse({"success": False, "error": "user_name or channel required"})
     
     def __rooms_upload(self, rid, file, **kwargs):
         """Post a message with attached file to a dedicated room."""
@@ -208,7 +197,7 @@ class RocketChat(RocketChatBase):
                     return self.call_api_get(
                         "chat.syncMessages", roomId=room_id, lastUpdate=lastUpdate, count=count, offset=offset
                     )
-            return ErrorResponse({"success": False, "error": "invalid-channel-name"})
+            return WrapResponse({"success": False, "error": "invalid-channel-name"})
         if user_name:
             list_us = self.users_list().json()
             user = None
@@ -218,7 +207,7 @@ class RocketChat(RocketChatBase):
                     break
             
             if not user:
-                return ErrorResponse({"success": False, "error": "invalid-user_name"})
+                return WrapResponse({"success": False, "error": "invalid-user_name"})
             
             list_r = self.rooms_get().json()
             for i in range(len(list_r["update"])):
@@ -228,8 +217,8 @@ class RocketChat(RocketChatBase):
                         return self.call_api_get(
                             "chat.syncMessages", roomId=room_id, lastUpdate=lastUpdate, count=count, offset=offset
                         )
-            return ErrorResponse({"success": False, "error": "No such room or no messages in a room you're trying to find"})
-        return ErrorResponse({"success": False, "error": "user_name or channel required"})
+            return WrapResponse({"success": False, "error": "No such room or no messages in a room you're trying to find"})
+        return WrapResponse({"success": False, "error": "user_name or channel required"})
     
     def directory(self, query, **kwargs):
         """Search by users or channels on all server.
@@ -279,7 +268,7 @@ Example: {"text": "rocket", "type": "users", "workspace": "local"}"""
                 user_id = list_us["users"][i]["_id"]
                 break
         if not user_id:
-            return ErrorResponse({"success": False, "error": "No such user_name"})
+            return WrapResponse({"success": False, "error": "No such user_name"})
         return self.call_api_post("users.delete", userId=user_id, **kwargs)
     
     # def chat_post_message_with_image_url(self, text, channel, image_url=None, **kwargs):

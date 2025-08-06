@@ -31,7 +31,7 @@ client = RocketChat("theagentcompany", "theagentcompany")
 
 # output = client.directory(query={"text": "help-desk", "type": "channels", "workspace": "local"})
 
-# output = client.channels_invite(room_id="PinWwfjHuqZzeCgcQ", user_id="GYMYHQKtWPAr47ZsE")
+output = client.channels_invite(channel="test_channel", user_names=["Mike Chen", "Chen Xinyi1"])
 
 # output = client.channels_add_moderator(room_id="PinWwfjHuqZzeCgcQ", user_id="GYMYHQKtWPAr47ZsE") 
 # output = client.channels_remove_moderator(room_id="PinWwfjHuqZzeCgcQ", user_id="GYMYHQKtWPAr47ZsE") 
@@ -61,7 +61,7 @@ client = RocketChat("theagentcompany", "theagentcompany")
 
 # output = client.chat_list_messages(user_name="Sarah Johnson")
 
-output = client.users_delete("TestUser43")
+#output = client.users_delete("TestUser43")
 
 data = output.json()
 

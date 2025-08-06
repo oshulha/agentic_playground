@@ -1,4 +1,4 @@
-class ErrorResponse:
+class WrapResponse:
     def __init__(self, data):
         self._data = data
 
