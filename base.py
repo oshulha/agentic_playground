@@ -13,8 +13,8 @@ class RocketChatBase:
 
     def __init__(
         self,
-        user=None,
-        password=None,
+        user="theagentcompany",
+        password="theagentcompany",
         auth_token=None,
         user_id=None,
         server_url="http://the-agent-company.com:3000",

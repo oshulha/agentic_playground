@@ -1,69 +1,162 @@
-from rocketchat import RocketChat
+#took from https://github.com/SoftSeq/pre-PoC/commit/bfde76a5b6cf1b837b85d285491d2486a7c42d13#diff-337b7c9a6d8c9c5cd759a0b692dc1f58a5a008913b3306975a906f736acb619e
+import asyncio
+from tools.mcp import create_service_tools
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import AIMessage, ToolMessage
 import json
 
-client = RocketChat("theagentcompany", "theagentcompany")
-#output = client.users_list()
-# output = client.chat_post_message("Hi! Testing post msg", channel="#general")
+# Async function to run the logic
+async def run_langgraph_with_rocketchat_tools():
+    # === 1. Create tools ===
+    tools, client = create_service_tools("rocketchat")  # or any other service
+    print(f"Loaded {len(tools)} tools: {[t.name for t in tools]}")
 
-#output = client.rooms_get()
+    # === 2. Create a prompt ===
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are a helpful assistant using Rocket.Chat tools."),
+        ("user", "{task}")
+    ])
 
-#output = client.chat_list_messages("GENERAL")
+    # === 3. Bind tools to LLM ===
+    llm_with_tools = ChatOpenAI(model="gpt-5-mini-2025-08-07").bind_tools(
+        tools, parallel_tool_calls=False  # sequential tool calls
+    )
 
-# output = client.users_list()
+    # === 4. Create chain ===
+    simple_chain = prompt | llm_with_tools 
 
-#Do Not Work Properly
-# dict = {
-#   "name": "Hai You Haikin",
-# }
-# output = client.users_update("7My8YbErQi3E7vd35", bio="here_we_go_again@gmail.com")
+    # === 5. Define input for the tool-assisted chain ===
+    # task = "List all channels in Rocket.Chat"
+    # hint = "Use the channels_list tool."
+    
+    task = "Read messages from channel general, then response to the last message"
+    hint = ""
 
-#output = client.users_create(name="TestUser", email="testuser@examle.com", password="testuser", username="testuser") #output.json gives id of created user
+    # task = "Write message 'Tool node says: Hi!' in channel named general"
+    # hint = ""
+    # You can pass any messages or context here if needed
+    state = {
+        "plan": task,
+        "messages": [],
+        "tools": tools
+    }
 
-# output = client.users_delete("nHnpCA9fky98z54yS")
+    # === 6. Run the chain ===
+    response = await simple_chain.ainvoke({
+        "task": state["plan"],
+        "messages": state["messages"],
+        "suffix": hint
+    })
 
-# output = client.channels_list()
+    print("🔧 Final Response:")
+    print(response)
 
-#output = client.channels_invite(room_id="QYaq3NKio4oGgwvM3", user_id="PCYGvJCeb89Nk4dK8")
+    state["messages"].append(response)
 
-# output = client.channels_info(channel="product")
+    result = await tool_node(response, state)
 
-#output = client.directory(query={"text": "CTO", "type": "users", "workspace": "local"})
+    state["messages"] += result["messages"]
 
-# output = client.directory(query={"text": "help-desk", "type": "channels", "workspace": "local"})
+    prompt2 = ChatPromptTemplate.from_messages([
+        ("system", "You are a helpful assistant using Rocket.Chat tools."),
+        ("user", "You can see the task: {task}. However, some steps have been already done. You can see them: {actions}")
+    ])
 
-output = client.channels_invite(channel="test_channel", user_names=["Mike Chen", "Chen Xinyi1"])
+    second_simple_chain = prompt2 | llm_with_tools
 
-# output = client.channels_add_moderator(room_id="PinWwfjHuqZzeCgcQ", user_id="GYMYHQKtWPAr47ZsE") 
-# output = client.channels_remove_moderator(room_id="PinWwfjHuqZzeCgcQ", user_id="GYMYHQKtWPAr47ZsE") 
-#output = client.channels_kick(room_id="PinWwfjHuqZzeCgcQ", user_id="GYMYHQKtWPAr47ZsE") 
+    response = await second_simple_chain.ainvoke({
+        "task": state["plan"],
+        "actions": state["messages"],
+        "messages": state["messages"],
+    })
 
-# output = client.channels_members(channel="general")
+    print("🔧 Final Response2:")
+    print(response)
 
-# output = client.directory(query={"text": "general", "type": "channels", "workspace": "local"})
+    result = await tool_node(response, state)
 
-# output = client.channels_add_owner(room_id = "GENERAL", username="theagentcompany")
+    state["messages"] += result["messages"]
 
-#output = client.directory(query={"text": "project-lowcode", "type": "channels", "workspace": "local"})
+    #Save state["messages"] to a file
+    # with open("/home/oleksandr/Downloads/pre-PoC/messages_state.json", "w", encoding="utf-8") as f:
+    #     json.dump([m.model_dump() if hasattr(m, "model_dump") else str(m) for m in state["messages"]], f, ensure_ascii=False, indent=2)
 
-# output = client.chat_list_messages("HaDSGnNhFM6mCKHa6")
 
-#output = client.chat_post_message(text="Hi, everyone!", channel="#project-lowcode")
 
-# output = client.channels_create(name="literaturereview")
+async def tool_node(response, state):
+    last_ai_message = response
+    if not hasattr(last_ai_message, "tool_calls") or not last_ai_message.tool_calls:
+        return {}
 
-# output = client.channels_add_leader(room_id="GENERAL", user_id="hDhbakBmvM8WmraTA") #Emma Lewis is new leader
+    tool_messages = []
+    tool_by_name = {f"{tool.name}": tool for tool in state["tools"]}
 
-# output = client.chat_post_message(text="Hi, @sarah_johnson! Your task is to be polite and good girl!", channel="#project-lowcode")
+    async def execute_tool(tool_call):
+        tool_call_name = tool_call["name"]
+        if tool_call_name in tool_by_name:
+            call_id = tool_call["id"]
 
-# output = client.chat_post_message(text="Hi! Look!", user_name="Mike Chen", file="/home/oleksandr/Pictures/ubuntu.jpg")
+            # Check if tool has async invoke method
+            tool = tool_by_name[tool_call_name]
+            if hasattr(tool, "ainvoke"):
+                print("Tool call Look:", tool_call)
+                result = await tool.ainvoke(tool_call["args"])
+            else:
+                # Run sync tool in thread pool to avoid blocking
+                # Run sync tool in a separate thread to avoid blocking.
+                result = await asyncio.to_thread(tool.invoke, tool_call["args"])
 
-# output = client.rooms_upload(rid="GENERAL", file="/home/oleksandr/Pictures/ubuntu.jpg")
 
-# output = client.chat_list_messages(user_name="Sarah Johnson")
+            return ToolMessage(content=json.dumps(result), tool_call_id=call_id)
+        return None
 
-#output = client.users_delete("TestUser43")
+    tasks = [execute_tool(tool_call) for tool_call in last_ai_message.tool_calls]
+    results = await asyncio.gather(*tasks)
 
-data = output.json()
+    for result in results:
+        if result is None:
+            continue
+        if isinstance(result, ToolMessage):
+            tool_messages.append(result)
 
-with open("output.json", "w") as file:
-    json.dump(data, file)
+    return {"messages": tool_messages}
+
+# === 7. Actually run the async function ===
+if __name__ == "__main__":
+    asyncio.run(run_langgraph_with_rocketchat_tools())
+
+
+# from tools.mcp import create_service_tools
+# import json
+
+# # Створюємо інструменти
+# tools, client = create_service_tools("rocketchat")
+
+# # 1) Перевіримо, що client == None для direct
+# assert client is None, "Очікуємо, що для transport=direct клієнт не повертається"
+
+# # if client is not None:
+# #     print(client.channels_list().json())
+# # else:
+# #     print("Client is None — це очікувано для transport='direct'")
+
+# # 2) Виведемо список імен згенерованих StructuredTool
+# names = [t.name for t in tools]
+# print("Інструменти:", names)
+
+# # 3) Спробуємо викликати один інструмент – наприклад channels_list
+# tool = next(t for t in tools if t.name == "channels_list")
+# # Припустимо, у тебе є коректні креденти у RocketChatBase – метод поверне JSON
+# result = tool.func()
+# print(type(result))
+# output = result.json()
+# with open("/home/oleksandr/Downloads/pre-PoC/channels_list_result.json", "w", encoding="utf-8") as f:
+#     f.write(result.text)
+# print("channels_list():", result)
+
+# # 4) Перевірка валідації Pydantic: викликаємо з ​неправильним​ аргументом
+# try:
+#     tool.func(foo="bar")
+# except Exception as e:
+#     print("Очікувана помилка валідації:", type(e), e)
