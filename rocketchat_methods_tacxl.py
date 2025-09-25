@@ -14,7 +14,9 @@ myid = "CZYWHd5bCmhj5YcFe"
 class RocketChat(RocketChatBase):
 
     def __paginate(self, resource_fn, params=None, resource_type=None, resource_subtype=None, max_items=None, func_limit=DEFAULT_LIMIT, offset=0):
-        """Pagination tool"""
+        """Pagination tool
+        
+        Note: If max_items = None, it means that paginate will return all items possible to get"""
 
         if params is None:
             params = {}
@@ -37,11 +39,11 @@ class RocketChat(RocketChatBase):
 
             results.extend(items)
 
-            if max_items and len(results) >= max_items:
-                results = results[:max_items]
-
             if offset:
                 results = results[offset:]
+
+            if max_items and len(results) >= max_items:
+                results = results[:max_items]
             
             return results
             #Needs Another Paginate

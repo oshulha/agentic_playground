@@ -2,33 +2,6 @@
 
 Below are some observations and suggestions based on my testing and review of the RocketChat methods.
 
----
-
-## 1. `channels_invite` and `channels_kick` Parameters
-- **`channels_invite`** accepts an **array** of users to add to a channel.  
-- **`channels_kick`** accepts **only one** user.  
-This inconsistency is not very logical. Ideally, both should accept an array.
-
----
-
-## 2. `directory` Method – Workspace Parameter
-- The `directory` method takes a **dictionary** as a parameter, one of its fields being `workspace`.  
-- The `workspace` field can have two values:
-  - `"local"` → works fine.
-  - `"all"` → does **not** work without additional configuration.  
-Should always be set `workspace` to `"local"` and should make this parameter unchangeable (inaccessible to the LLM).
-
----
-
-## 3. Poorly Written Docstrings
-- Many docstrings are short and sometimes contain unnecessary text.  
-- Parameter descriptions are often unclear — it’s not always obvious what values should be passed.
-  - Example: The parameter `user_name` in all methods refers to **First and Last name** (with a space and capitalized), **not** the username or user ID. This is not explained in the current docstrings, and the variable name could be improved.
-
-(need to check how it takes user_name as input (as First and Last Name or not) -- gives it error or not -- and write name in various variants)
-
----
-
 ## 4. Optimization Idea
 It might be better to define and return the `StructuredTool` objects directly in `rocketchat_methods.py` instead of generating them dynamically via code.
 
@@ -54,8 +27,20 @@ There may still be exceptions. These should be rewritten so that errors are retu
 At the moment we have 14 tools. This tools must be enough to do tasks in TAC for Do node. However, it can be not enough for Check node. 
 Example: Do node made a mistake and made wrong user a moderator in chat/channel. Check node noticed this mistake, but Check or Do node can't remove moderator because there is no tool for that.
 
+## 8. Optimization Idea #2
+![screenshot in debug -- alphabetical order of usernames](image.png)
+
+Optimization idea -- ids are given to user in alphabetical order -- Look the picture below (at least for the users/members)
+Binarysearch on alphabetical order. Can be very beneficial where a lot of users, channels, members in channels.
+
+## 9. Python Module To Propose To Agent Most Appropriate Answer 
+Idea From Volodymyr 22.09.2025 -- There is no Vasya Pupkin but Vasyliy Pupkin. Having this function our agent can resolve issue finding right person
+
 ## Testing
 I tested the RocketChat MCP using the `test.py` script:  
 ```bash
 # Run from the `src` directory
 python test.py
+```
+
+## Danylo's Testing 
