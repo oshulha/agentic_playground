@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Literal, Optional
 
 from langchain_core.tools import tool
 
-from base import RocketChatBase
+from .base import RocketChatBase
 
 DEFAULT_LIMIT = 50
 USERS_LIMIT = 100
@@ -22,11 +22,11 @@ class RocketChat(RocketChatBase):
         Returns:
             Optional[Dict[str, Any]]: The channel object if found; otherwise None.
         """
-        list_ch = self.rocketchat_channels_list()
+        list_ch = self.rocketchat_channels_list(extra_fields=True)
 
-        for channel in list_ch["channels"]:
-            if channel["name"] == channel_name:
-                return channel
+        for channel_info in list_ch["channels"]:
+            if channel_info["name"] == channel_name:
+                return channel_info
 
     def __get_user_by_name(self, user_name: Any) -> Optional[Dict[str, Any]]:
         """Get user information (entire JSON) by username or full name.
@@ -40,7 +40,7 @@ class RocketChat(RocketChatBase):
         Returns:
             Optional[Dict[str, Any]]: The user object if found; otherwise None.
         """
-        list_us = self.rocketchat_users_list()
+        list_us = self.rocketchat_users_list(extra_fields=True)
         found_user = None
         if user_name.startswith("@"):
             user_name = user_name[1:]
@@ -55,37 +55,37 @@ class RocketChat(RocketChatBase):
         self,
         text: str,
         user_name: Optional[str] = None,
-        channel: Optional[str] = None,
+        channel_name: Optional[str] = None,
         **kwargs,
     ) -> Dict:
         """Post a message to a channel or direct message.
 
-        At least one of `user_name` or `channel` must be provided. If both are
+        At least one of `user_name` or `channel_name` must be provided. If both are
         provided, `user_name` takes precedence and a direct message will be sent
         to that user.
 
         Args:
             text (str): The message text to send.
             user_name (Optional[str]): Username for a direct message target.
-            channel (Optional[str]): Channel name (e.g., "general").
+            channel_name (Optional[str]): Channel name (e.g., "general").
 
         Returns:
             Dict: Rocket.Chat API response JSON.
         """
-        if not user_name and not channel:
-            return {"success": False, "error": "user_name or channel required"}
+        if not user_name and not channel_name:
+            return {"success": False, "error": "user_name or channel_name required"}
 
         if user_name:
             user = self.__get_user_by_name(user_name)
             if not user:
                 return {"success": False, "error": "invalid-user_name"}
-            channel = "@" + user["username"]
+            channel_name = "@" + user["username"]
 
         return self.call_api_post(
-            "chat.postMessage", channel=channel, text=text, kwargs=kwargs
+            "chat.postMessage", channel=channel_name, text=text
         ).json()
 
-    def __rooms_upload(self, rid: str, file: str, **kwargs) -> Dict:
+    def __rooms_upload(self, rid: str, file: str) -> Dict:
         """Upload a file to a room.
 
         Args:
@@ -104,11 +104,11 @@ class RocketChat(RocketChatBase):
             ),
         }
         return self.call_api_post(
-            "rooms.upload/" + rid, kwargs=kwargs, use_json=False, files=files
+            "rooms.upload/" + rid, use_json=False, files=files
         ).json()
 
     def __channels_invite_one_user(
-        self, channel: Any, user_name: str, **kwargs
+        self, channel_name: Any, user_name: str
     ) -> Dict:
         """Add a single user to a public channel.
 
@@ -124,16 +124,16 @@ class RocketChat(RocketChatBase):
         if not user:
             return {"success": False, "error": "invalid-user_name"}
 
-        channel = self.__get_channel_by_name(channel)
+        channel_info = self.__get_channel_by_name(channel_name)
 
-        if not channel:
+        if not channel_info:
             return {"success": False, "error": "invalid-channel-name"}
 
         return self.call_api_post(
-            "channels.invite", roomId=channel["_id"], userId=user["_id"], kwargs=kwargs
+            "channels.invite", roomId=channel_info["_id"], userId=user["_id"]
         ).json()
 
-    def __channels_kick_one_user(self, channel: str, user_name: str, **kwargs) -> Dict:
+    def __channels_kick_one_user(self, channel_name: str, user_name: str) -> Dict:
         """Remove a user from a Rocket.Chat public channel.
 
         Args:
@@ -151,7 +151,7 @@ class RocketChat(RocketChatBase):
         if not user:
             return {"success": False, "error": "invalid-user_name"}
 
-        channel_info = self.__get_channel_by_name(channel)
+        channel_info = self.__get_channel_by_name(channel_name)
 
         if not channel_info:
             return {"success": False, "error": "invalid-channel-name"}
@@ -159,32 +159,64 @@ class RocketChat(RocketChatBase):
         return self.call_api_post(
             "channels.kick",
             roomId=channel_info["_id"],
-            userId=user["_id"],
-            kwargs=kwargs,
+            userId=user["_id"]
         ).json()
 
+    def __clean_channels_list(self, output: dict) -> dict:
+        """
+        Clean the JSON returned by Rocket.Chat's channels.list API.
+        Removes unnecessary fields and renames some keys for clarity.
+        """
+
+        def clean_channel(channel_info: dict) -> dict:
+            cleaned = {}
+
+            if "name" in channel_info:
+                cleaned["name"] = channel_info["name"]
+
+            if "msgs" in channel_info:
+                cleaned["msgs"] = channel_info["msgs"]
+            if "usersCount" in channel_info:
+                cleaned["usersCount"] = channel_info["usersCount"]
+
+            if "description" in channel_info:
+                cleaned["description"] = channel_info["description"]
+
+            return cleaned
+
+        # If output has "channels" list
+        if "channels" in output:
+            output["channels"] = [clean_channel(c) for c in output["channels"]]
+
+        return output
+
     def rocketchat_channels_list(
-        self, count: int = DEFAULT_LIMIT, offset: int = 0, **kwargs
+        self, count: int = DEFAULT_LIMIT, offset: int = 0, extra_fields : bool = False
     ) -> Dict:
         """Retrieve channels from the server.
 
         Args:
             count (int, optional): Maximum number of channels to return. Defaults to DEFAULT_LIMIT.
             offset (int, optional): Number of channels to skip (pagination). Defaults to 0.
+            extra_fields (bool, optional): If True, includes additional information about each channel as raw JSON from the RocketChat API, which is often unnecessary. Defaults to False.
 
         Returns:
             Dict: A JSON-like dictionary containing the list of channels and metadata as provided by the Rocket.Chat API.
         """
-        return self.call_api_get(
-            "channels.list", count=count, offset=offset, kwargs=kwargs
+        output = self.call_api_get(
+            "channels.list", count=count, offset=offset
         ).json()
 
-    def rocketchat_channels_add_role(
+        if extra_fields and output["success"]:
+            return output
+        else:
+            return self.__clean_channels_list(output)
+
+    def rocketchat_channel_add_role(
         self,
-        channel: str,
+        channel_name: str,
         role: Literal["owner", "moderator", "leader"],
-        user_name: str,
-        **kwargs,
+        user_name: str
     ) -> Dict:
         """Assign a role (owner, moderator, or leader) to a user in a public channel.
 
@@ -205,7 +237,7 @@ class RocketChat(RocketChatBase):
         if not user:
             return {"success": False, "error": "invalid-user_name"}
 
-        channel_info = self.__get_channel_by_name(channel)
+        channel_info = self.__get_channel_by_name(channel_name)
 
         if not channel_info:
             return {"success": False, "error": "invalid-channel-name"}
@@ -225,23 +257,31 @@ class RocketChat(RocketChatBase):
         return self.call_api_post(
             f"channels.{method}",
             roomId=channel_info["_id"],
-            userId=user["_id"],
-            kwargs=kwargs,
+            userId=user["_id"]
         ).json()
 
-    def rocketchat_channels_create(self, name: str, **kwargs) -> Dict:
+    def rocketchat_channel_create(self, channel_name: str, extra_fields: bool = False) -> Dict:
         """Create a new public Rocket.Chat channel.
 
         Args:
-            name (str): The name of the channel to create (e.g., "project_team").
+            channel_name (str): The name of the channel to create (e.g., "project_team").
+            extra_fields (bool, optional): If True, includes additional information about each channel as raw JSON from the RocketChat API, which is often unnecessary. Defaults to False.
 
         Returns:
             dict: A JSON-like dictionary containing details of the created channel and metadata as provided by the Rocket.Chat API.
         """
-        return self.call_api_post("channels.create", name=name, kwargs=kwargs).json()
+        output = self.call_api_post("channels.create", name=channel_name).json()
 
-    def rocketchat_channels_invite(
-        self, channel: str, user_names: List[str], **kwargs
+        if extra_fields and output["success"]:
+            return output
+        else:
+            #Clean information about a channel that was created
+            cleaned = {}
+            cleaned["success"] = output["success"]
+            return cleaned
+
+    def rocketchat_channel_invite(
+        self, channel_name: str, user_names: List[str]
     ) -> List[Dict[str, Any]]:
         """Invite one or more users to a Rocket.Chat public channel.
 
@@ -258,7 +298,7 @@ class RocketChat(RocketChatBase):
         invite_results = []
         for user_name in user_names:
             output = self.__channels_invite_one_user(
-                channel=channel, user_name=user_name, **kwargs
+                channel_name=channel_name, user_name=user_name
             )
             result = {"success": output["success"], "user_name": user_name}
             if not output.get("success", False):
@@ -268,8 +308,8 @@ class RocketChat(RocketChatBase):
             invite_results.append(result)
         return invite_results
 
-    def rocketchat_channels_kick(
-        self, channel: str, user_names: List[str], **kwargs
+    def rocketchat_channel_kick(
+        self, channel_name: str, user_names: List[str]
     ) -> List[Dict[str, Any]]:
         """Remove one or more users from a Rocket.Chat public channel.
 
@@ -286,7 +326,7 @@ class RocketChat(RocketChatBase):
         kick_results = []
         for user_name in user_names:
             output = self.__channels_kick_one_user(
-                channel=channel, user_name=user_name, **kwargs
+                channel_name=channel_name, user_name=user_name
             )
             result = {"success": output["success"], "user_name": user_name}
             if not output.get("success", False):
@@ -294,7 +334,7 @@ class RocketChat(RocketChatBase):
             kick_results.append(result)
         return kick_results
 
-    def rocketchat_channels_delete(self, channel: str, **kwargs) -> Dict:
+    def rocketchat_channel_delete(self, channel_name: str) -> Dict:
         """Delete a public Rocket.Chat channel.
 
         Args:
@@ -307,11 +347,34 @@ class RocketChat(RocketChatBase):
             Once deleted, the channel and its messages cannot be recovered.
         """
         return self.call_api_post(
-            "channels.delete", roomName=channel, kwargs=kwargs
+            "channels.delete", roomName=channel_name
         ).json()
+    
+    def __clean_channel_members(self, output: dict) -> dict:
+        """
+        Clean the JSON returned by Rocket.Chat's channels.list API.
+        Removes unnecessary fields and renames some keys for clarity.
+        """
 
-    def rocketchat_channels_members(
-        self, channel: str, count: int = USERS_LIMIT, offset: int = 0, **kwargs
+        def clean_member(member_info: dict) -> dict:
+            cleaned = {}
+
+            if "name" in member_info:
+                cleaned["name"] = member_info["name"]
+
+            if "username" in member_info:
+                cleaned["username"] = member_info["username"]
+
+            return cleaned
+
+        # If output has "members" list
+        if "members" in output:
+            output["members"] = [clean_member(c) for c in output["members"]]
+
+        return output
+
+    def rocketchat_channel_members(
+        self, channel_name: str, count: int = USERS_LIMIT, offset: int = 0, extra_fields: bool = False
     ) -> Dict:
         """List members of a Rocket.Chat channel.
 
@@ -319,25 +382,51 @@ class RocketChat(RocketChatBase):
             channel (str): The name of the channel whose members should be listed (e.g., "general").
             count (int, optional): Maximum number of members to return. Defaults to USERS_LIMIT.
             offset (int, optional): Number of members to skip (pagination). Defaults to 0.
+            extra_fields (bool, optional): If True, includes additional information about each channel as raw JSON from the RocketChat API, which is often unnecessary. Defaults to False.
 
         Returns:
             dict: A JSON-like dictionary containing the list of channel members and metadata as provided by the Rocket.Chat API.
         """
-        return self.call_api_get(
+        output = self.call_api_get(
             "channels.members",
-            roomName=channel,
+            roomName=channel_name,
             count=count,
-            offset=offset,
-            kwargs=kwargs,
+            offset=offset
         ).json()
+
+        if extra_fields and output["success"]:
+            return output
+        else:
+            return self.__clean_channel_members(output)
+
+    def __clean_chat_post_message(self, output: dict) -> dict:
+        """
+        Clean the JSON returned by Rocket.Chat's channels.list API.
+        Removes unnecessary fields and renames some keys for clarity.
+        """
+
+        cleaned = {}
+        if "messages" in output:
+            cleaned["messages"] = output["message"].get("msg", [])
+        if "channel" in output:
+            cleaned["channel"] = output["channel"]
+        if "success" in output:
+            cleaned["success"] = output["success"]
+        if "message" in output:
+            if "file" in output["message"]: 
+                cleaned["file"] = {}
+                cleaned["file"]["name"] = output["message"]["file"]["name"]
+                cleaned["file"]["type"] = output["message"]["file"]["type"]
+
+        return cleaned
 
     def rocketchat_chat_post_message(
         self,
         text: str,
         user_name: Optional[str] = None,
-        channel: Optional[str] = None,
+        channel_name: Optional[str] = None,
         file: Optional[str] = None,
-        **kwargs,
+        extra_fields: bool = False
     ) -> Dict:
         """Post a new chat message to a channel or direct chat.
 
@@ -346,6 +435,7 @@ class RocketChat(RocketChatBase):
             user_name (str, optional): Username of the user to send a direct message to. Defaults to None.
             channel (str, optional): Channel name to send the message to (e.g., "general"). Defaults to None.
             file (str, optional): Path to a local file to upload along with the message. Defaults to None.
+            extra_fields (bool, optional): If True, includes additional information about each channel as raw JSON from the RocketChat API, which is often unnecessary. Defaults to False.
 
         Returns:
             dict: A JSON-like dictionary containing details of the posted message
@@ -355,21 +445,59 @@ class RocketChat(RocketChatBase):
             Either `user_name` or `channel` must be provided. If both are provided, `user_name` takes precedence and a direct message will be sent.
             When `file` is provided and the message is posted successfully, the response will be that of the file upload (rooms.upload).
         """
-        output = self.__post_msg(text, user_name=user_name, channel=channel, **kwargs)
+        output = self.__post_msg(text, user_name=user_name, channel_name=channel_name)
 
         if file:
             if output.get("success"):
                 rid = output["message"]["rid"]
-                return self.__rooms_upload(rid, file)
-        return output
+                output = self.__rooms_upload(rid, file)
+            
+        if extra_fields and output["success"]:
+            return output
+        else: 
+            return self.__clean_chat_post_message(output)
+    
+    def __clean_chat_list_messages(self, output: dict) -> dict:
+        """
+        Clean the JSON returned by Rocket.Chat's channels.list API.
+        Removes unnecessary fields and renames some keys for clarity.
+        """
 
+        def clean_messages(message_info: dict) -> dict:
+            cleaned = {}
+
+            if "msg" in message_info:
+                cleaned["msg"] = message_info["msg"]
+
+            if "ts" in message_info:
+                cleaned["timestamp"] = message_info["ts"]
+
+            if "u" in message_info:
+                cleaned["sender"] = {}
+                if "username" in message_info["u"]:
+                    cleaned["sender"]["username"] = message_info["u"]["username"]
+                if "name" in message_info["u"]:
+                    cleaned["sender"]["name"] = message_info["u"]["name"]
+
+            return cleaned
+
+        # If output has "members" list
+        if "result" in output and "updated" in output["result"]:
+            output["result"]["updated"] = [clean_messages(c) for c in output["result"]["updated"]]
+
+        if "result" in output and "deleted" in output["result"]:
+            output["result"]["deleted"] = {}
+
+        return output
+            
     def rocketchat_chat_list_messages(
         self,
         user_name: Optional[str] = None,
-        channel: Optional[str] = None,
+        channel_name: Optional[str] = None,
         lastUpdate: str = "2025-01-01T00:00:00.000Z",
         count: int = DEFAULT_LIMIT,
         offset: int = 0,
+        extra_fields: bool = False
     ) -> Dict:
         """Retrieve a list of messages from a Rocket.Chat channel or direct chat.
 
@@ -379,6 +507,7 @@ class RocketChat(RocketChatBase):
             lastUpdate (str, optional): Only messages updated after this time will be returned. It must strictly follow the format "YYYY-MM-DDTHH:MM:SS.000Z". Defaults to "2025-01-01T00:00:00.000Z".
             count (int, optional): The maximum number of messages to return.
             offset (int, optional): The number of messages to skip (used for pagination). Defaults to 0.
+            extra_fields (bool, optional): If True, includes additional information about each channel as raw JSON from the RocketChat API, which is often unnecessary. Defaults to False.
 
         Returns:
             dict: A JSON-like dictionary containing message objects and metadata as provided by the Rocket.Chat API.
@@ -386,13 +515,13 @@ class RocketChat(RocketChatBase):
         Notes:
             Either `user_name` or `channel` must be provided.
         """
-        if not user_name and not channel:
+        if not user_name and not channel_name:
             return {"success": False, "error": "user_name or channel required"}
 
         # Resolve roomId either from a channel name or a direct room with a user
         room_id = None
-        if channel:
-            channel_info = self.__get_channel_by_name(channel)
+        if channel_name:
+            channel_info = self.__get_channel_by_name(channel_name)
             if not channel_info:
                 return {"success": False, "error": "invalid-channel-name"}
             room_id = channel_info.get("_id")
@@ -402,15 +531,11 @@ class RocketChat(RocketChatBase):
                 return {"success": False, "error": "invalid-user_name"}
 
             username = user_info["username"]
-            rooms_resp = self.rocketchat_rooms_get()
-            updates = (
-                rooms_resp.get("update", [])
-                if isinstance(rooms_resp, dict)
-                else rooms_resp
-            )
-            for r in updates:
-                if r.get("t") == "d" and username in r.get("usernames", []):
-                    room_id = r.get("_id")
+            dms_resp = self.rocketchat_dms_list(extra_fields=True)
+            dms_list = dms_resp.get("ims", [])
+            for dm in dms_list:
+                if username in dm.get("usernames", []):
+                    room_id = dm.get("_id")
                     break
 
         if not room_id:
@@ -432,15 +557,19 @@ class RocketChat(RocketChatBase):
         response["result"]["deleted"] = response["result"]["deleted"][
             offset : offset + count
         ]
-        return response
+
+        if extra_fields:
+            return response
+        else:
+            return self.__clean_chat_list_messages(response)
+
 
     def rocketchat_directory(
         self,
         text: str,
         type: Literal["users", "channels"],
         count: int = DEFAULT_LIMIT,
-        offset: int = 0,
-        **kwargs,
+        offset: int = 0
     ) -> Dict:
         """Search for users or channels in the Rocket.Chat server directory.
 
@@ -456,35 +585,98 @@ class RocketChat(RocketChatBase):
         query = {"text": text, "type": type, "workspace": "local"}
         query = json.dumps(query)
         return self.call_api_get(
-            "directory", query=query, count=count, offset=offset, kwargs=kwargs
+            "directory", query=query, count=count, offset=offset
         ).json()
 
-    def rocketchat_rooms_get(self, **kwargs) -> Dict:
-        """Get all opened rooms for this user.
-
-        Returns:
-            Dict: A JSON-like dictionary containing the user's opened rooms and related metadata as provided by the Rocket.Chat API.
+    def __clean_users_list(self, output: dict) -> dict:
         """
-        return self.call_api_get("rooms.get", kwargs=kwargs).json()
+        Clean the JSON returned by Rocket.Chat's users.list API.
+        Removes unnecessary fields and renames some keys for clarity.
+        """
+        def clean_user(user_info: dict) -> dict:
+            cleaned = {}
+
+            if "name" in user_info:
+                cleaned["name"] = user_info["name"]
+
+            if "username" in user_info:
+                cleaned["username"] = user_info["username"]
+            if "roles" in user_info:
+                cleaned["roles"] = user_info["roles"]
+
+            return cleaned
+
+        if "users" in output:
+            output["users"] = [clean_user(user) for user in output["users"]]
+
+        return output
 
     def rocketchat_users_list(
-        self, count: int = USERS_LIMIT, offset: int = 0, **kwargs
+        self, count: int = USERS_LIMIT, offset: int = 0, extra_fields: bool = False
     ) -> Dict:
         """Retrieve users and their information (permission-limited view).
 
         Args:
             count (int, optional): Maximum number of users to return. Defaults to USERS_LIMIT.
             offset (int, optional): Number of users to skip (pagination). Defaults to 0.
+            extra_fields (bool, optional): If True, includes additional information about each channel as raw JSON from the RocketChat API, which is often unnecessary. Defaults to False.
 
         Returns:
             dict: A JSON-like dictionary containing the list of users and metadata as provided by the Rocket.Chat API.
         """
-        return self.call_api_get(
-            "users.list", count=count, offset=offset, kwargs=kwargs
+        output = self.call_api_get(
+            "users.list", count=count, offset=offset
         ).json()
 
+        if extra_fields:
+            return output
+        else:
+            return self.__clean_users_list(output)
+        
+    def __clean_dms_list(self, output: dict) -> dict:
+        """
+        Clean the JSON returned by Rocket.Chat's users.list API.
+        Removes unnecessary fields and renames some keys for clarity.
+        """
+        def clean_dm(user_info: dict) -> dict:
+            cleaned = {}
+
+            if "usernames" in user_info:
+                cleaned["usernames"] = user_info["usernames"]
+            if "msgs" in user_info:
+                cleaned["msgs"] = user_info["msgs"]
+
+            return cleaned
+
+        if "ims" in output:
+            output["ims"] = [clean_dm(user) for user in output["ims"]]
+
+        return output
+        
+    def rocketchat_dms_list(
+        self, count: int = USERS_LIMIT, offset: int = 0, extra_fields: bool = False
+    ) -> Dict:
+        """Retrieve users and their information (permission-limited view).
+
+        Args:
+            count (int, optional): Maximum number of users to return. Defaults to USERS_LIMIT.
+            offset (int, optional): Number of users to skip (pagination). Defaults to 0.
+            extra_fields (bool, optional): If True, includes additional information about each channel as raw JSON from the RocketChat API, which is often unnecessary. Defaults to False.
+
+        Returns:
+            dict: A JSON-like dictionary containing the list of users and metadata as provided by the Rocket.Chat API.
+        """
+        output = self.call_api_get(
+            "dm.list", count=count, offset=offset
+        ).json()
+
+        if extra_fields:
+            return output
+        else:
+            return self.__clean_dms_list(output)
+
     def rocketchat_user_create(
-        self, email: str, password: str, name: str, user_name: str, **kwargs
+        self, email: str, password: str, name: str, user_name: str, extra_fields: bool = False
     ) -> Dict:
         """Create a new user in Rocket.Chat.
 
@@ -493,20 +685,29 @@ class RocketChat(RocketChatBase):
             password (str): The password for the new user account.
             name (str): The full display name of the new user.
             user_name (str): The unique username for the new user.
+            extra_fields (bool, optional): If True, includes additional information about each channel as raw JSON from the RocketChat API, which is often unnecessary. Defaults to False.
+
 
         Returns:
             dict: A JSON-like dictionary containing details of the created user and metadata as provided by the Rocket.Chat API.
         """
-        return self.call_api_post(
+        output = self.call_api_post(
             "users.create",
             email=email,
             name=name,
             password=password,
-            username=user_name,
-            kwargs=kwargs,
+            username=user_name
         ).json()
 
-    def rocketchat_user_delete(self, user_name: str, **kwargs) -> Dict:
+        if extra_fields:
+            return output
+        else:
+            cleaned = {}
+            cleaned["success"] = output["success"]
+            return cleaned
+
+
+    def rocketchat_user_delete(self, user_name: str) -> Dict:
         """Delete a user from Rocket.Chat.
 
         Args:
@@ -520,4 +721,4 @@ class RocketChat(RocketChatBase):
         if not user:
             return {"success": False, "error": "invalid-user_name"}
 
-        return self.call_api_post("users.delete", userId=user["_id"], **kwargs).json()
+        return self.call_api_post("users.delete", userId=user["_id"]).json()

@@ -36,6 +36,8 @@ Binarysearch on alphabetical order. Can be very beneficial where a lot of users,
 ## 9. Python Module To Propose To Agent Most Appropriate Answer 
 Idea From Volodymyr 22.09.2025 -- There is no Vasya Pupkin but Vasyliy Pupkin. Having this function our agent can resolve issue finding right person
 
+## 10. Danylo said very important thing that in base.py server_url needs to be taken out of mcp.toml or other place
+
 ## Testing
 I tested the RocketChat MCP using the `test.py` script:  
 ```bash

@@ -4,7 +4,7 @@ import mimetypes
 import os
 from typing import Any, Dict, List, Literal, Optional
 
-from .base import RocketChatBase
+from base import RocketChatBase
 
 DEFAULT_LIMIT = 50
 
@@ -27,50 +27,49 @@ class RocketChat(RocketChatBase):
             "offset": offset,
         }
 
-        if resource_fn == self.__chat_list_messages:
-            resource_type = "result"
-            resource_subtype = "updated"
+        # if resource_fn == self.__chat_list_messages:
+        #     resource_type = "result"
+        #     resource_subtype = "updated"
 
+        #     response = resource_fn(**params)
+        #     items = response.get(resource_type, [])
+
+        #     if resource_subtype and items:
+        #         items = items.get(resource_subtype, [])
+
+        #     results.extend(items)
+
+        #     if offset:
+        #         results = results[offset:]
+
+        #     if max_items and len(results) >= max_items:
+        #         results = results[:max_items]
+            
+        #     return results
+        #     #Needs Another Paginate
+        results = []
+        total = None
+
+        while True:
             response = resource_fn(**params)
+            # with open("response.json", "w", encoding="utf-8") as f:
+            #     f.write(json.dumps(response, ensure_ascii=False))
             items = response.get(resource_type, [])
-
             if resource_subtype and items:
                 items = items.get(resource_subtype, [])
 
             results.extend(items)
 
-            if offset:
-                results = results[offset:]
-
             if max_items and len(results) >= max_items:
-                results = results[:max_items]
-            
-            return results
-            #Needs Another Paginate
-        else:
-            results = []
-            total = None
+                return results[:max_items]
 
-            while True:
-                response = resource_fn(**params)
-                # with open("response.json", "w", encoding="utf-8") as f:
-                #     f.write(json.dumps(response, ensure_ascii=False))
-                items = response.get(resource_type, [])
-                if resource_subtype and items:
-                    items = items.get(resource_subtype, [])
+            total = len(items)
+            params["offset"] += func_limit
 
-                results.extend(items)
+            if total < func_limit:
+                break
 
-                if max_items and len(results) >= max_items:
-                    return results[:max_items]
-
-                total = len(items)
-                params["offset"] += func_limit
-
-                if total < func_limit:
-                    break
-
-            return results
+        return results
 
     def __get_channel_by_name(self, channel_name: str) -> Optional[Dict[str, Any]]:
         """Get channel information (entire JSON) by its name.
@@ -80,7 +79,7 @@ class RocketChat(RocketChatBase):
         """
         list_ch = self.rocketchat_channels_list()
 
-        for channel in list_ch["channels"]:
+        for channel in list_ch:
             if channel["name"] == channel_name:
                 return channel
 
@@ -94,7 +93,7 @@ class RocketChat(RocketChatBase):
         found_user = None
         if user_name.startswith("@"):
             user_name = user_name[1:]
-        for user in list_us["users"]:
+        for user in list_us:
             if user["username"] == user_name:
                 return user
             if user["name"] == user_name:
@@ -408,9 +407,18 @@ class RocketChat(RocketChatBase):
             channel = self.__get_channel_by_name(channel)
             if not channel:
                 return {"success": False, "error": "invalid-channel-name"}
-            return self.call_api_get(
+            output = self.call_api_get(
                 "chat.syncMessages", roomId=channel["_id"], lastUpdate=lastUpdate, count=count, offset=offset
             ).json()
+
+            output["result"]["updated"] = output["result"]["updated"][
+                offset : offset + count
+            ]
+            output["result"]["deleted"] = output["result"]["deleted"][
+                offset : offset + count
+            ]
+
+            return output
         
         if user_name:
             user = self.__get_user_by_name(user_name)
@@ -425,9 +433,31 @@ class RocketChat(RocketChatBase):
                 "chat.syncMessages", roomId=user["_id"] + myid, lastUpdate=lastUpdate, count=count, offset=offset
             ).json()
 
+            #!!! Danylo added this magic lines to make "count" and "offset" parameters work in chat_list_messages   
+            # response["result"]["updated"] = response["result"]["updated"][
+            #     offset : offset + count
+            # ]
+            # response["result"]["deleted"] = response["result"]["deleted"][
+            #     offset : offset + count
+            # ]
+
+            output1["result"]["updated"] = output1["result"]["updated"][
+                offset : offset + count
+            ]
+            output1["result"]["deleted"] = output1["result"]["deleted"][
+                offset : offset + count
+            ]
+
+            output2["result"]["updated"] = output2["result"]["updated"][
+                offset : offset + count
+            ]
+            output2["result"]["deleted"] = output2["result"]["deleted"][
+                offset : offset + count
+            ]
+
             if output1.get("success"):
                 return output1
-            elif output2.get("success"):
+            elif output2.get("success"):               
                 return output2
             else:
                 return {"success": False, "error": f"Failed to find direct messages to {user_name}. There is may no direct message channel between you and {user_name}."}
