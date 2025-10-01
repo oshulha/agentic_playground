@@ -11,6 +11,11 @@ from .base import RocketChatBase
 DEFAULT_LIMIT = 50
 USERS_LIMIT = 100
 
+#This version isn't tested thoroughly. It completed Danylo's autotests. Channel was changed to channel_name. 
+#I've debugged it from some issues. Extra fields parameter added. Not sure if every doc-string is correct (having channel_name instead of channel + extra_fields parameter added to doc-string to function it needed)
+# It needs to be merged with rocketchat_methods_tacxl (having the best of two worlds) 
+# Is TACXL version differ from this version only having ability to output all objects (e.g. 600 users -- this ability is not that necessary if every tool that needs offset (and count) works fine) 
+# -- Does every tool that needs offset (and count) has it? And if it has, is it working fine? Dms_list works fine with offset and count (having maximum_count possible 100 dms)
 
 class RocketChat(RocketChatBase):
     def __get_channel_by_name(self, channel_name: str) -> Optional[Dict[str, Any]]:
