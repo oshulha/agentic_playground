@@ -1,0 +1,70 @@
+{
+    "id": "e7622a94-98ad-4575-a39c-65027f264da6",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 19:05:02.848056",
+    "end_time": "2025-10-14 19:07:04.218806",
+    "deltatime": 121.37075,
+    "prompt_tokens": 91676,
+    "completion_tokens": 5172,
+    "total_tokens": 96848,
+    "prompt_token_details": {
+        "cache_read": 44160
+    },
+    "completion_token_details": {
+        "reasoning": 3648
+    },
+    "prompt_cost": 0.0288034,
+    "completion_cost": 0.0121872,
+    "total_cost": 0.0409906,
+    "public_link": "https://smith.langchain.com/public/d8a46425-5f1c-46c3-b238-a960e1cea487/r",
+    "inputs": {
+        "user_input": "Complete the following task: You need to pick Emily Zhou as interviewer. Try to talk to her in Rocketchat (http://the-agent-company.com:3000). See if you can persuade her to interview.\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('e7622a94-98ad-4575-a39c-65027f264da6') name='agent' start_time=datetime.datetime(2025, 10, 14, 19, 5, 2, 848056, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 19, 7, 4, 218806, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': 'Complete the following task: You need to pick Emily Zhou as interviewer. Try to talk to her in Rocketchat (http://the-agent-company.com:3000). See if you can persuade her to interview.\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n'} outputs={'output': RunTree(id=e7622a94-98ad-4575-a39c-65027f264da6, name='agent', run_type='chain', dotted_order='20251014T190502848056Ze7622a94-98ad-4575-a39c-65027f264da6')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=1e61140c-4935-4a74-8694-d3f910fc350c, name='RunnableSequence', run_type='chain', dotted_order='20251014T190502848056Ze7622a94-98ad-4575-a39c-65027f264da6.20251014T190503840183Z1e61140c-4935-4a74-8694-d3f910fc350c'), RunTree(id=1429e920-a99b-4cdd-a646-d94ca3b6beb1, name='react_ask', run_type='chain', dotted_order='20251014T190502848056Ze7622a94-98ad-4575-a39c-65027f264da6.20251014T190539930165Z1429e920-a99b-4cdd-a646-d94ca3b6beb1')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T190502848056Ze7622a94-98ad-4575-a39c-65027f264da6' trace_id=UUID('e7622a94-98ad-4575-a39c-65027f264da6') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "1e61140c-4935-4a74-8694-d3f910fc350c",
+        "101b5b8a-60cd-49f6-b2f2-4c2525dc625b",
+        "c9430b13-a095-4e38-a2e9-a9aa01564fa5",
+        "1429e920-a99b-4cdd-a646-d94ca3b6beb1",
+        "baabfe5d-7f79-4081-abda-3c5acbec76c7",
+        "5f704d28-dd3b-4f30-8f4a-6a7117007e31",
+        "8e2cd336-f351-4db6-89cc-37ecaa9f9f15",
+        "57926698-fd2f-4812-91b6-ede6545f383d",
+        "102cf32b-1e02-481e-be44-84887c2e6d20",
+        "3bbe5ae9-c492-4d9f-8e5c-585535de75cd",
+        "3dcb043d-af38-4e5a-a2ae-a65e1115ed36",
+        "e9a5945f-a6cf-45eb-9e42-a225ad49e1e7",
+        "f921f9ef-1eac-4574-9d21-3631ac760370",
+        "a25a526b-93f3-4f0a-be34-2378493bda59",
+        "09402ff5-7488-46b2-aadb-f44f0c6a06c6",
+        "6e3985e5-0bd5-4ebd-9f8e-375559c1935a",
+        "96558f20-314b-4f72-a96b-a4e258cec445",
+        "5d7748ef-c867-487e-ad8e-a707257725bc",
+        "457266c1-0f77-46c8-baf5-d4c9c91e0a0f"
+    ]
+}

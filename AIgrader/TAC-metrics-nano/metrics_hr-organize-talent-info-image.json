@@ -1,0 +1,68 @@
+{
+    "id": "f8ec4764-5ec4-470b-a7fb-435fe70638bd",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 20:37:34.693913",
+    "end_time": "2025-10-14 20:39:55.044583",
+    "deltatime": 140.35067,
+    "prompt_tokens": 90387,
+    "completion_tokens": 6752,
+    "total_tokens": 97139,
+    "prompt_token_details": {
+        "cache_read": 54528
+    },
+    "completion_token_details": {
+        "reasoning": 3648
+    },
+    "prompt_cost": 0.03198879,
+    "completion_cost": 0.0142592,
+    "total_cost": 0.04624799,
+    "public_link": "https://smith.langchain.com/public/6f893d34-376d-4cce-990f-286e48b1916c/r",
+    "inputs": {
+        "user_input": "Complete the following task: Emily Johnson, Michael Davis, and Sarah Thompson, whose resumes are located in Documents/Human Resources Team/resumes on owncloud(http://the-agent-company.com:8092)\n\nExtract the name, education information, skills and past work experiences of each candidate, and organize them in a document at `/workspace/summary.csv`.\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('f8ec4764-5ec4-470b-a7fb-435fe70638bd') name='agent' start_time=datetime.datetime(2025, 10, 14, 20, 37, 34, 693913, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 20, 39, 55, 44583, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': 'Complete the following task: Emily Johnson, Michael Davis, and Sarah Thompson, whose resumes are located in Documents/Human Resources Team/resumes on owncloud(http://the-agent-company.com:8092)\\n\\nExtract the name, education information, skills and past work experiences of each candidate, and organize them in a document at `/workspace/summary.csv`.\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n'} outputs={'output': RunTree(id=f8ec4764-5ec4-470b-a7fb-435fe70638bd, name='agent', run_type='chain', dotted_order='20251014T203734693913Zf8ec4764-5ec4-470b-a7fb-435fe70638bd')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=47583f54-f4c6-41f3-a6e2-95cf547b70a8, name='RunnableSequence', run_type='chain', dotted_order='20251014T203734693913Zf8ec4764-5ec4-470b-a7fb-435fe70638bd.20251014T203735404126Z47583f54-f4c6-41f3-a6e2-95cf547b70a8'), RunTree(id=a84ed75b-1cba-4ac7-aef0-7b474eb88926, name='react_ask', run_type='chain', dotted_order='20251014T203734693913Zf8ec4764-5ec4-470b-a7fb-435fe70638bd.20251014T203816898909Za84ed75b-1cba-4ac7-aef0-7b474eb88926')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T203734693913Zf8ec4764-5ec4-470b-a7fb-435fe70638bd' trace_id=UUID('f8ec4764-5ec4-470b-a7fb-435fe70638bd') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "47583f54-f4c6-41f3-a6e2-95cf547b70a8",
+        "1b9fd25f-35a7-4b5c-947e-439df96124b7",
+        "904bb755-537c-409f-b14f-10d705a6a459",
+        "a84ed75b-1cba-4ac7-aef0-7b474eb88926",
+        "30f1de62-8f02-439c-a1d5-a8ef1698c796",
+        "c292a097-748e-4158-8bb2-8c9e8aa9743e",
+        "c94da565-e0e8-4349-9522-2ca677da95e8",
+        "2bdadd64-5fe4-4158-88ea-79bdec66347c",
+        "708a0bbd-ee58-4a21-8da2-70013b4461b7",
+        "5629b0d9-6d0d-467b-bd12-4b069311ef8a",
+        "2e4f3145-0d97-47b7-bf5b-c15c94001f10",
+        "e4f16c78-9b43-48a0-ab53-f833ff3d646f",
+        "5d0806c7-a664-49d7-b255-c88488d595d8",
+        "c9397b62-76b9-4b59-8233-0711c72f6704",
+        "b22347f1-edcf-40d9-b9b9-0bf41f2263c9",
+        "b6029cde-afb3-4587-8f65-e49d09acaf15",
+        "8f271fd3-b252-44a9-9c9e-fb6222fa2608"
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "id": "5af33e5a-d1b9-46de-b866-178a5a04d553",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 19:21:59.543035",
+    "end_time": "2025-10-14 19:22:45.944097",
+    "deltatime": 46.401062,
+    "prompt_tokens": 49617,
+    "completion_tokens": 2470,
+    "total_tokens": 52087,
+    "prompt_token_details": {
+        "cache_read": 12288
+    },
+    "completion_token_details": {
+        "reasoning": 1600
+    },
+    "prompt_cost": 0.03181869,
+    "completion_cost": 0.0133624,
+    "total_cost": 0.04518109,
+    "public_link": "https://smith.langchain.com/public/b9aedf17-16d6-414d-929a-c05aa34ab4f5/r",
+    "inputs": {
+        "user_input": "Complete the following task: Create a public #sales-talk channel in our company's platform directory http://the-agent-company.com:3000/home\nAnd invite Mark Johnson to the channel. Make him the channel leader.\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('5af33e5a-d1b9-46de-b866-178a5a04d553') name='agent' start_time=datetime.datetime(2025, 10, 14, 19, 21, 59, 543035, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 19, 22, 45, 944097, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': \"Complete the following task: Create a public #sales-talk channel in our company's platform directory http://the-agent-company.com:3000/home\\nAnd invite Mark Johnson to the channel. Make him the channel leader.\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n\"} outputs={'output': RunTree(id=5af33e5a-d1b9-46de-b866-178a5a04d553, name='agent', run_type='chain', dotted_order='20251014T192159543035Z5af33e5a-d1b9-46de-b866-178a5a04d553')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=e0f6cf1c-0743-4c58-aecd-70d547eed2b4, name='RunnableSequence', run_type='chain', dotted_order='20251014T192159543035Z5af33e5a-d1b9-46de-b866-178a5a04d553.20251014T192200236916Ze0f6cf1c-0743-4c58-aecd-70d547eed2b4'), RunTree(id=240bd269-cbe5-4215-b8b7-ca618bf9d374, name='react_ask', run_type='chain', dotted_order='20251014T192159543035Z5af33e5a-d1b9-46de-b866-178a5a04d553.20251014T192226610184Z240bd269-cbe5-4215-b8b7-ca618bf9d374')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T192159543035Z5af33e5a-d1b9-46de-b866-178a5a04d553' trace_id=UUID('5af33e5a-d1b9-46de-b866-178a5a04d553') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "e0f6cf1c-0743-4c58-aecd-70d547eed2b4",
+        "c51e03b2-f2ab-4d68-8b03-5fa99286b6bd",
+        "3e9f98c4-0ce5-4cbb-a6b5-b7012ac8ac6e",
+        "240bd269-cbe5-4215-b8b7-ca618bf9d374",
+        "7f0c7854-d55f-4b1d-8ace-efaea0dad88a",
+        "311660b6-6d2f-42d3-a9f5-4733bd0cb0b7",
+        "7a57cf7b-3cc3-4e8d-bfa0-9dd20ce0a43a",
+        "78003ca2-d555-464e-8eff-7a8565534133",
+        "150be907-ccdf-4aad-9f90-8d15e81ac9d5",
+        "c6405d53-3092-445c-a4af-d47a2ad198a6",
+        "5ba91de3-8599-49fd-b45b-fe03b7dcdcfa"
+    ]
+}

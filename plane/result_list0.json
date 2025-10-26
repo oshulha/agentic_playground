@@ -1,0 +1,72 @@
+[
+    {
+        "name": "JanusGraph",
+        "id": "f04e5c07-8fa2-4eaf-a35b-5cacf3f1d025",
+        "identifier": "JANUS",
+        "description": "Project about JanusGraph",
+        "project_lead": null
+    },
+    {
+        "name": "RisingWave",
+        "id": "ea796314-eeec-41aa-816d-58be13909bf2",
+        "identifier": "RISIN",
+        "description": "",
+        "project_lead": null
+    },
+    {
+        "name": "OpenHands",
+        "id": "73cb74f7-a7ac-4292-a915-e2f59a09a703",
+        "identifier": "OPENH",
+        "description": "",
+        "project_lead": null
+    },
+    {
+        "name": "llama.cpp",
+        "id": "3edefc6d-20a9-49a3-aaa4-77f096375ed5",
+        "identifier": "LLAMA",
+        "description": "",
+        "project_lead": null
+    },
+    {
+        "name": "Colly",
+        "id": "d6341c6c-6403-48c5-8d77-4e3564fd6cee",
+        "identifier": "COLLY",
+        "description": "",
+        "project_lead": null
+    },
+    {
+        "name": "OpenSearch",
+        "id": "1e6caa98-31a1-437b-99be-1bd99db0a461",
+        "identifier": "OPENS",
+        "description": "",
+        "project_lead": null
+    },
+    {
+        "name": "Node-RED",
+        "id": "a063d05f-37cf-4f97-b10c-486acf13b138",
+        "identifier": "NODER",
+        "description": "",
+        "project_lead": null
+    },
+    {
+        "name": "API-Development",
+        "id": "3ae3345f-d125-4d59-829b-6d767bf19407",
+        "identifier": "APIDE",
+        "description": "",
+        "project_lead": null
+    },
+    {
+        "name": "Frontend Development",
+        "id": "39ccbb74-8f1d-4259-8f75-df9ffbc9a962",
+        "identifier": "FRONT",
+        "description": "",
+        "project_lead": null
+    },
+    {
+        "name": "Sotopia",
+        "id": "2bc631a1-8515-4bca-858e-129337c83c8d",
+        "identifier": "SOTOP",
+        "description": "",
+        "project_lead": null
+    }
+]

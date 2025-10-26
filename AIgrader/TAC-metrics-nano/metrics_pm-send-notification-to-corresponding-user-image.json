@@ -1,0 +1,70 @@
+{
+    "id": "add12e58-bea6-453d-a822-c911ed01d909",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 19:34:47.501102",
+    "end_time": "2025-10-14 19:36:36.007529",
+    "deltatime": 108.506427,
+    "prompt_tokens": 71821,
+    "completion_tokens": 4832,
+    "total_tokens": 76653,
+    "prompt_token_details": {
+        "cache_read": 22784
+    },
+    "completion_token_details": {
+        "reasoning": 3456
+    },
+    "prompt_cost": 0.03244457,
+    "completion_cost": 0.0112832,
+    "total_cost": 0.04372777,
+    "public_link": "https://smith.langchain.com/public/f78f56b2-8853-416f-bfb4-14fdc0011b7d/r",
+    "inputs": {
+        "user_input": "Complete the following task: Navigate to the Rocketchat web at http://the-agent-company.com:3000/home\n\n* Ask Jessica Lee what you should do\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('add12e58-bea6-453d-a822-c911ed01d909') name='agent' start_time=datetime.datetime(2025, 10, 14, 19, 34, 47, 501102, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 19, 36, 36, 7529, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': 'Complete the following task: Navigate to the Rocketchat web at http://the-agent-company.com:3000/home\\n\\n* Ask Jessica Lee what you should do\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n'} outputs={'output': RunTree(id=add12e58-bea6-453d-a822-c911ed01d909, name='agent', run_type='chain', dotted_order='20251014T193447501102Zadd12e58-bea6-453d-a822-c911ed01d909')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=df2259df-8f84-4dee-8882-c93ce8c22829, name='RunnableSequence', run_type='chain', dotted_order='20251014T193447501102Zadd12e58-bea6-453d-a822-c911ed01d909.20251014T193448195472Zdf2259df-8f84-4dee-8882-c93ce8c22829'), RunTree(id=e1de34b8-4e19-4390-9e07-04a1610323b8, name='react_ask', run_type='chain', dotted_order='20251014T193447501102Zadd12e58-bea6-453d-a822-c911ed01d909.20251014T193511638878Ze1de34b8-4e19-4390-9e07-04a1610323b8')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T193447501102Zadd12e58-bea6-453d-a822-c911ed01d909' trace_id=UUID('add12e58-bea6-453d-a822-c911ed01d909') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "df2259df-8f84-4dee-8882-c93ce8c22829",
+        "f2861340-ab22-4093-89f6-e9fcc4708d13",
+        "e67a1d73-1acd-4c59-9e50-66b2922fbed9",
+        "e1de34b8-4e19-4390-9e07-04a1610323b8",
+        "76f5610a-2f4e-4677-b2a0-51f50370af04",
+        "de3a6024-834c-484b-9899-0f18b2dbd290",
+        "b36ec036-c287-40d8-90b1-20d5949d2c73",
+        "24fb02a6-03d0-4daa-932b-010f1578da01",
+        "83ad375d-5738-47ee-863f-8c7394d152de",
+        "c1cedeb0-e015-4b9a-b3c3-ca68ffe1844b",
+        "d41f5c77-1475-4a61-900d-44e20133fbc5",
+        "83397aef-13fa-4fb6-b996-7db338dfb80c",
+        "72014bc1-d55f-4bd7-b193-189d1bf50b95",
+        "36cc37ae-dd9e-47b2-ab0a-de7afbf2ad1f",
+        "dad7e169-4d80-43f8-8a97-a4232b26cdb9",
+        "f38c9323-0468-4ac4-bbda-74344e4d3255",
+        "55dd664c-6586-4b8b-9768-b7012e4429a0",
+        "d48e39bd-20dc-4653-8bd2-24de5484f83e",
+        "aa652c98-b08c-4713-8c79-db53382c290f"
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "id": "5685f8fc-72e7-40e9-a639-d34fc6c7f97f",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 18:33:13.322693",
+    "end_time": "2025-10-14 18:35:48.526335",
+    "deltatime": 155.203642,
+    "prompt_tokens": 61351,
+    "completion_tokens": 8095,
+    "total_tokens": 69446,
+    "prompt_token_details": {
+        "cache_read": 27904
+    },
+    "completion_token_details": {
+        "reasoning": 5760
+    },
+    "prompt_cost": 0.03179387,
+    "completion_cost": 0.0142972,
+    "total_cost": 0.04609107,
+    "public_link": "https://smith.langchain.com/public/e7c319cd-4da7-47b2-beea-fe5b806df5f8/r",
+    "inputs": {
+        "user_input": "Complete the following task: Our company is organizing a paper reading session, and the chosen paper is about \"OpenHands\". Could you assist by creating a shortened version of the paper?\n\nPlease Include the \"References\" section in the shortened version, but remove all content after it. Save the shortened paper locally as /workspace/openhands_short.pdf on your system (not on owncloud).\nThe original paper on can be found on owncloud (http://the-agent-company.com:8092) in the Documents/Research directory.\n\nThank you! Someone else will print the paper before the meeting.\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('5685f8fc-72e7-40e9-a639-d34fc6c7f97f') name='agent' start_time=datetime.datetime(2025, 10, 14, 18, 33, 13, 322693, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 18, 35, 48, 526335, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': 'Complete the following task: Our company is organizing a paper reading session, and the chosen paper is about \"OpenHands\". Could you assist by creating a shortened version of the paper?\\n\\nPlease Include the \"References\" section in the shortened version, but remove all content after it. Save the shortened paper locally as /workspace/openhands_short.pdf on your system (not on owncloud).\\nThe original paper on can be found on owncloud (http://the-agent-company.com:8092) in the Documents/Research directory.\\n\\nThank you! Someone else will print the paper before the meeting.\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n'} outputs={'output': RunTree(id=5685f8fc-72e7-40e9-a639-d34fc6c7f97f, name='agent', run_type='chain', dotted_order='20251014T183313322693Z5685f8fc-72e7-40e9-a639-d34fc6c7f97f')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=7fb6b906-27a6-4549-a432-e1d94593524a, name='RunnableSequence', run_type='chain', dotted_order='20251014T183313322693Z5685f8fc-72e7-40e9-a639-d34fc6c7f97f.20251014T183314014249Z7fb6b906-27a6-4549-a432-e1d94593524a'), RunTree(id=166d5979-7625-4f10-a06e-f799c353b19a, name='react_ask', run_type='chain', dotted_order='20251014T183313322693Z5685f8fc-72e7-40e9-a639-d34fc6c7f97f.20251014T183344600778Z166d5979-7625-4f10-a06e-f799c353b19a')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T183313322693Z5685f8fc-72e7-40e9-a639-d34fc6c7f97f' trace_id=UUID('5685f8fc-72e7-40e9-a639-d34fc6c7f97f') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "7fb6b906-27a6-4549-a432-e1d94593524a",
+        "951a1842-d943-437b-b435-eeb9c3376487",
+        "63484eae-9b87-4b36-bdeb-9455d26bb02d",
+        "166d5979-7625-4f10-a06e-f799c353b19a",
+        "7ecd0a57-2fa8-4581-82f8-e67f576d1669",
+        "1b74d5bf-97e2-4592-a904-afa0f5b78ff3",
+        "4911ba4a-b2d9-49fa-9945-c99db45d7856",
+        "e7e0602f-0614-47ae-b2c7-481bdf982ae6",
+        "09fcd8b0-a6f3-4d42-8533-28fe689f2555",
+        "a726b45d-93dd-4ab7-b8cb-f3d468a15341",
+        "c02dc530-9668-43de-b997-ff648d703dab"
+    ]
+}

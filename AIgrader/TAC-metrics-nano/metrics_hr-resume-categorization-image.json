@@ -1,0 +1,76 @@
+{
+    "id": "ad613c65-e9e5-4392-941a-bbf849b9a80d",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 20:49:59.058821",
+    "end_time": "2025-10-14 20:53:11.843479",
+    "deltatime": 192.784658,
+    "prompt_tokens": 142136,
+    "completion_tokens": 6772,
+    "total_tokens": 148908,
+    "prompt_token_details": {
+        "cache_read": 89472
+    },
+    "completion_token_details": {
+        "reasoning": 3840
+    },
+    "prompt_cost": 0.03316096,
+    "completion_cost": 0.015352,
+    "total_cost": 0.04851296,
+    "public_link": "https://smith.langchain.com/public/9dd0fcf8-5c02-424f-8498-269dbd8bdf44/r",
+    "inputs": {
+        "user_input": "Complete the following task: Download resumes.zip from owncloud on http://the-agent-company.com:8092/ under Documents > Human Resources Team > resumes folder and categorize them locally based on the candidates' YOE. You should place them into one of the following folders under /workspace directory:\n\n- early-career\n- mid-level\n- senior\n- unsure\n\nWhere early-career folder stores all resumes of candidates who have less than one year of full-time working experience; mid-level folder stores all resumes of those who have less than 5 years of full-time working experience; and senior folder for those who work for at least 5 years. Keep the resumes in their original PDF format.\n\nA few tips:\n\n* Do your best judgement based on the resume itself. Don't try to look up the candidates' LinkedIn profiles.\n* If you are not sure about the YOE, put the resume in the unsure folder.\n* For simplicity, assume today is 12/01/2024.\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('ad613c65-e9e5-4392-941a-bbf849b9a80d') name='agent' start_time=datetime.datetime(2025, 10, 14, 20, 49, 59, 58821, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 20, 53, 11, 843479, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': \"Complete the following task: Download resumes.zip from owncloud on http://the-agent-company.com:8092/ under Documents > Human Resources Team > resumes folder and categorize them locally based on the candidates' YOE. You should place them into one of the following folders under /workspace directory:\\n\\n- early-career\\n- mid-level\\n- senior\\n- unsure\\n\\nWhere early-career folder stores all resumes of candidates who have less than one year of full-time working experience; mid-level folder stores all resumes of those who have less than 5 years of full-time working experience; and senior folder for those who work for at least 5 years. Keep the resumes in their original PDF format.\\n\\nA few tips:\\n\\n* Do your best judgement based on the resume itself. Don't try to look up the candidates' LinkedIn profiles.\\n* If you are not sure about the YOE, put the resume in the unsure folder.\\n* For simplicity, assume today is 12/01/2024.\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n\"} outputs={'output': RunTree(id=ad613c65-e9e5-4392-941a-bbf849b9a80d, name='agent', run_type='chain', dotted_order='20251014T204959058821Zad613c65-e9e5-4392-941a-bbf849b9a80d')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=e4098fd8-2192-488c-89e1-8c8eead7fd56, name='RunnableSequence', run_type='chain', dotted_order='20251014T204959058821Zad613c65-e9e5-4392-941a-bbf849b9a80d.20251014T204959780101Ze4098fd8-2192-488c-89e1-8c8eead7fd56'), RunTree(id=ede0f70d-abf1-43e0-9c4d-33e9918d8006, name='react_ask', run_type='chain', dotted_order='20251014T204959058821Zad613c65-e9e5-4392-941a-bbf849b9a80d.20251014T205030474838Zede0f70d-abf1-43e0-9c4d-33e9918d8006')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T204959058821Zad613c65-e9e5-4392-941a-bbf849b9a80d' trace_id=UUID('ad613c65-e9e5-4392-941a-bbf849b9a80d') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "e4098fd8-2192-488c-89e1-8c8eead7fd56",
+        "9dd0d722-0259-4567-ae10-2239198c5ed5",
+        "e94ce29c-faa0-4912-8dd9-bed24855bea3",
+        "ede0f70d-abf1-43e0-9c4d-33e9918d8006",
+        "35e1c799-ceba-497b-a74e-c01ad179aba9",
+        "1810623f-9496-4b78-a21d-28f8c7699e25",
+        "9c551e97-1cae-41d4-8283-64f5334eed09",
+        "214d1582-609d-45ae-8ae8-16e2bd39ff1f",
+        "1263e680-97ca-4570-aa66-09e18617291e",
+        "e8f0871e-0c74-49da-8559-ef735a6dfa6c",
+        "f91c9fc3-fb08-46ec-b9c3-dbb40fc779ad",
+        "a8df69dd-8f36-4a66-b6b7-a7c4ca26903d",
+        "17e7d4e1-aea4-41a0-ae82-1c8626cbcf61",
+        "9f8eebfb-66cc-44bb-96ef-c8cfd7270389",
+        "72feb7e3-a181-4db6-abb3-8e5aec3479a4",
+        "9dc93b4e-046f-437e-ade4-a6e2ee505f75",
+        "19c45cf8-49c0-42c0-8725-f8145e3b2564",
+        "59416df6-3728-4ecf-bed5-36ceb013269d",
+        "a66718b2-a903-4442-a56f-949465b65d0e",
+        "029a53c9-8f58-43a3-a81c-ce643237c9a5",
+        "a836832a-c9ea-482c-8a8a-1512abc5342c",
+        "dcabc225-fd92-4db9-9f8a-dcd2178f1598",
+        "38dee823-eb32-4008-8958-1743ab957809",
+        "3e7b992d-9603-41ac-a0cd-1c76674bcd53",
+        "e51333ac-2780-412b-95ef-f4f4f687c0d6"
+    ]
+}

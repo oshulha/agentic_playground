@@ -1,4 +1,4 @@
-from rocketchat_methods import RocketChat
+from rocketchat_methods_new import RocketChat
 import json
 import xml.etree.ElementTree as ET
 from collections import defaultdict
@@ -46,15 +46,41 @@ def extract_channels(xml_file):
 if __name__ == "__main__":
     check = "2"
     client = RocketChat(server_url="http://157.230.77.20:3000/")
+    #client = RocketChat(server_url="http://127.0.0.1:3000/")
 
-    output = client.rocketchat_channels_add_role(channel="general", role="owner", full_name="Sarah Johnson")
+    # output = client.rocketchat_channels_add_role(channel="general", role="owner", full_name="Sarah Johnson")
+    # with open("result_list1.json", "w", encoding="utf-8") as f:
+    #     f.write(json.dumps(output, ensure_ascii=False))
+
+
+    # for i in range(250):
+    #     print(client.rocketchat_chat_post_message(text=f"Hello{i}", channel="general"))
+    output1 = client.rocketchat_users_list()
     with open("result_list1.json", "w", encoding="utf-8") as f:
+        f.write(json.dumps(output1, ensure_ascii=False))
+
+    output = client.rocketchat_channels_invite(channel="general", user_names=[f"{output1["users"][0]["_id"]}"])
+    with open("result_list2.json", "w", encoding="utf-8") as f:
         f.write(json.dumps(output, ensure_ascii=False))
 
-    
+    output = client.rocketchat_channels_kick(channel="general", user_names=[f"{output1["users"][0]["_id"]}"])
+    with open("result_list22.json", "w", encoding="utf-8") as f:
+        f.write(json.dumps(output, ensure_ascii=False))
 
-    # output = client.rocketchat_chat_list_messages(user_name="Huang Jie", 
+    # output = client.rocketchat_chat_list_messages(channel="general", 
     #                                               lastUpdate="2025-09-19T18:32:25")
+    # with open("result_list3.json", "w", encoding="utf-8") as f:
+    #     f.write(json.dumps(output, ensure_ascii=False))
+
+    # output = client.rocketchat_channels_list()
+    # with open("result_list3.json", "w", encoding="utf-8") as f:
+    #     f.write(json.dumps(output, ensure_ascii=False))
+
+    # output = client.rocketchat_channels_members(channel="general")
+    # with open("result_list3.json", "w", encoding="utf-8") as f:
+    #     f.write(json.dumps(output, ensure_ascii=False))
+
+    # output = client.rocketchat_users_list()
     # with open("result_list3.json", "w", encoding="utf-8") as f:
     #     f.write(json.dumps(output, ensure_ascii=False))
 

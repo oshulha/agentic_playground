@@ -1,0 +1,94 @@
+{
+    "id": "d0437913-3282-450b-b81b-3487a3dc817c",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 18:27:15.852397",
+    "end_time": "2025-10-14 18:31:35.416440",
+    "deltatime": 259.564043,
+    "prompt_tokens": 138438,
+    "completion_tokens": 14248,
+    "total_tokens": 152686,
+    "prompt_token_details": {
+        "cache_read": 98560
+    },
+    "completion_token_details": {
+        "reasoning": 10112
+    },
+    "prompt_cost": 0.0324867,
+    "completion_cost": 0.0209824,
+    "total_cost": 0.0534691,
+    "public_link": "https://smith.langchain.com/public/60f86adf-6379-4dce-85c2-880097d52f9b/r",
+    "inputs": {
+        "user_input": "Complete the following task: Go to our office cloud http://the-agent-company.com:8092/,\nfind the i-9.pdf and TAC_personell_data.csv under /Documents/Admin folder.\nFilling out the section A of i-9.pdf (Employee Eligibility Verification) \nfor each of the employees in TAC_personell_info.csv, naming them as \ni-9_[employee_firstname]_[employee_lastname].pdf and save in a folder named \"/Documents/Admin/i_9_forms\".\nTip: It is suggested to not fill the form programatically. \nThe numbers in TAC_personell_data.csv needs to be formatted to fit in i-9.pdf.\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('d0437913-3282-450b-b81b-3487a3dc817c') name='agent' start_time=datetime.datetime(2025, 10, 14, 18, 27, 15, 852397, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 18, 31, 35, 416440, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': 'Complete the following task: Go to our office cloud http://the-agent-company.com:8092/,\\nfind the i-9.pdf and TAC_personell_data.csv under /Documents/Admin folder.\\nFilling out the section A of i-9.pdf (Employee Eligibility Verification) \\nfor each of the employees in TAC_personell_info.csv, naming them as \\ni-9_[employee_firstname]_[employee_lastname].pdf and save in a folder named \"/Documents/Admin/i_9_forms\".\\nTip: It is suggested to not fill the form programatically. \\nThe numbers in TAC_personell_data.csv needs to be formatted to fit in i-9.pdf.\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n'} outputs={'output': RunTree(id=d0437913-3282-450b-b81b-3487a3dc817c, name='agent', run_type='chain', dotted_order='20251014T182715852397Zd0437913-3282-450b-b81b-3487a3dc817c')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=0db8710a-3dd2-40e9-800f-efe309a554ee, name='RunnableSequence', run_type='chain', dotted_order='20251014T182715852397Zd0437913-3282-450b-b81b-3487a3dc817c.20251014T182716865042Z0db8710a-3dd2-40e9-800f-efe309a554ee'), RunTree(id=58697591-9240-4d1c-989b-a7e4be6008e5, name='react_ask', run_type='chain', dotted_order='20251014T182715852397Zd0437913-3282-450b-b81b-3487a3dc817c.20251014T182752458996Z58697591-9240-4d1c-989b-a7e4be6008e5')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T182715852397Zd0437913-3282-450b-b81b-3487a3dc817c' trace_id=UUID('d0437913-3282-450b-b81b-3487a3dc817c') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "0db8710a-3dd2-40e9-800f-efe309a554ee",
+        "9f9a596c-2fc1-4468-947c-4294fcb2ed3f",
+        "3507ba0c-6556-4fdb-8fb1-4e167e939a5d",
+        "58697591-9240-4d1c-989b-a7e4be6008e5",
+        "2cefb9a7-37c5-4d43-bf60-2f8f423c3e36",
+        "efdd5682-a3c5-4629-9fef-9205502e6651",
+        "914842da-da2f-4c71-a92f-a729ea6ef225",
+        "c75f7b84-764c-4a68-ae44-96fb40adbdf5",
+        "1a99a79e-0553-4df7-9cca-a6ce4a838b7a",
+        "f591eb42-9c24-4a77-a44c-94fbaeda8191",
+        "403e00cf-2f83-49da-870d-8dd04b72af42",
+        "2a515e43-59fa-4d8b-adf3-92bc16fbd338",
+        "0bac0093-460d-4629-82d3-209ffaa7adba",
+        "21d97673-86c1-4f02-8a04-ef2cb5abb133",
+        "b0bb54d8-46bf-4161-acc0-ab5b45d68f95",
+        "d75b3ac1-5d3b-4a0c-9813-afe1b99514bb",
+        "8d529a18-53a6-4f8a-9ed0-c6218b340d4b",
+        "4906f6d6-b90c-488f-9156-889f978b6971",
+        "ad924c8a-3527-42d7-bc80-8085fa45ffa3",
+        "d7915b14-ed4a-4437-8303-8dbdda9e3c51",
+        "d3a35601-7255-40ff-8cea-9c2760be242f",
+        "c51c9cf3-86b0-4371-b65f-04ec5ed22298",
+        "2904f7f3-084f-4076-a0c6-1547cd4278f0",
+        "e800f955-64c9-49f3-9d0d-c0886dee12bf",
+        "bdc3664e-73b8-4c26-aa58-c657bd11a301",
+        "3563085e-c4b3-43d7-821e-f6b1a4f97908",
+        "64bfce70-ea5d-4409-847a-0a08868ce990",
+        "556b19e1-5b36-4c2d-aba9-aca1292c44a8",
+        "182c86a6-a04b-4755-a187-26c9fc22a6bc",
+        "b7047326-bb52-40bf-b47d-d5edd5a7ae5b",
+        "b9a43c95-0141-4403-966e-7408dd0600a5",
+        "eae8bf3a-249c-4068-8a64-dcbc39df196a",
+        "b24411fc-2868-4eb3-a0e9-6f3923a33151",
+        "8117f914-c9c4-49e5-8a56-52a859cc0f33",
+        "c95d8b90-e040-49d5-8c8f-fcd9484c4a10",
+        "6ce1bf2f-6fcd-4d50-bc84-1da4baaad0cb",
+        "a294dad4-ca6f-4e59-9e04-77694c5a49b4",
+        "f2129506-22f0-4b6b-af86-9e3fe5f4a22b",
+        "0f71421a-5b7d-4ad6-8942-10dd116b2736",
+        "0af3568e-267d-47bf-88bc-b2d3a1493e34",
+        "191fc51d-df91-4fb0-afad-3fc097d53880",
+        "0c083344-af4e-465a-b862-ebc216b5d32f",
+        "b7a68b37-0a06-4465-9476-e0bec9bfeeb7"
+    ]
+}

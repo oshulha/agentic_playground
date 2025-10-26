@@ -1,0 +1,2346 @@
+{
+  "agent_run_id": "2025-10-21T12-42-49_",
+  "total_cost": 2.955760889999999,
+  "total_cost_details": {
+    "completion_cost": 0.8461148000000002,
+    "prompt_cost": 2.109646089999999
+  },
+  "total_tokens": 18541972,
+  "total_tokens_details": {
+    "completion_tokens": 439559,
+    "prompt_tokens": 18102413,
+    "prompt_cache_read": 10796928,
+    "completion_reasoning": 301248
+  },
+  "total_deltatime": 11683.891478999998,
+  "total_score": 108,
+  "total_max_score": 256,
+  "total_checkpoints": 179,
+  "total_checkpoints_passed": 83,
+  "total_tests": 57,
+  "total_tests_passed": 19,
+  "accuracy": 0.421875,
+  "tests": {
+    "pm-create-channel-message": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 3,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 1536
+      },
+      "deltatime": 78.230423,
+      "completion_cost": 0.0104808,
+      "prompt_token_details": {
+        "cache_read": 12672
+      },
+      "completion_tokens": 2370,
+      "total_tokens": 52256,
+      "prompt_cost": 0.03182446,
+      "id": "edc578ba-9419-42b9-8aa4-72206f7ec528",
+      "prompt_tokens": 49886,
+      "total_cost": 0.04230526,
+      "public_link": "https://smith.langchain.com/public/cfad9e70-a4ac-4632-9b39-d798a7308eef/r",
+      "status": "success"
+    },
+    "ml-grade-exam": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 6,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 8,
+        "result": 1,
+        "ai_result": 1
+      },
+      "completion_token_details": {
+        "reasoning": 7488
+      },
+      "deltatime": 300.669345,
+      "completion_cost": 0.0179244,
+      "prompt_token_details": {
+        "cache_read": 116608
+      },
+      "completion_tokens": 12747,
+      "total_tokens": 185070,
+      "prompt_cost": 0.03352959,
+      "id": "f5db9b16-bcb0-466b-9c1d-a44ce7a94f82",
+      "prompt_tokens": 172323,
+      "total_cost": 0.05145399,
+      "public_link": "https://smith.langchain.com/public/aace26e0-4404-4233-a10c-6aedf66f737a/r",
+      "status": "success"
+    },
+    "hr-check-attendance-multiple-days": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 1,
+        "ai_result": 4
+      },
+      "completion_token_details": {
+        "reasoning": 3520
+      },
+      "deltatime": 108.442697,
+      "completion_cost": 0.0127864,
+      "prompt_token_details": {
+        "cache_read": 62336
+      },
+      "completion_tokens": 6406,
+      "total_tokens": 119165,
+      "prompt_cost": 0.03292043,
+      "id": "ab7ce7aa-7ae4-406f-aa9c-611371a80c1f",
+      "prompt_tokens": 112759,
+      "total_cost": 0.04570683,
+      "public_link": "https://smith.langchain.com/public/1173b818-5b43-46c9-8b44-3214ceb5e7d3/r",
+      "status": "success"
+    },
+    "pm-schedule-meeting-1": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 3,
+          "result": 0,
+          "ai_result": 3
+        }
+      ],
+      "final_score": {
+        "total": 5,
+        "result": 2,
+        "ai_result": 5
+      },
+      "completion_token_details": {
+        "reasoning": 2944
+      },
+      "deltatime": 121.434927,
+      "completion_cost": 0.0134052,
+      "prompt_token_details": {
+        "cache_read": 24192
+      },
+      "completion_tokens": 4089,
+      "total_tokens": 73984,
+      "prompt_cost": 0.03241091,
+      "id": "d1178686-abeb-43e8-94e0-1719e06e2142",
+      "prompt_tokens": 69895,
+      "total_cost": 0.04581611,
+      "public_link": "https://smith.langchain.com/public/b1bce5a3-6687-48eb-81b7-13c790935be3/r",
+      "status": "success"
+    },
+    "qa-escalate-emergency": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 2,
+        "ai_result": 2
+      },
+      "completion_token_details": {
+        "reasoning": 2880
+      },
+      "deltatime": 139.345743,
+      "completion_cost": 0.0114504,
+      "prompt_token_details": {
+        "cache_read": 24320
+      },
+      "completion_tokens": 3786,
+      "total_tokens": 68120,
+      "prompt_cost": 0.0320971,
+      "id": "95070a8b-a925-482d-9a85-eef149eae944",
+      "prompt_tokens": 64334,
+      "total_cost": 0.0435475,
+      "public_link": "https://smith.langchain.com/public/22ed7097-61f5-4ec8-973a-bf0da8cf6c63/r",
+      "status": "success"
+    },
+    "hr-check-attendance-multiple-days-department": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 0,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 12800
+      },
+      "deltatime": 234.627607,
+      "completion_cost": 0.0179204,
+      "prompt_token_details": {
+        "cache_read": 214144
+      },
+      "completion_tokens": 16553,
+      "total_tokens": 308526,
+      "prompt_cost": 0.03510017,
+      "id": "22ae052b-fef4-4a91-a894-77efd56dbcac",
+      "prompt_tokens": 291973,
+      "total_cost": 0.05302057,
+      "public_link": "https://smith.langchain.com/public/dbd18cb0-51c8-4d55-be8b-558b9b1e55a4/r",
+      "status": "success"
+    },
+    "hr-delete-and-insert-user": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 1,
+        "ai_result": 1
+      },
+      "completion_token_details": {
+        "reasoning": 3904
+      },
+      "deltatime": 165.185378,
+      "completion_cost": 0.0144296,
+      "prompt_token_details": {
+        "cache_read": 54016
+      },
+      "completion_tokens": 5066,
+      "total_tokens": 95120,
+      "prompt_cost": 0.03196038,
+      "id": "a1b7044a-e293-4b6b-86c5-8eb9db159ea0",
+      "prompt_tokens": 90054,
+      "total_cost": 0.04638998,
+      "public_link": "https://smith.langchain.com/public/838b5700-b54a-46f2-a901-69d54cb00446/r",
+      "status": "success"
+    },
+    "hr-new-grad-job-description": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 2,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 5824
+      },
+      "deltatime": 179.339179,
+      "completion_cost": 0.015166,
+      "prompt_token_details": {
+        "cache_read": 93312
+      },
+      "completion_tokens": 7051,
+      "total_tokens": 133547,
+      "prompt_cost": 0.03214256,
+      "id": "329575af-c565-45b5-871e-f5eb2b824344",
+      "prompt_tokens": 126496,
+      "total_cost": 0.04730856,
+      "public_link": "https://smith.langchain.com/public/32c4b256-3409-453f-8080-e0eec7bb329c/r",
+      "status": "success"
+    },
+    "pm-create-plane-issue": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 2,
+        "result": 2,
+        "ai_result": 2
+      },
+      "completion_token_details": {
+        "reasoning": 1280
+      },
+      "deltatime": 58.117852,
+      "completion_cost": 0.0103916,
+      "prompt_token_details": {
+        "cache_read": 11392
+      },
+      "completion_tokens": 2411,
+      "total_tokens": 45039,
+      "prompt_cost": 0.03150596,
+      "id": "6dd090d3-f434-4a14-9fe1-779e920266bf",
+      "prompt_tokens": 42628,
+      "total_cost": 0.04189756,
+      "public_link": "https://smith.langchain.com/public/29f56601-70cf-4311-9590-2ada6f21095e/r",
+      "status": "success"
+    },
+    "finance-check-attendance-payroll": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": false,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": false,
+          "ai_result": false
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 1,
+        "ai_result": 2
+      },
+      "completion_token_details": {
+        "reasoning": 11008
+      },
+      "deltatime": 327.887922,
+      "completion_cost": 0.0196076,
+      "prompt_token_details": {
+        "cache_read": 453376
+      },
+      "completion_tokens": 14339,
+      "total_tokens": 537257,
+      "prompt_cost": 0.03579678,
+      "id": "5e793622-475e-4195-b628-a0a8ab56d554",
+      "prompt_tokens": 522918,
+      "total_cost": 0.05540438,
+      "public_link": "https://smith.langchain.com/public/0f23bd9b-269e-48b6-8529-91fd31fab6c6/r",
+      "status": "success"
+    },
+    "ds-visualize-data-in-pie-and-bar-chart": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 0,
+        "ai_result": 4
+      },
+      "completion_token_details": {
+        "reasoning": 2816
+      },
+      "deltatime": 118.484268,
+      "completion_cost": 0.0106936,
+      "prompt_token_details": {
+        "cache_read": 51200
+      },
+      "completion_tokens": 4606,
+      "total_tokens": 88374,
+      "prompt_cost": 0.0318484,
+      "id": "cf855ad9-7b03-4bcf-8925-1aac4d0ef488",
+      "prompt_tokens": 83768,
+      "total_cost": 0.042542,
+      "public_link": "https://smith.langchain.com/public/fa4054b5-ca51-42a3-81ad-4bf592495a89/r",
+      "status": "success"
+    },
+    "pm-change-channel-ownership": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 3,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 1600
+      },
+      "deltatime": 61.551092,
+      "completion_cost": 0.010024,
+      "prompt_token_details": {
+        "cache_read": 16896
+      },
+      "completion_tokens": 2524,
+      "total_tokens": 50844,
+      "prompt_cost": 0.03154528,
+      "id": "592fd0f8-e29e-49e3-b654-73beae9db629",
+      "prompt_tokens": 48320,
+      "total_cost": 0.04156928,
+      "public_link": "https://smith.langchain.com/public/d29185b7-b424-4422-845d-894a98e8eda5/r",
+      "status": "success"
+    },
+    "hr-salary-analysis": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 2,
+        "result": 0,
+        "ai_result": 0
+      },
+      "completion_token_details": {
+        "reasoning": 4736
+      },
+      "deltatime": 134.30454,
+      "completion_cost": 0.0152312,
+      "prompt_token_details": {
+        "cache_read": 13568
+      },
+      "completion_tokens": 6302,
+      "total_tokens": 52260,
+      "prompt_cost": 0.03161774,
+      "id": "983a53e8-8bc8-49fb-8b82-63ea0b57b283",
+      "prompt_tokens": 45958,
+      "total_cost": 0.04684894,
+      "public_link": "https://smith.langchain.com/public/7afca460-7ea6-4693-bf3e-6b16f20353b0/r",
+      "status": "success"
+    },
+    "finance-substantial-presence-test": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 2,
+        "result": 2,
+        "ai_result": 2
+      },
+      "completion_token_details": {
+        "reasoning": 7104
+      },
+      "deltatime": 131.875386,
+      "completion_cost": 0.0181868,
+      "prompt_token_details": {
+        "cache_read": 68736
+      },
+      "completion_tokens": 9491,
+      "total_tokens": 113963,
+      "prompt_cost": 0.03221208,
+      "id": "412440a5-de72-4096-a2d6-9172d93ab209",
+      "prompt_tokens": 104472,
+      "total_cost": 0.05039888,
+      "public_link": "https://smith.langchain.com/public/638ba15d-df09-49cf-8560-781a8eb8d7d9/r",
+      "status": "success"
+    },
+    "hr-pick-interviewer-3": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 0,
+        "ai_result": 2
+      },
+      "completion_token_details": {
+        "reasoning": 3648
+      },
+      "deltatime": 121.37075,
+      "completion_cost": 0.0121872,
+      "prompt_token_details": {
+        "cache_read": 44160
+      },
+      "completion_tokens": 5172,
+      "total_tokens": 96848,
+      "prompt_cost": 0.0288034,
+      "id": "e7622a94-98ad-4575-a39c-65027f264da6",
+      "prompt_tokens": 91676,
+      "total_cost": 0.0409906,
+      "public_link": "https://smith.langchain.com/public/d8a46425-5f1c-46c3-b238-a960e1cea487/r",
+      "status": "success"
+    },
+    "ds-fix-table-values-and-missing-answers": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 2,
+          "ai_result": 2
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 6,
+        "result": 2,
+        "ai_result": 2
+      },
+      "completion_token_details": {
+        "reasoning": 6784
+      },
+      "deltatime": 222.734537,
+      "completion_cost": 0.0163904,
+      "prompt_token_details": {
+        "cache_read": 51840
+      },
+      "completion_tokens": 9464,
+      "total_tokens": 114098,
+      "prompt_cost": 0.0329385,
+      "id": "a333c16b-d60a-4c8d-840f-2abed9b58417",
+      "prompt_tokens": 104634,
+      "total_cost": 0.0493289,
+      "public_link": "https://smith.langchain.com/public/0e3f8aa4-e2f2-478c-b220-bba0736021e2/r",
+      "status": "success"
+    },
+    "sde-debug-crashed-server": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 4,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 8,
+        "result": 0,
+        "ai_result": 0
+      },
+      "completion_token_details": {
+        "reasoning": 2176
+      },
+      "deltatime": 60.220952,
+      "completion_cost": 0.0146872,
+      "prompt_token_details": {
+        "cache_read": 0
+      },
+      "completion_tokens": 3214,
+      "total_tokens": 33892,
+      "prompt_cost": 0.0315063,
+      "id": "ee472e8a-ea96-451a-b2e8-91ee59a97395",
+      "prompt_tokens": 30678,
+      "total_cost": 0.0461935,
+      "public_link": "https://smith.langchain.com/public/93488a4d-ee2d-4231-ba31-b14440d81a0c/r",
+      "status": "success"
+    },
+    "finance-budget-variance": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 3,
+          "result": 3,
+          "ai_result": 3
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 4,
+        "ai_result": 4
+      },
+      "completion_token_details": {
+        "reasoning": 5568
+      },
+      "deltatime": 142.328551,
+      "completion_cost": 0.0159812,
+      "prompt_token_details": {
+        "cache_read": 143360
+      },
+      "completion_tokens": 8321,
+      "total_tokens": 231410,
+      "prompt_cost": 0.03478725,
+      "id": "296506fe-915b-4dd3-8840-b1b008339fa3",
+      "prompt_tokens": 223089,
+      "total_cost": 0.05076845,
+      "public_link": "https://smith.langchain.com/public/3968a69b-aab1-4b39-b29a-3cda0c2d64f2/r",
+      "status": "success"
+    },
+    "admin-ask-for-meeting-feedback": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 2,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 6,
+        "result": 6,
+        "ai_result": 6
+      },
+      "completion_token_details": {
+        "reasoning": 4928
+      },
+      "deltatime": 148.129864,
+      "completion_cost": 0.0147608,
+      "prompt_token_details": {
+        "cache_read": 33024
+      },
+      "completion_tokens": 6998,
+      "total_tokens": 68675,
+      "prompt_cost": 0.02626857,
+      "id": "c0a81baf-f40c-4413-ada5-1d4c71d1b390",
+      "prompt_tokens": 61677,
+      "total_cost": 0.04102937,
+      "public_link": "https://smith.langchain.com/public/d81feb79-e156-470b-9a10-84ce2c709d32/r",
+      "status": "success"
+    },
+    "pm-schedule-meeting-2": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 3,
+          "result": 0,
+          "ai_result": 3
+        }
+      ],
+      "final_score": {
+        "total": 5,
+        "result": 2,
+        "ai_result": 5
+      },
+      "completion_token_details": {
+        "reasoning": 3008
+      },
+      "deltatime": 131.136569,
+      "completion_cost": 0.013688,
+      "prompt_token_details": {
+        "cache_read": 98304
+      },
+      "completion_tokens": 4460,
+      "total_tokens": 134685,
+      "prompt_cost": 0.03209237,
+      "id": "1786f707-5c06-4aba-a8e8-deb15557fedf",
+      "prompt_tokens": 130225,
+      "total_cost": 0.04578037,
+      "public_link": "https://smith.langchain.com/public/365e7c61-4057-4ee8-99ac-abc249ddacd1/r",
+      "status": "success"
+    },
+    "finance-nonqualified-bill-ask-for-reimburse": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 2,
+        "result": 0,
+        "ai_result": 0
+      },
+      "completion_token_details": {
+        "reasoning": 6656
+      },
+      "deltatime": 256.51065,
+      "completion_cost": 0.0170468,
+      "prompt_token_details": {
+        "cache_read": 101760
+      },
+      "completion_tokens": 8825,
+      "total_tokens": 158159,
+      "prompt_cost": 0.0328407,
+      "id": "56411aa7-95d4-4ae3-a091-7eaae2e34ef6",
+      "prompt_tokens": 149334,
+      "total_cost": 0.0498875,
+      "public_link": "https://smith.langchain.com/public/6900eb4e-6b97-4530-aa24-7c1454e3bbf6/r",
+      "status": "success"
+    },
+    "ds-find-meeting-spreadsheet": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 2,
+        "result": 2,
+        "ai_result": 2
+      },
+      "completion_token_details": {
+        "reasoning": 2304
+      },
+      "deltatime": 130.118624,
+      "completion_cost": 0.0129848,
+      "prompt_token_details": {
+        "cache_read": 44544
+      },
+      "completion_tokens": 3350,
+      "total_tokens": 91578,
+      "prompt_cost": 0.03237812,
+      "id": "19f11fb4-ef74-4573-be58-c4296a5e01d1",
+      "prompt_tokens": 88228,
+      "total_cost": 0.04536292,
+      "public_link": "https://smith.langchain.com/public/d97cfa63-81e4-4ec8-9ae3-3e6fbfcac678/r",
+      "status": "success"
+    },
+    "ds-predictive-modeling": {
+      "checkpoints": [
+        {
+          "total": 3,
+          "result": 3,
+          "ai_result": 3
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 3,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 6272
+      },
+      "deltatime": 197.65432,
+      "completion_cost": 0.010614,
+      "prompt_token_details": {
+        "cache_read": 0
+      },
+      "completion_tokens": 8871,
+      "total_tokens": 1246703,
+      "prompt_cost": 0.0918856,
+      "id": "e64033a6-6664-4e34-927d-ae64108b0278",
+      "prompt_tokens": 1237832,
+      "total_cost": 0.1024996,
+      "public_link": "https://smith.langchain.com/public/c05fe2cf-0e9a-445b-bec5-c61a67970a6b/r",
+      "status": "success"
+    },
+    "admin-make-spreadsheet": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 5,
+        "result": 0,
+        "ai_result": 0
+      },
+      "completion_token_details": {
+        "reasoning": 4416
+      },
+      "deltatime": 150.741707,
+      "completion_cost": 0.012816,
+      "prompt_token_details": {
+        "cache_read": 84608
+      },
+      "completion_tokens": 5856,
+      "total_tokens": 143122,
+      "prompt_cost": 0.02764514,
+      "id": "10d79896-6a6d-4e22-a290-e132a3efe9bd",
+      "prompt_tokens": 137266,
+      "total_cost": 0.04046114,
+      "public_link": "https://smith.langchain.com/public/6ad02f13-0f87-4356-a1ec-f79429e68abf/r",
+      "status": "success"
+    },
+    "sde-run-rising-wave-locally": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 2,
+        "result": 0,
+        "ai_result": 0
+      },
+      "completion_token_details": {
+        "reasoning": 9856
+      },
+      "deltatime": 197.806645,
+      "completion_cost": 0.0156536,
+      "prompt_token_details": {
+        "cache_read": 94848
+      },
+      "completion_tokens": 12422,
+      "total_tokens": 157767,
+      "prompt_cost": 0.03304949,
+      "id": "07830bfb-0a37-4cd2-a8b7-3cbf5a39e2a4",
+      "prompt_tokens": 145345,
+      "total_cost": 0.04870309,
+      "public_link": "https://smith.langchain.com/public/5c78c9e8-ef41-4228-8bf0-73d81215e836/r",
+      "status": "success"
+    },
+    "hr-check-for-invalid-passwords-and-ask-for-valid-passwords": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 2,
+          "ai_result": 2
+        },
+        {
+          "total": 2,
+          "result": 2,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 4,
+        "ai_result": 4
+      },
+      "completion_token_details": {
+        "reasoning": 6848
+      },
+      "deltatime": 164.307687,
+      "completion_cost": 0.0154868,
+      "prompt_token_details": {
+        "cache_read": 171648
+      },
+      "completion_tokens": 9005,
+      "total_tokens": 228056,
+      "prompt_cost": 0.02794599,
+      "id": "93df25f0-dfa9-4b14-8c34-ba2c5adf4e69",
+      "prompt_tokens": 219051,
+      "total_cost": 0.04343279,
+      "public_link": "https://smith.langchain.com/public/90989c24-580f-4848-9562-787bf1001915/r",
+      "status": "success"
+    },
+    "pm-create-channel-message-medium": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 6,
+        "result": 6,
+        "ai_result": 6
+      },
+      "completion_token_details": {
+        "reasoning": 2880
+      },
+      "deltatime": 81.068397,
+      "completion_cost": 0.0115084,
+      "prompt_token_details": {
+        "cache_read": 27136
+      },
+      "completion_tokens": 4003,
+      "total_tokens": 77811,
+      "prompt_cost": 0.03243928,
+      "id": "36769a98-d7a3-436e-a147-e66ee921766a",
+      "prompt_tokens": 73808,
+      "total_cost": 0.04394768,
+      "public_link": "https://smith.langchain.com/public/07588833-a261-4fa2-94f4-c9cf12171597/r",
+      "status": "success"
+    },
+    "pm-add-new-moderator": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 3,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 1792
+      },
+      "deltatime": 70.248446,
+      "completion_cost": 0.0115764,
+      "prompt_token_details": {
+        "cache_read": 26496
+      },
+      "completion_tokens": 2565,
+      "total_tokens": 61026,
+      "prompt_cost": 0.03162513,
+      "id": "1782c1ce-39b5-4f5d-9a97-1897c109b1ff",
+      "prompt_tokens": 58461,
+      "total_cost": 0.04320153,
+      "public_link": "https://smith.langchain.com/public/58afe0c2-f22d-4e40-86e7-7a110815275e/r",
+      "status": "success"
+    },
+    "finance-expense-validation": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 0,
+        "ai_result": 4
+      },
+      "completion_token_details": {
+        "reasoning": 3264
+      },
+      "deltatime": 146.582862,
+      "completion_cost": 0.0122052,
+      "prompt_token_details": {
+        "cache_read": 56832
+      },
+      "completion_tokens": 5769,
+      "total_tokens": 109588,
+      "prompt_cost": 0.03280751,
+      "id": "958e2ee5-c974-469e-bc2a-9b8b11c30313",
+      "prompt_tokens": 103819,
+      "total_cost": 0.04501271,
+      "public_link": "https://smith.langchain.com/public/c5a154c9-e5dd-4804-90d3-462e53f90e6d/r",
+      "status": "success"
+    },
+    "ds-coffee-shop-database-management": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 2,
+          "ai_result": 2
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 3,
+          "result": 0,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 10,
+        "result": 2,
+        "ai_result": 7
+      },
+      "completion_token_details": {
+        "reasoning": 8448
+      },
+      "deltatime": 468.833302,
+      "completion_cost": 0.0180804,
+      "prompt_token_details": {
+        "cache_read": 242944
+      },
+      "completion_tokens": 14937,
+      "total_tokens": 383121,
+      "prompt_cost": 0.03764232,
+      "id": "acdb1891-86f1-4919-a855-c47ce2dcaca2",
+      "prompt_tokens": 368184,
+      "total_cost": 0.05572272,
+      "public_link": "https://smith.langchain.com/public/021e1502-3ba2-41fd-a951-d8faf5ea55fe/r",
+      "status": "success"
+    },
+    "sde-close-all-issue-on-all-project-under-tac-workspace": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 0,
+        "ai_result": 0
+      },
+      "completion_token_details": {
+        "reasoning": 1280
+      },
+      "deltatime": 60.677244,
+      "completion_cost": 0.0121556,
+      "prompt_token_details": {
+        "cache_read": 0
+      },
+      "completion_tokens": 2429,
+      "total_tokens": 33281,
+      "prompt_cost": 0.031437,
+      "id": "964d0ff1-210f-427a-a345-837b944e969f",
+      "prompt_tokens": 30852,
+      "total_cost": 0.0435926,
+      "public_link": "https://smith.langchain.com/public/d2263305-b34c-4d0c-829c-5df4b1525c11/r",
+      "status": "success"
+    },
+    "sde-create-sqlite-database": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": false,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        }
+      ],
+      "final_score": {
+        "total": 8,
+        "result": 8,
+        "ai_result": 8
+      },
+      "completion_token_details": {
+        "reasoning": 7488
+      },
+      "deltatime": 280.079789,
+      "completion_cost": 0.0149132,
+      "prompt_token_details": {
+        "cache_read": 168448
+      },
+      "completion_tokens": 11051,
+      "total_tokens": 224914,
+      "prompt_cost": 0.03311659,
+      "id": "529916c8-95d1-447b-9c54-d8aee3f08f4f",
+      "prompt_tokens": 213863,
+      "total_cost": 0.04802979,
+      "public_link": "https://smith.langchain.com/public/412fc53a-36fe-41ed-b1c3-e0139765662c/r",
+      "status": "success"
+    },
+    "finance-invoice-matching": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 5,
+        "result": 0,
+        "ai_result": 1
+      },
+      "completion_token_details": {
+        "reasoning": 9344
+      },
+      "deltatime": 1216.048293,
+      "completion_cost": 0.0196812,
+      "prompt_token_details": {
+        "cache_read": 4847104
+      },
+      "completion_tokens": 18867,
+      "total_tokens": 5414478,
+      "prompt_cost": 0.08178567,
+      "id": "c5312582-5281-435b-a57b-0d770f89dca7",
+      "prompt_tokens": 5395611,
+      "total_cost": 0.10146687,
+      "public_link": "https://smith.langchain.com/public/f59bfde3-d818-4937-84a9-2444c43bb550/r",
+      "status": "success"
+    },
+    "ds-stock-analysis-slides": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 5,
+          "result": 0,
+          "ai_result": 5
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 8,
+        "result": 0,
+        "ai_result": 8
+      },
+      "completion_token_details": {
+        "reasoning": 8064
+      },
+      "deltatime": 306.335114,
+      "completion_cost": 0.017506,
+      "prompt_token_details": {
+        "cache_read": 786304
+      },
+      "completion_tokens": 14725,
+      "total_tokens": 3694951,
+      "prompt_cost": 0.17888562,
+      "id": "ccd85fe8-b031-4f64-8968-6e9ca16046d9",
+      "prompt_tokens": 3680226,
+      "total_cost": 0.19639162,
+      "public_link": "https://smith.langchain.com/public/0c02678d-0bfe-4bf3-bbfa-ddfd28597bc7/r",
+      "status": "success"
+    },
+    "ds-format-excel-sheets": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 3,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 2944
+      },
+      "deltatime": 86.887427,
+      "completion_cost": 0.0114708,
+      "prompt_token_details": {
+        "cache_read": 29696
+      },
+      "completion_tokens": 4245,
+      "total_tokens": 66055,
+      "prompt_cost": 0.03174818,
+      "id": "0d6646a8-cc97-4048-b5c5-e2c701cfcb20",
+      "prompt_tokens": 61810,
+      "total_cost": 0.04321898,
+      "public_link": "https://smith.langchain.com/public/0040c861-8076-4b94-b19f-a22487a2adc1/r",
+      "status": "success"
+    },
+    "hr-check-attendance-one-day": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": false,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        },
+        {
+          "total": 1,
+          "result": true,
+          "ai_result": true
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 3,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 3584
+      },
+      "deltatime": 202.302309,
+      "completion_cost": 0.015626,
+      "prompt_token_details": {
+        "cache_read": 59776
+      },
+      "completion_tokens": 5537,
+      "total_tokens": 98709,
+      "prompt_cost": 0.03199868,
+      "id": "4d541a50-f300-4e42-8551-124f71a7d9ee",
+      "prompt_tokens": 93172,
+      "total_cost": 0.04762468,
+      "public_link": "https://smith.langchain.com/public/fe270255-5a6d-4ace-953a-235fe81a6893/r",
+      "status": "success"
+    },
+    "hr-transfer-group": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 2,
+        "ai_result": 2
+      },
+      "completion_token_details": {
+        "reasoning": 4480
+      },
+      "deltatime": 147.620368,
+      "completion_cost": 0.0148236,
+      "prompt_token_details": {
+        "cache_read": 44160
+      },
+      "completion_tokens": 5571,
+      "total_tokens": 93902,
+      "prompt_cost": 0.03235135,
+      "id": "a44c2dda-6a95-4d6c-99c5-a7e78452419f",
+      "prompt_tokens": 88331,
+      "total_cost": 0.04717495,
+      "public_link": "https://smith.langchain.com/public/e41fc945-d19f-4f82-87f7-2a3b01cf5393/r",
+      "status": "success"
+    },
+    "sde-update-issue-status-on-plane": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 3,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 6016
+      },
+      "deltatime": 246.11647,
+      "completion_cost": 0.0157408,
+      "prompt_token_details": {
+        "cache_read": 229248
+      },
+      "completion_tokens": 8080,
+      "total_tokens": 281854,
+      "prompt_cost": 0.03331974,
+      "id": "fe6677a7-2479-4d25-ae7d-99e11277edb7",
+      "prompt_tokens": 273774,
+      "total_cost": 0.04906054,
+      "public_link": "https://smith.langchain.com/public/0b64a7d9-9d88-40c2-aa0c-598394f94ee7/r",
+      "status": "success"
+    },
+    "hr-get-valid-password": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 2,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 4,
+        "ai_result": 4
+      },
+      "completion_token_details": {
+        "reasoning": 4608
+      },
+      "deltatime": 325.468167,
+      "completion_cost": 0.0148424,
+      "prompt_token_details": {
+        "cache_read": 144640
+      },
+      "completion_tokens": 6194,
+      "total_tokens": 186522,
+      "prompt_cost": 0.0325484,
+      "id": "280021d3-6690-4fd2-b1c0-74050b75bd18",
+      "prompt_tokens": 180328,
+      "total_cost": 0.0473908,
+      "public_link": "https://smith.langchain.com/public/9532f511-13c7-4dd2-9d42-e08f97b6c328/r",
+      "status": "success"
+    },
+    "admin-mass-forms-filling": {
+      "checkpoints": [
+        {
+          "total": 5,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 5,
+        "result": 0,
+        "ai_result": 0
+      },
+      "completion_token_details": {
+        "reasoning": 10112
+      },
+      "deltatime": 259.564043,
+      "completion_cost": 0.0209824,
+      "prompt_token_details": {
+        "cache_read": 98560
+      },
+      "completion_tokens": 14248,
+      "total_tokens": 152686,
+      "prompt_cost": 0.0324867,
+      "id": "d0437913-3282-450b-b81b-3487a3dc817c",
+      "prompt_tokens": 138438,
+      "total_cost": 0.0534691,
+      "public_link": "https://smith.langchain.com/public/60f86adf-6379-4dce-85c2-880097d52f9b/r",
+      "status": "success"
+    },
+    "pm-send-notification-to-corresponding-user": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 0,
+        "ai_result": 0
+      },
+      "completion_token_details": {
+        "reasoning": 3456
+      },
+      "deltatime": 108.506427,
+      "completion_cost": 0.0112832,
+      "prompt_token_details": {
+        "cache_read": 22784
+      },
+      "completion_tokens": 4832,
+      "total_tokens": 76653,
+      "prompt_cost": 0.03244457,
+      "id": "add12e58-bea6-453d-a822-c911ed01d909",
+      "prompt_tokens": 71821,
+      "total_cost": 0.04372777,
+      "public_link": "https://smith.langchain.com/public/f78f56b2-8853-416f-bfb4-14fdc0011b7d/r",
+      "status": "success"
+    },
+    "hr-organize-talent-info": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 1,
+        "ai_result": 4
+      },
+      "completion_token_details": {
+        "reasoning": 3648
+      },
+      "deltatime": 140.35067,
+      "completion_cost": 0.0142592,
+      "prompt_token_details": {
+        "cache_read": 54528
+      },
+      "completion_tokens": 6752,
+      "total_tokens": 97139,
+      "prompt_cost": 0.03198879,
+      "id": "f8ec4764-5ec4-470b-a7fb-435fe70638bd",
+      "prompt_tokens": 90387,
+      "total_cost": 0.04624799,
+      "public_link": "https://smith.langchain.com/public/6f893d34-376d-4cce-990f-286e48b1916c/r",
+      "status": "success"
+    },
+    "ds-answer-numerical-data-question": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 6,
+        "result": 0,
+        "ai_result": 6
+      },
+      "completion_token_details": {
+        "reasoning": 10816
+      },
+      "deltatime": 380.282371,
+      "completion_cost": 0.0153756,
+      "prompt_token_details": {
+        "cache_read": 117376
+      },
+      "completion_tokens": 12999,
+      "total_tokens": 168260,
+      "prompt_cost": 0.03251473,
+      "id": "11f095d2-b72f-4133-99af-936cce34e1fd",
+      "prompt_tokens": 155261,
+      "total_cost": 0.04789033,
+      "public_link": "https://smith.langchain.com/public/2736656b-1466-4a7b-b3fd-0a997d855f99/r",
+      "status": "success"
+    },
+    "admin-employee-info-reconciliation": {
+      "checkpoints": [
+        {
+          "total": 3,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 7,
+        "result": 1,
+        "ai_result": 1
+      },
+      "completion_token_details": {
+        "reasoning": 3648
+      },
+      "deltatime": 111.150839,
+      "completion_cost": 0.0151356,
+      "prompt_token_details": {
+        "cache_read": 51456
+      },
+      "completion_tokens": 5079,
+      "total_tokens": 101521,
+      "prompt_cost": 0.03255338,
+      "id": "bc25ba7c-9da6-4ace-949c-e08e5a71d9d1",
+      "prompt_tokens": 96442,
+      "total_cost": 0.04768898,
+      "public_link": "https://smith.langchain.com/public/edc0bf1a-3486-45e5-a31a-8473ca40200c/r",
+      "status": "success"
+    },
+    "sde-find-api": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 0,
+        "ai_result": 1
+      },
+      "completion_token_details": {
+        "reasoning": 3776
+      },
+      "deltatime": 143.770599,
+      "completion_cost": 0.0191684,
+      "prompt_token_details": {
+        "cache_read": 78848
+      },
+      "completion_tokens": 5321,
+      "total_tokens": 140761,
+      "prompt_cost": 0.03319504,
+      "id": "11fb9fc7-bb16-4eea-9714-75b937aeb66a",
+      "prompt_tokens": 135440,
+      "total_cost": 0.05236344,
+      "public_link": "https://smith.langchain.com/public/5fb0e356-e1e1-4a0d-83c6-e93b3e84d36e/r",
+      "status": "success"
+    },
+    "admin-translate-sales-chat": {
+      "checkpoints": [
+        {
+          "total": 4,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 0,
+        "ai_result": 0
+      },
+      "completion_token_details": {
+        "reasoning": 3904
+      },
+      "deltatime": 383.517251,
+      "completion_cost": 0.0118284,
+      "prompt_token_details": {
+        "cache_read": 161408
+      },
+      "completion_tokens": 5451,
+      "total_tokens": 261133,
+      "prompt_cost": 0.03554834,
+      "id": "8924ba09-5c64-43c4-b676-751f1500e639",
+      "prompt_tokens": 255682,
+      "total_cost": 0.04737674,
+      "public_link": "https://smith.langchain.com/public/1fbaa9d7-a49c-42da-9cfc-26f34d76609d/r",
+      "status": "success"
+    },
+    "pm-send-hello-message": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 5,
+        "result": 5,
+        "ai_result": 5
+      },
+      "completion_token_details": {
+        "reasoning": 2112
+      },
+      "deltatime": 78.882569,
+      "completion_cost": 0.0114464,
+      "prompt_token_details": {
+        "cache_read": 11520
+      },
+      "completion_tokens": 2912,
+      "total_tokens": 44410,
+      "prompt_cost": 0.0314821,
+      "id": "e6048e58-b1b8-4d25-bac9-984d46fd3044",
+      "prompt_tokens": 41498,
+      "total_cost": 0.0429285,
+      "public_link": "https://smith.langchain.com/public/cdde63dd-641c-46dc-b597-d07870a68876/r",
+      "status": "success"
+    },
+    "hr-make-slides-introduce-leadership": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 5,
+        "result": 5,
+        "ai_result": 5
+      },
+      "completion_token_details": {
+        "reasoning": 4864
+      },
+      "deltatime": 180.888436,
+      "completion_cost": 0.015478,
+      "prompt_token_details": {
+        "cache_read": 17664
+      },
+      "completion_tokens": 6631,
+      "total_tokens": 58443,
+      "prompt_cost": 0.03182332,
+      "id": "ab8139fc-a56b-4239-882e-e99eaeb42b55",
+      "prompt_tokens": 51812,
+      "total_cost": 0.04730132,
+      "public_link": "https://smith.langchain.com/public/9e6db94c-ae20-452b-aa9e-9d27dbf0eb65/r",
+      "status": "success"
+    },
+    "hr-pick-interviewer-2": {
+      "checkpoints": [
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 2,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 6,
+        "result": 2,
+        "ai_result": 5
+      },
+      "completion_token_details": {
+        "reasoning": 3520
+      },
+      "deltatime": 212.782664,
+      "completion_cost": 0.01309,
+      "prompt_token_details": {
+        "cache_read": 178944
+      },
+      "completion_tokens": 5125,
+      "total_tokens": 230932,
+      "prompt_cost": 0.03318027,
+      "id": "2b6cb1dc-3ba9-42c2-8d8a-baad6aee3823",
+      "prompt_tokens": 225807,
+      "total_cost": 0.04627027,
+      "public_link": "https://smith.langchain.com/public/963316ea-18c4-4b23-8a9e-37910362c554/r",
+      "status": "success"
+    },
+    "research-answer-questions-on-paper": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 11,
+          "result": 0,
+          "ai_result": 8
+        }
+      ],
+      "final_score": {
+        "total": 12,
+        "result": 0,
+        "ai_result": 8
+      },
+      "completion_token_details": {
+        "reasoning": 8128
+      },
+      "deltatime": 193.747538,
+      "completion_cost": 0.0154668,
+      "prompt_token_details": {
+        "cache_read": 91264
+      },
+      "completion_tokens": 10107,
+      "total_tokens": 159975,
+      "prompt_cost": 0.03338532,
+      "id": "4bd4cc19-23d5-4861-ba4d-86280fb346f0",
+      "prompt_tokens": 149868,
+      "total_cost": 0.04885212,
+      "public_link": "https://smith.langchain.com/public/89cdbf2f-76c2-4482-9196-47baf1cb6d1b/r",
+      "status": "success"
+    },
+    "admin-remove-pages-pdf": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 1,
+        "ai_result": 1
+      },
+      "completion_token_details": {
+        "reasoning": 5760
+      },
+      "deltatime": 155.203642,
+      "completion_cost": 0.0142972,
+      "prompt_token_details": {
+        "cache_read": 27904
+      },
+      "completion_tokens": 8095,
+      "total_tokens": 69446,
+      "prompt_cost": 0.03179387,
+      "id": "5685f8fc-72e7-40e9-a639-d34fc6c7f97f",
+      "prompt_tokens": 61351,
+      "total_cost": 0.04609107,
+      "public_link": "https://smith.langchain.com/public/e7c319cd-4da7-47b2-beea-fe5b806df5f8/r",
+      "status": "success"
+    },
+    "hr-resume-categorization": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 0
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 1,
+        "ai_result": 1
+      },
+      "completion_token_details": {
+        "reasoning": 3840
+      },
+      "deltatime": 192.784658,
+      "completion_cost": 0.015352,
+      "prompt_token_details": {
+        "cache_read": 89472
+      },
+      "completion_tokens": 6772,
+      "total_tokens": 148908,
+      "prompt_cost": 0.03316096,
+      "id": "ad613c65-e9e5-4392-941a-bbf849b9a80d",
+      "prompt_tokens": 142136,
+      "total_cost": 0.04851296,
+      "public_link": "https://smith.langchain.com/public/9dd0fcf8-5c02-424f-8498-269dbd8bdf44/r",
+      "status": "success"
+    },
+    "pm-create-channel-new-leader": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 3,
+        "result": 3,
+        "ai_result": 3
+      },
+      "completion_token_details": {
+        "reasoning": 1600
+      },
+      "deltatime": 46.401062,
+      "completion_cost": 0.0133624,
+      "prompt_token_details": {
+        "cache_read": 12288
+      },
+      "completion_tokens": 2470,
+      "total_tokens": 52087,
+      "prompt_cost": 0.03181869,
+      "id": "5af33e5a-d1b9-46de-b866-178a5a04d553",
+      "prompt_tokens": 49617,
+      "total_cost": 0.04518109,
+      "public_link": "https://smith.langchain.com/public/b9aedf17-16d6-414d-929a-c05aa34ab4f5/r",
+      "status": "success"
+    },
+    "hr-collect-feedbacks": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        }
+      ],
+      "final_score": {
+        "total": 5,
+        "result": 3,
+        "ai_result": 5
+      },
+      "completion_token_details": {
+        "reasoning": 3840
+      },
+      "deltatime": 151.571797,
+      "completion_cost": 0.0126908,
+      "prompt_token_details": {
+        "cache_read": 36608
+      },
+      "completion_tokens": 5351,
+      "total_tokens": 71186,
+      "prompt_cost": 0.03168039,
+      "id": "b2951d0e-508c-42e9-956a-a4e0be86f486",
+      "prompt_tokens": 65835,
+      "total_cost": 0.04437119,
+      "public_link": "https://smith.langchain.com/public/545849e5-1ece-4872-8629-a93e0f055849/r",
+      "status": "success"
+    },
+    "hr-populate-salary-increase-memo": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        },
+        {
+          "total": 4,
+          "result": 4,
+          "ai_result": 4
+        }
+      ],
+      "final_score": {
+        "total": 7,
+        "result": 4,
+        "ai_result": 7
+      },
+      "completion_token_details": {
+        "reasoning": 8832
+      },
+      "deltatime": 401.915619,
+      "completion_cost": 0.0249508,
+      "prompt_token_details": {
+        "cache_read": 317696
+      },
+      "completion_tokens": 13489,
+      "total_tokens": 437601,
+      "prompt_cost": 0.03689128,
+      "id": "885a864e-a907-4cd9-b0a2-96ed1a4bc3aa",
+      "prompt_tokens": 424112,
+      "total_cost": 0.06184208,
+      "public_link": "https://smith.langchain.com/public/a9fdcd57-5453-4263-8570-5b3945f09e1d/r",
+      "status": "success"
+    },
+    "sde-copy-table-from-pdf-to-xlsx": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        },
+        {
+          "total": 1,
+          "result": 1,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 5,
+        "result": 5,
+        "ai_result": 5
+      },
+      "completion_token_details": {
+        "reasoning": 17280
+      },
+      "deltatime": 478.4088,
+      "completion_cost": 0.023852,
+      "prompt_token_details": {
+        "cache_read": 539520
+      },
+      "completion_tokens": 27278,
+      "total_tokens": 730146,
+      "prompt_cost": 0.040853,
+      "id": "f37ca2f7-4144-4f11-9986-fbe1acbf62a1",
+      "prompt_tokens": 702868,
+      "total_cost": 0.064705,
+      "public_link": "https://smith.langchain.com/public/909879e5-6e37-4969-bf7b-393a25fef394/r",
+      "status": "success"
+    },
+    "hr-create-employee-manual": {
+      "checkpoints": [
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        },
+        {
+          "total": 2,
+          "result": 0,
+          "ai_result": 2
+        },
+        {
+          "total": 1,
+          "result": 0,
+          "ai_result": 1
+        }
+      ],
+      "final_score": {
+        "total": 4,
+        "result": 0,
+        "ai_result": 4
+      },
+      "completion_token_details": {
+        "reasoning": 6016
+      },
+      "deltatime": 343.337091,
+      "completion_cost": 0.0179708,
+      "prompt_token_details": {
+        "cache_read": 141440
+      },
+      "completion_tokens": 8975,
+      "total_tokens": 185955,
+      "prompt_cost": 0.0324866,
+      "id": "6ae1d284-741f-4ddf-b82d-6f67d566970a",
+      "prompt_tokens": 176980,
+      "total_cost": 0.0504574,
+      "public_link": "https://smith.langchain.com/public/24baa5c5-79ab-41db-ad6d-faa8865dc2bc/r",
+      "status": "success"
+    }
+  },
+  "total_ai_score": 176
+}

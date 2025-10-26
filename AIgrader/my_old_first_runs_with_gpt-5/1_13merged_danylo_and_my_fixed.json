@@ -1,0 +1,142 @@
+{
+  "qa-escalate-emergency": {
+    "first_final_score": {
+      "total": 3,
+      "ai_result": 2
+    },
+    "second_final_score": {
+      "total": 3,
+      "ai_result": 3
+    }
+  },
+  "hr-delete-and-insert-user": {
+    "first_final_score": {
+      "total": 3,
+      "ai_result": 1
+    },
+    "second_final_score": {
+      "total": 3,
+      "ai_result": 3
+    }
+  },
+  "hr-pick-interviewer-3": {
+    "first_final_score": {
+      "total": 4,
+      "ai_result": 2
+    },
+    "second_final_score": {
+      "total": 4,
+      "ai_result": 3
+    }
+  },
+  "ds-fix-table-values-and-missing-answers": {
+    "first_final_score": {
+      "total": 6,
+      "ai_result": 2
+    },
+    "second_final_score": {
+      "total": 6,
+      "ai_result": 4
+    }
+  },
+  "admin-ask-for-meeting-feedback": {
+    "first_final_score": {
+      "total": 6,
+      "ai_result": 6
+    },
+    "second_final_score": {
+      "total": 6,
+      "ai_result": "-"
+    }
+  },
+  "ds-coffee-shop-database-management": {
+    "first_final_score": {
+      "total": 10,
+      "ai_result": 8
+    },
+    "second_final_score": {
+      "total": 10,
+      "ai_result": 4
+    }
+  },
+  "finance-invoice-matching": {
+    "first_final_score": {
+      "total": 5,
+      "ai_result": 1
+    },
+    "second_final_score": {
+      "total": 5,
+      "ai_result": 2
+    }
+  },
+  "ds-format-excel-sheets": {
+    "first_final_score": {
+      "total": 4,
+      "ai_result": 3
+    },
+    "second_final_score": {
+      "total": 4,
+      "ai_result": 4
+    }
+  },
+  "admin-mass-forms-filling": {
+    "first_final_score": {
+      "total": 5,
+      "ai_result": 1
+    },
+    "second_final_score": {
+      "total": 5,
+      "ai_result": 0
+    }
+  },
+  "pm-send-notification-to-corresponding-user": {
+    "first_final_score": {
+      "total": 4,
+      "ai_result": 0
+    },
+    "second_final_score": {
+      "total": 4,
+      "ai_result": 1
+    }
+  },
+  "admin-employee-info-reconciliation": {
+    "first_final_score": {
+      "total": 7,
+      "ai_result": 1
+    },
+    "second_final_score": {
+      "total": 7,
+      "ai_result": 2
+    }
+  },
+  "hr-pick-interviewer-2": {
+    "first_final_score": {
+      "total": 6,
+      "ai_result": 6
+    },
+    "second_final_score": {
+      "total": 6,
+      "ai_result": 5
+    }
+  },
+  "research-answer-questions-on-paper": {
+    "first_final_score": {
+      "total": 12,
+      "ai_result": 9
+    },
+    "second_final_score": {
+      "total": 12,
+      "ai_result": 0
+    }
+  },
+  "hr-resume-categorization": {
+    "first_final_score": {
+      "total": 4,
+      "ai_result": 1
+    },
+    "second_final_score": {
+      "total": 4,
+      "ai_result": 2
+    }
+  }
+}

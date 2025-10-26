@@ -1,0 +1,178 @@
+{
+  "total_checkpoints": 179,
+  "total_tasks": 57,
+  "hr-organize-talent-info": {
+    "total_points": 4
+  },
+  "ds-stock-analysis-slides": {
+    "total_points": 8
+  },
+  "admin-make-spreadsheet": {
+    "total_points": 5
+  },
+  "pm-add-new-moderator": {
+    "total_points": 3
+  },
+  "admin-translate-sales-chat": {
+    "total_points": 4
+  },
+  "qa-escalate-emergency": {
+    "total_points": 3
+  },
+  "admin-employee-info-reconciliation": {
+    "total_points": 7
+  },
+  "ds-predictive-modeling": {
+    "total_points": 3
+  },
+  "finance-substantial-presence-test": {
+    "total_points": 2
+  },
+  "hr-resume-categorization": {
+    "total_points": 4
+  },
+  "hr-salary-analysis": {
+    "total_points": 2
+  },
+  "hr-create-employee-manual": {
+    "total_points": 4
+  },
+  "research-answer-questions-on-paper": {
+    "total_points": 12
+  },
+  "pm-schedule-meeting-1": {
+    "total_points": 5
+  },
+  "admin-remove-pages-pdf": {
+    "total_points": 3
+  },
+  "sde-copy-table-from-pdf-to-xlsx": {
+    "total_points": 5
+  },
+  "pm-create-plane-issue": {
+    "total_points": 2
+  },
+  "hr-pick-interviewer-2": {
+    "total_points": 6
+  },
+  "sde-debug-crashed-server": {
+    "total_points": 8
+  },
+  "hr-check-attendance-multiple-days": {
+    "total_points": 4
+  },
+  "pm-change-channel-ownership": {
+    "total_points": 3
+  },
+  "pm-create-channel-message": {
+    "total_points": 3
+  },
+  "ds-coffee-shop-database-management": {
+    "total_points": 10
+  },
+  "admin-ask-for-meeting-feedback": {
+    "total_points": 6
+  },
+  "hr-check-attendance-one-day": {
+    "total_points": 3
+  },
+  "hr-delete-and-insert-user": {
+    "total_points": 3
+  },
+  "hr-collect-feedbacks": {
+    "total_points": 5
+  },
+  "admin-mass-forms-filling": {
+    "total_points": 5
+  },
+  "sde-run-rising-wave-locally": {
+    "total_points": 2
+  },
+  "pm-schedule-meeting-2": {
+    "total_points": 5
+  },
+  "ds-answer-numerical-data-question": {
+    "total_points": 6
+  },
+  "pm-create-channel-message-medium": {
+    "total_points": 6
+  },
+  "pm-send-notification-to-corresponding-user": {
+    "total_points": 4
+  },
+  "finance-budget-variance": {
+    "total_points": 4
+  },
+  "finance-check-attendance-payroll": {
+    "total_points": 3
+  },
+  "hr-populate-salary-increase-memo": {
+    "total_points": 7
+  },
+  "finance-nonqualified-bill-ask-for-reimburse": {
+    "total_points": 2
+  },
+  "sde-create-sqlite-database": {
+    "total_points": 8
+  },
+  "ml-grade-exam": {
+    "total_points": 8
+  },
+  "ds-visualize-data-in-pie-and-bar-chart": {
+    "total_points": 4
+  },
+  "ds-format-excel-sheets": {
+    "total_points": 4
+  },
+  "pm-send-hello-message": {
+    "total_points": 5
+  },
+  "pm-create-channel-new-leader": {
+    "total_points": 3
+  },
+  "sde-update-issue-status-on-plane": {
+    "total_points": 3
+  },
+  "finance-invoice-matching": {
+    "total_points": 5
+  },
+  "hr-make-slides-introduce-leadership": {
+    "total_points": 5
+  },
+  "finance-expense-validation": {
+    "total_points": 4
+  },
+  "sde-find-api": {
+    "total_points": 4
+  },
+  "sde-close-all-issue-on-all-project-under-tac-workspace": {
+    "total_points": 3
+  },
+  "hr-get-valid-password": {
+    "total_points": 4
+  },
+  "hr-new-grad-job-description": {
+    "total_points": 3
+  },
+  "hr-check-attendance-multiple-days-department": {
+    "total_points": 3
+  },
+  "hr-transfer-group": {
+    "total_points": 3
+  },
+  "hr-check-for-invalid-passwords-and-ask-for-valid-passwords": {
+    "total_points": 4
+  },
+  "hr-pick-interviewer-3": {
+    "total_points": 4
+  },
+  "ds-fix-table-values-and-missing-answers": {
+    "total_points": 6
+  },
+  "ds-find-meeting-spreadsheet": {
+    "total_points": 2
+  },
+  "run_worst_case": 141,
+  "run_best_case": 225,
+  "run_median_case": 183.0
+}

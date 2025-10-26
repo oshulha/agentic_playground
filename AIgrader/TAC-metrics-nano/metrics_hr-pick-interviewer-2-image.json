@@ -1,0 +1,94 @@
+{
+    "id": "2b6cb1dc-3ba9-42c2-8d8a-baad6aee3823",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 18:59:43.670915",
+    "end_time": "2025-10-14 19:03:16.453579",
+    "deltatime": 212.782664,
+    "prompt_tokens": 225807,
+    "completion_tokens": 5125,
+    "total_tokens": 230932,
+    "prompt_token_details": {
+        "cache_read": 178944
+    },
+    "completion_token_details": {
+        "reasoning": 3520
+    },
+    "prompt_cost": 0.03318027,
+    "completion_cost": 0.01309,
+    "total_cost": 0.04627027,
+    "public_link": "https://smith.langchain.com/public/963316ea-18c4-4b23-8a9e-37910362c554/r",
+    "inputs": {
+        "user_input": "Complete the following task: You are going to pick an interviewer for a candidate. You should ask hiring resource manager Chen Xinyi in Rocketchat (http://the-agent-company.com:3000) about who is available to interview. \nOnce you get the interviewer list, chat with them one by one and identify the person agrees to interview, you should write the person's name down in `/workspace/interviewer.txt` file locally.\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('2b6cb1dc-3ba9-42c2-8d8a-baad6aee3823') name='agent' start_time=datetime.datetime(2025, 10, 14, 18, 59, 43, 670915, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 19, 3, 16, 453579, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': \"Complete the following task: You are going to pick an interviewer for a candidate. You should ask hiring resource manager Chen Xinyi in Rocketchat (http://the-agent-company.com:3000) about who is available to interview. \\nOnce you get the interviewer list, chat with them one by one and identify the person agrees to interview, you should write the person's name down in `/workspace/interviewer.txt` file locally.\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n\"} outputs={'output': RunTree(id=2b6cb1dc-3ba9-42c2-8d8a-baad6aee3823, name='agent', run_type='chain', dotted_order='20251014T185943670915Z2b6cb1dc-3ba9-42c2-8d8a-baad6aee3823')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=6df4323e-9d70-454a-b004-510e84311a28, name='RunnableSequence', run_type='chain', dotted_order='20251014T185943670915Z2b6cb1dc-3ba9-42c2-8d8a-baad6aee3823.20251014T185944396247Z6df4323e-9d70-454a-b004-510e84311a28'), RunTree(id=46c8d58a-bc11-4250-8098-09cc69b85dc1, name='react_ask', run_type='chain', dotted_order='20251014T185943670915Z2b6cb1dc-3ba9-42c2-8d8a-baad6aee3823.20251014T190010178777Z46c8d58a-bc11-4250-8098-09cc69b85dc1')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T185943670915Z2b6cb1dc-3ba9-42c2-8d8a-baad6aee3823' trace_id=UUID('2b6cb1dc-3ba9-42c2-8d8a-baad6aee3823') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "6df4323e-9d70-454a-b004-510e84311a28",
+        "0ef67ec3-0511-4b8a-a49f-adab8394ea93",
+        "a9d427a2-c948-45a9-b0ea-83df34801924",
+        "46c8d58a-bc11-4250-8098-09cc69b85dc1",
+        "bd131563-82b9-4bca-9dc8-41dfd280e137",
+        "e1522317-eb9f-415f-9bc9-1ac6fa038c83",
+        "f7ba46c4-1067-4802-b750-f10db50d4ea0",
+        "baa750a5-f5a8-4225-96fa-2b8f62df20a6",
+        "077972fb-03b7-4e8b-9a19-0b55e09fb944",
+        "1e90a1cf-e235-4c18-b617-f18f445db72b",
+        "67e7b87f-b24a-4c86-8dee-0a9ac7e93127",
+        "957cd667-c0cd-4e4e-91c7-cb278b62b811",
+        "2597af66-a675-41ba-81ee-64a572a9130b",
+        "11d56594-a886-4d36-8fc8-7ea6a7758ceb",
+        "fc7f062b-16bf-4032-a01a-dd862a6b5ce6",
+        "3cf1d915-5a42-4bf5-bf8c-770c75ba8152",
+        "99002ea4-60e2-42ae-8cb7-53d1f115df2d",
+        "3a59067e-64de-428e-a332-097752fe0503",
+        "4a43c89d-5e17-41e4-b975-09b266c15534",
+        "94d687d7-7a5e-473c-92cd-609f7c7b6cc4",
+        "9bb53ed7-f9e4-45ff-b57d-1ef117bc1c7a",
+        "7ce19766-f82e-42bf-a01d-0dc09325a547",
+        "4b5d8813-679d-4977-a523-167d089e7ba5",
+        "cb4c3824-1a7c-4e3f-9ee1-27222218e0b0",
+        "5a5b671e-1744-4a5d-b6db-b7b9b2565da4",
+        "63578975-7ee1-4bea-8293-3a864f2e4fb4",
+        "c00b7705-fe28-425b-80d1-59876aa52c98",
+        "639c11e3-dfd0-44b1-b70e-cdcaa27f7d45",
+        "0e4ed05e-e71a-4ee5-853a-88fe3a01d909",
+        "c2172474-150e-420e-b243-86ed3d59f0ef",
+        "49285cb9-2324-48db-9fd8-7e005349c471",
+        "80137b1c-5114-437d-a065-2644644b1d35",
+        "e19f3dd8-c6af-42b7-b18b-f1daa1990fc3",
+        "5cd87f80-9ae7-40b4-84dd-16381f575b2d",
+        "1ca9180c-b803-4cf1-b28a-e97535c56a81",
+        "fb6bbd58-d726-49d4-bc98-a7082baa9a35",
+        "aea4102b-0e30-4e3a-b880-43a08eccbc23",
+        "07b56d55-382c-4f60-939c-dc4b1b6945b2",
+        "eb3982ff-ad71-43a4-a3ab-fc0420497b57",
+        "3b8b283e-7b38-4e02-8f22-b494b5edefb0",
+        "9ad451c1-2fae-41e4-8ceb-eea8f754305e",
+        "50af9fcf-418c-4ff9-9aa4-ea5cf261efd4",
+        "3e36ce20-459f-4a43-b771-4820c152462f"
+    ]
+}

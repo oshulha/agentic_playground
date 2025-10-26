@@ -1,0 +1,62 @@
+{
+    "id": "983a53e8-8bc8-49fb-8b82-63ea0b57b283",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 20:54:53.179958",
+    "end_time": "2025-10-14 20:57:07.484498",
+    "deltatime": 134.30454,
+    "prompt_tokens": 45958,
+    "completion_tokens": 6302,
+    "total_tokens": 52260,
+    "prompt_token_details": {
+        "cache_read": 13568
+    },
+    "completion_token_details": {
+        "reasoning": 4736
+    },
+    "prompt_cost": 0.03161774,
+    "completion_cost": 0.0152312,
+    "total_cost": 0.04684894,
+    "public_link": "https://smith.langchain.com/public/7afca460-7ea6-4693-bf3e-6b16f20353b0/r",
+    "inputs": {
+        "user_input": "Complete the following task: Navigate to owncloud at http://the-agent-company.com:8092.\nUse the provided salary.txt spreadsheet on owncloud's \"Documents/Human Resources Team\" folder to identify the following trends: average salary, highest and lowest salaries, and median salaries across roles. Save the report as \"Salary_Analysis_Report.odt\" in the same folder.\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('983a53e8-8bc8-49fb-8b82-63ea0b57b283') name='agent' start_time=datetime.datetime(2025, 10, 14, 20, 54, 53, 179958, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 20, 57, 7, 484498, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': 'Complete the following task: Navigate to owncloud at http://the-agent-company.com:8092.\\nUse the provided salary.txt spreadsheet on owncloud\\'s \"Documents/Human Resources Team\" folder to identify the following trends: average salary, highest and lowest salaries, and median salaries across roles. Save the report as \"Salary_Analysis_Report.odt\" in the same folder.\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n'} outputs={'output': RunTree(id=983a53e8-8bc8-49fb-8b82-63ea0b57b283, name='agent', run_type='chain', dotted_order='20251014T205453179958Z983a53e8-8bc8-49fb-8b82-63ea0b57b283')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=cb7147fa-a1d0-4843-a1f9-75dcc73846b1, name='RunnableSequence', run_type='chain', dotted_order='20251014T205453179958Z983a53e8-8bc8-49fb-8b82-63ea0b57b283.20251014T205453894066Zcb7147fa-a1d0-4843-a1f9-75dcc73846b1'), RunTree(id=7a3ca44b-eb59-4fb0-908d-9ad66a6f424b, name='react_ask', run_type='chain', dotted_order='20251014T205453179958Z983a53e8-8bc8-49fb-8b82-63ea0b57b283.20251014T205532110518Z7a3ca44b-eb59-4fb0-908d-9ad66a6f424b')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T205453179958Z983a53e8-8bc8-49fb-8b82-63ea0b57b283' trace_id=UUID('983a53e8-8bc8-49fb-8b82-63ea0b57b283') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "cb7147fa-a1d0-4843-a1f9-75dcc73846b1",
+        "474e345c-733b-48cf-8424-e341fc5bc194",
+        "e58ecd45-a409-475d-85e0-3a2a90376994",
+        "7a3ca44b-eb59-4fb0-908d-9ad66a6f424b",
+        "2689cb8a-72ab-4f60-ae13-34450bb315f5",
+        "c4835825-cd64-4a5d-85b9-6d1c55cff755",
+        "d1b91b31-020e-4f79-8610-aa285de806e1",
+        "72632a50-66c2-41d9-8da1-3490fd43b7e2",
+        "0bc91cd7-4eba-4979-af9a-a127e2a4731e",
+        "03af862a-5da9-48b0-a667-adf4012a8089",
+        "7bd4fbda-574e-40e7-8593-5a97344c9c4f"
+    ]
+}

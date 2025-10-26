@@ -1,0 +1,92 @@
+{
+  "hr-check-attendance-multiple-days-department": {
+    "first_final_score": {
+      "total": 3,
+      "ai_result": "-"
+    },
+    "second_final_score": {
+      "total": 3,
+      "ai_result": 3
+    }
+  },
+  "hr-delete-and-insert-user": {
+    "first_final_score": {
+      "total": 3,
+      "ai_result": 2
+    },
+    "second_final_score": {
+      "total": 3,
+      "ai_result": 3
+    }
+  },
+  "hr-pick-interviewer-3": {
+    "first_final_score": {
+      "total": 4,
+      "ai_result": 2
+    },
+    "second_final_score": {
+      "total": 4,
+      "ai_result": 3
+    }
+  },
+  "ds-coffee-shop-database-management": {
+    "first_final_score": {
+      "total": 10,
+      "ai_result": 7
+    },
+    "second_final_score": {
+      "total": 10,
+      "ai_result": 4
+    }
+  },
+  "pm-send-notification-to-corresponding-user": {
+    "first_final_score": {
+      "total": 4,
+      "ai_result": 0
+    },
+    "second_final_score": {
+      "total": 4,
+      "ai_result": 1
+    }
+  },
+  "admin-employee-info-reconciliation": {
+    "first_final_score": {
+      "total": 7,
+      "ai_result": 1
+    },
+    "second_final_score": {
+      "total": 7,
+      "ai_result": 2
+    }
+  },
+  "hr-pick-interviewer-2": {
+    "first_final_score": {
+      "total": 6,
+      "ai_result": 6
+    },
+    "second_final_score": {
+      "total": 6,
+      "ai_result": 5
+    }
+  },
+  "research-answer-questions-on-paper": {
+    "first_final_score": {
+      "total": 12,
+      "ai_result": 9
+    },
+    "second_final_score": {
+      "total": 12,
+      "ai_result": 0
+    }
+  },
+  "hr-populate-salary-increase-memo": {
+    "first_final_score": {
+      "total": 7,
+      "ai_result": "-"
+    },
+    "second_final_score": {
+      "total": 7,
+      "ai_result": 7
+    }
+  }
+}

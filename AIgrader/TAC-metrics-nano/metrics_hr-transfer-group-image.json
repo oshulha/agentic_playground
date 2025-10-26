@@ -1,0 +1,70 @@
+{
+    "id": "a44c2dda-6a95-4d6c-99c5-a7e78452419f",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 19:08:19.996262",
+    "end_time": "2025-10-14 19:10:47.616630",
+    "deltatime": 147.620368,
+    "prompt_tokens": 88331,
+    "completion_tokens": 5571,
+    "total_tokens": 93902,
+    "prompt_token_details": {
+        "cache_read": 44160
+    },
+    "completion_token_details": {
+        "reasoning": 4480
+    },
+    "prompt_cost": 0.03235135,
+    "completion_cost": 0.0148236,
+    "total_cost": 0.04717495,
+    "public_link": "https://smith.langchain.com/public/e41fc945-d19f-4f82-87f7-2a3b01cf5393/r",
+    "inputs": {
+        "user_input": "Complete the following task: Navigate to the Rocketchat web at http://the-agent-company.com:3000/home\n\nTransfer Li Ming from his current database group to AI group. \n\n* Move Li Ming from #project-graphdb channel to #project-ai channel\n* Update his bio in user info to reflect this change in project group\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('a44c2dda-6a95-4d6c-99c5-a7e78452419f') name='agent' start_time=datetime.datetime(2025, 10, 14, 19, 8, 19, 996262, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 19, 10, 47, 616630, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': 'Complete the following task: Navigate to the Rocketchat web at http://the-agent-company.com:3000/home\\n\\nTransfer Li Ming from his current database group to AI group. \\n\\n* Move Li Ming from #project-graphdb channel to #project-ai channel\\n* Update his bio in user info to reflect this change in project group\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n'} outputs={'output': RunTree(id=a44c2dda-6a95-4d6c-99c5-a7e78452419f, name='agent', run_type='chain', dotted_order='20251014T190819996262Za44c2dda-6a95-4d6c-99c5-a7e78452419f')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=233dfd08-fb64-4daa-ad5a-46d80700367e, name='RunnableSequence', run_type='chain', dotted_order='20251014T190819996262Za44c2dda-6a95-4d6c-99c5-a7e78452419f.20251014T190820726066Z233dfd08-fb64-4daa-ad5a-46d80700367e'), RunTree(id=9f370beb-3557-4c92-9d98-5525541a76fc, name='react_ask', run_type='chain', dotted_order='20251014T190819996262Za44c2dda-6a95-4d6c-99c5-a7e78452419f.20251014T190854668472Z9f370beb-3557-4c92-9d98-5525541a76fc')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T190819996262Za44c2dda-6a95-4d6c-99c5-a7e78452419f' trace_id=UUID('a44c2dda-6a95-4d6c-99c5-a7e78452419f') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "233dfd08-fb64-4daa-ad5a-46d80700367e",
+        "a43b3c73-0fce-411a-a4cc-9e2632bead22",
+        "0602b12a-5c31-49c2-9a64-48dab917a38a",
+        "9f370beb-3557-4c92-9d98-5525541a76fc",
+        "353d718a-59d4-4742-86f1-5eb125c90ea7",
+        "dea32d4f-3f6c-4339-b0b5-219d73a16e8a",
+        "f86473bb-0e8a-4e6a-a11c-1ccd2fd13d1a",
+        "1da4f94c-9588-4612-88d1-6e0960fffca1",
+        "71a0bc98-3ef7-475b-97ec-5f0c1845a9ec",
+        "db758856-418b-4b35-bf11-a98fcaca7123",
+        "eb307b8b-d702-4c74-9560-7605aa4e2b51",
+        "e82866d9-e631-445f-90a5-f12740b4c626",
+        "96b11d15-7a34-44df-8a99-bcdfdd1c80d0",
+        "9f73baf6-b9c9-4f8e-98e1-08767fb0b695",
+        "cb0cbdbe-8a40-498f-9493-4bc2ec4bfa1c",
+        "4735b362-a834-44bd-9d44-b73b5e49dddd",
+        "d37a030f-b4ed-43ac-82b9-eb0b5fe27a77",
+        "9b592dfc-ee01-4702-8388-21638768f9e4",
+        "46512e2c-3190-40bb-b66b-d213993f8711"
+    ]
+}

@@ -1,0 +1,70 @@
+{
+    "id": "11fb9fc7-bb16-4eea-9714-75b937aeb66a",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 18:30:43.617073",
+    "end_time": "2025-10-14 18:33:07.387672",
+    "deltatime": 143.770599,
+    "prompt_tokens": 135440,
+    "completion_tokens": 5321,
+    "total_tokens": 140761,
+    "prompt_token_details": {
+        "cache_read": 78848
+    },
+    "completion_token_details": {
+        "reasoning": 3776
+    },
+    "prompt_cost": 0.03319504,
+    "completion_cost": 0.0191684,
+    "total_cost": 0.05236344,
+    "public_link": "https://smith.langchain.com/public/5fb0e356-e1e1-4a0d-83c6-e93b3e84d36e/r",
+    "inputs": {
+        "user_input": "Complete the following task: To retrieve a filtered list of issues with their brief details, you'll need to locate the appropriate API endpoint at http://the-agent-company.com:8091/.\nSpecifically, you want to fetch the 10 most recent issues from the 'tac' workspace, ordered by due date. To accomplish this:\nMonitor the network requests to identify the correct API endpoint\nNote the required parameters (using cursor value 10:0:0)\nSave the complete URL including all GET parameters to /workspace/url_for_issues.txt\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('11fb9fc7-bb16-4eea-9714-75b937aeb66a') name='agent' start_time=datetime.datetime(2025, 10, 14, 18, 30, 43, 617073, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 18, 33, 7, 387672, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': \"Complete the following task: To retrieve a filtered list of issues with their brief details, you'll need to locate the appropriate API endpoint at http://the-agent-company.com:8091/.\\nSpecifically, you want to fetch the 10 most recent issues from the 'tac' workspace, ordered by due date. To accomplish this:\\nMonitor the network requests to identify the correct API endpoint\\nNote the required parameters (using cursor value 10:0:0)\\nSave the complete URL including all GET parameters to /workspace/url_for_issues.txt\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n\"} outputs={'output': RunTree(id=11fb9fc7-bb16-4eea-9714-75b937aeb66a, name='agent', run_type='chain', dotted_order='20251014T183043617073Z11fb9fc7-bb16-4eea-9714-75b937aeb66a')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=7ddd079e-7cf9-44ea-a2d7-3f8e83d88bdd, name='RunnableSequence', run_type='chain', dotted_order='20251014T183043617073Z11fb9fc7-bb16-4eea-9714-75b937aeb66a.20251014T183044708755Z7ddd079e-7cf9-44ea-a2d7-3f8e83d88bdd'), RunTree(id=e1e98b7c-ee87-4052-b8f1-333e5a5dde4f, name='react_ask', run_type='chain', dotted_order='20251014T183043617073Z11fb9fc7-bb16-4eea-9714-75b937aeb66a.20251014T183133167128Ze1e98b7c-ee87-4052-b8f1-333e5a5dde4f')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T183043617073Z11fb9fc7-bb16-4eea-9714-75b937aeb66a' trace_id=UUID('11fb9fc7-bb16-4eea-9714-75b937aeb66a') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "7ddd079e-7cf9-44ea-a2d7-3f8e83d88bdd",
+        "29aad7f0-9ec7-49e9-bf78-312f7594e4fd",
+        "53712a59-8312-4bca-9f51-16198b6b15e3",
+        "e1e98b7c-ee87-4052-b8f1-333e5a5dde4f",
+        "0cc06f0e-de5c-4abf-95fc-6fd6dea48338",
+        "fea0236a-0040-464e-b455-ca65d6a8966f",
+        "5e83509e-4de0-4f1a-bda5-155b07512537",
+        "320198e4-f210-44b3-90df-ecb0fe96aa7b",
+        "01a428f3-94ae-4b44-afa6-8fd04a0417ed",
+        "0a6dbc7f-8c70-4b5b-9710-e1d506be3a7f",
+        "afec9a5d-3855-4280-ab68-6d08828cd3dc",
+        "20b7aeb8-f40a-4c9c-afcf-8c9d7e382d0e",
+        "d53c40a9-6175-43e7-bc29-0c68c36245a8",
+        "d6a9f843-b004-451a-b349-1c0e9df440ee",
+        "ac31f002-0238-4c98-8047-27a868a86130",
+        "3ae66e41-9c83-4963-bd7e-f9370589fe07",
+        "1be75a69-fca6-4b6f-8c37-31231d6ed45c",
+        "8865283a-07f2-4685-8efa-2606a80d5895",
+        "2ea7c6ab-8b8f-412b-b875-c7d7a9d49d20"
+    ]
+}

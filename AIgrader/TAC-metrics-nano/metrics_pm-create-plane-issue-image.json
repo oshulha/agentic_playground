@@ -1,0 +1,60 @@
+{
+    "id": "6dd090d3-f434-4a14-9fe1-779e920266bf",
+    "name": "agent",
+    "run_type": "chain",
+    "status": "success",
+    "start_time": "2025-10-14 18:23:58.376847",
+    "end_time": "2025-10-14 18:24:56.494699",
+    "deltatime": 58.117852,
+    "prompt_tokens": 42628,
+    "completion_tokens": 2411,
+    "total_tokens": 45039,
+    "prompt_token_details": {
+        "cache_read": 11392
+    },
+    "completion_token_details": {
+        "reasoning": 1280
+    },
+    "prompt_cost": 0.03150596,
+    "completion_cost": 0.0103916,
+    "total_cost": 0.04189756,
+    "public_link": "https://smith.langchain.com/public/29f56601-70cf-4311-9590-2ada6f21095e/r",
+    "inputs": {
+        "user_input": "Complete the following task: Navigate to the Plane at http://the-agent-company.com:8091/\n\nFor the 'Frontend Development' project, create a new issue titled 'Improve Page Loading Speed'\n\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\n## GitLab\n* service url: http://the-agent-company.com:8929\n* root email: `root@local`\n* root password: `theagentcompany`\n\n## ownCloud\n* service url: http://the-agent-company.com:8092\n* username: `theagentcompany`\n* password: `theagentcompany`\n\n## Plane\n* service url: http://the-agent-company.com:8091\n* email: `agent@company.com`\n* password: `theagentcompany`\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\n\n## RocketChat\n* service url: http://the-agent-company.com:3000\n* email: `theagentcompany`\n* password: `theagentcompany`\n"
+    },
+    "outputs": {
+        "output": "id=UUID('6dd090d3-f434-4a14-9fe1-779e920266bf') name='agent' start_time=datetime.datetime(2025, 10, 14, 18, 23, 58, 376847, tzinfo=datetime.timezone.utc) run_type='chain' end_time=datetime.datetime(2025, 10, 14, 18, 24, 56, 494699, tzinfo=datetime.timezone.utc) extra={'metadata': {'ls_method': 'traceable', 'LANGSMITH_TRACING_V2': 'true', 'LANGSMITH_PROJECT': 'tac-benchmark-18505913176', 'LANGSMITH_ENDPOINT': 'https://api.smith.langchain.com'}, 'runtime': {'sdk': 'langsmith-py', 'sdk_version': '0.4.27', 'library': 'langsmith', 'platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.36', 'runtime': 'python', 'py_implementation': 'CPython', 'runtime_version': '3.12.8', 'langchain_version': '0.3.27', 'langchain_core_version': '0.3.79'}} error=None serialized=None events=[] inputs={'user_input': \"Complete the following task: Navigate to the Plane at http://the-agent-company.com:8091/\\n\\nFor the 'Frontend Development' project, create a new issue titled 'Improve Page Loading Speed'\\n\\nIMPORTANT: here is our services urls and credentials, use the only if you are required to.\\n## GitLab\\n* service url: http://the-agent-company.com:8929\\n* root email: `root@local`\\n* root password: `theagentcompany`\\n\\n## ownCloud\\n* service url: http://the-agent-company.com:8092\\n* username: `theagentcompany`\\n* password: `theagentcompany`\\n\\n## Plane\\n* service url: http://the-agent-company.com:8091\\n* email: `agent@company.com`\\n* password: `theagentcompany`\\n* API_KEY:`plane_api_83f868352c6f490aba59b869ffdae1cf`\\n\\n## RocketChat\\n* service url: http://the-agent-company.com:3000\\n* email: `theagentcompany`\\n* password: `theagentcompany`\\n\"} outputs={'output': RunTree(id=6dd090d3-f434-4a14-9fe1-779e920266bf, name='agent', run_type='chain', dotted_order='20251014T182358376847Z6dd090d3-f434-4a14-9fe1-779e920266bf')} reference_example_id=None parent_run_id=None tags=[] attachments={} parent_run=None parent_dotted_order=None child_runs=[RunTree(id=605d2d83-11ef-4140-9ba6-875dd6278788, name='RunnableSequence', run_type='chain', dotted_order='20251014T182358376847Z6dd090d3-f434-4a14-9fe1-779e920266bf.20251014T182359121151Z605d2d83-11ef-4140-9ba6-875dd6278788'), RunTree(id=b0426985-9907-44e6-9085-486f39ac353b, name='react_ask', run_type='chain', dotted_order='20251014T182358376847Z6dd090d3-f434-4a14-9fe1-779e920266bf.20251014T182425182893Zb0426985-9907-44e6-9085-486f39ac353b')] session_name='tac-benchmark-18505913176' session_id=None ls_client=Client (API URL: https://api.smith.langchain.com) dotted_order='20251014T182358376847Z6dd090d3-f434-4a14-9fe1-779e920266bf' trace_id=UUID('6dd090d3-f434-4a14-9fe1-779e920266bf') dangerously_allow_filesystem=False replicas=[]"
+    },
+    "extra": {
+        "metadata": {
+            "ls_method": "traceable",
+            "LANGSMITH_TRACING_V2": "true",
+            "LANGSMITH_PROJECT": "tac-benchmark-18505913176",
+            "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+            "ls_run_depth": 0
+        },
+        "runtime": {
+            "sdk": "langsmith-py",
+            "sdk_version": "0.4.27",
+            "library": "langsmith",
+            "platform": "Linux-6.11.0-1018-azure-x86_64-with-glibc2.36",
+            "runtime": "python",
+            "py_implementation": "CPython",
+            "runtime_version": "3.12.8",
+            "langchain_version": "0.3.27",
+            "langchain_core_version": "0.3.79"
+        }
+    },
+    "tags": [],
+    "child_run_ids": [
+        "605d2d83-11ef-4140-9ba6-875dd6278788",
+        "48528e1a-9146-4536-b76d-73082cdf1e5c",
+        "da87468a-f3c4-472c-a5b0-4b519c62db31",
+        "b0426985-9907-44e6-9085-486f39ac353b",
+        "38ef50d2-632f-495e-994a-b0f2ccf2237e",
+        "2a42c3dc-1c92-49b5-aab2-e1a6a9b977a5",
+        "7ee2ba3c-5fca-4e49-b2d3-12c98400b689",
+        "8257b66d-047b-4f55-ab40-6ddb20205b27",
+        "1da1ad4f-7153-4dc8-86ac-4827ddfe2a53"
+    ]
+}
