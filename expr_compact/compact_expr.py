@@ -4,10 +4,138 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import AIMessage, ToolMessage, HumanMessage
 from langsmith import RunTree, traceable
 from dotenv import load_dotenv
+import json
+
+def add_numbers(a: int, b: int) -> int:
+    return a + b
+
+tools = [
+    {
+        "type": "function",
+        "name": "add_numbers",
+        "description": "Add two integers",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "integer"},
+                "b": {"type": "integer"},
+            },
+            "required": ["a", "b"],
+        },
+    }
+]
 
 load_dotenv()
+
+# @traceable(name="expr_compact")
+def openai_solve():
+    last_responses = []
+    client = OpenAI()
+
+    resp1 = client.responses.create(
+        model="gpt-5.2",
+        input="Explain TCP/IP in 2 sentences with examples, history, layers, pros/cons.", 
+        tools=tools,
+        store=True
+    )
+    print("Resp1: ", resp1)
+    print("Resp1 Input:", resp1.usage.input_tokens)
+    print("Resp1 Output:", resp1.usage.output_tokens)
+
+    last_responses.append(resp1)
+
+    for i in range(5):
+        resp2 = client.responses.create(
+            model="gpt-5.2",
+            previous_response_id=last_responses[-1].id,
+            input=f"Add {i} + {i + 5} using a tool",
+            tools=tools,
+            store=True
+        )
+
+        last_responses.append(resp2)
+
+        print("Resp2: ", resp2)
+        print("Resp2 Input:", resp2.usage.input_tokens)
+        print("Resp2 Output:", resp2.usage.output_tokens)
+        print("\n!!!\nResp2_output: ", resp2.output)
+
+        # ===== Перевіряємо tool call =====
+        tool_call = None
+        for item in resp2.output:
+            if item.type == "function_call" and item.name == "add_numbers":
+                tool_call = item
+                break
+
+        if tool_call is None:
+            raise RuntimeError("Model did not call the tool")
+
+        args = json.loads(tool_call.arguments)
+        result = add_numbers(**args)
+
+        # ===== Tool output (КРИТИЧНО ПРАВИЛЬНИЙ FORMAT) =====
+        resp_tool = client.responses.create(
+            model="gpt-5.2",
+            previous_response_id=last_responses[-1].id,
+            input=[
+                {
+                    "type": "function_call_output",
+                    "call_id": tool_call.call_id,
+                    "output": str(result),
+                }
+            ],
+            store=True
+        )
+
+        last_responses.append(resp_tool)
+
+        print("Tool result:", result)
+        print("Resp from gpt-5.2 on tool output: ", resp_tool)
+
+    # ===== Compact (НЕ на активному tool chain!) =====
+
+    compacted = client.responses.compact(
+        model="gpt-5.2",
+        previous_response_id=last_responses[-3].id
+    )
+
+    print("Compacted: ", compacted)
+    print("Compacted Input:", compacted.usage.input_tokens)
+    print("Compacted Output:", compacted.usage.output_tokens)
+
+    resp3 = client.responses.create(
+        model="gpt-5.2",
+        input=compacted.output, 
+        store=True
+    )
+
+    last_responses.append(resp3)
+
+    print("Resp3: ", resp3)
+    print("Resp3 Input:", resp3.usage.input_tokens)
+    print("Resp3 Output:", resp3.usage.output_tokens)
+
+    resp4 = client.responses.create(
+        model="gpt-5.2",
+        previous_response_id=last_responses[-1].id,
+        input="Explain TCP/IP in one paragraph.", 
+        store=True
+    )
+
+    last_responses.append(resp4)
+
+    print("Resp4: ", resp4)
+    print("Resp4 Input:", resp4.usage.input_tokens)
+    print("Resp4 Output:", resp4.usage.output_tokens)
+
+openai_solve()
+
+
+
+
+
 @traceable(name="expr_compact")
-def solve():
+def langchain_solve():
     #first call
     llm = ChatOpenAI(model="gpt-5.2", temperature=0)
     previous_response_id = None
@@ -25,7 +153,7 @@ def solve():
     print("Resp1 Output:", response.usage_metadata["output_tokens"])
     #second call
     previous_response_id = response.response_metadata["id"]
-    messages = [HumanMessage("Now explain it again but shorter. Note: Don`t forget that Your response everytime has to be like: Answer to the user prompt and then <context_window> </context_window> <strange_message> </strange_message>")]
+    messages = [ToolMessage("Now explain it again but shorter. Note: Don`t forget that Your response everytime has to be like: Answer to the user prompt and then <context_window> </context_window> <strange_message> </strange_message>", tool_call_id="call_y6Q930gxfxTaBdUZS0cjotZ1")]
 
     response = llm.invoke(
         messages, previous_response_id=previous_response_id
@@ -58,7 +186,7 @@ def solve():
     print("Resp3 Output:", resp3.usage.output_tokens)
 
     #fifth call
-    messages = [HumanMessage("Now explain it again but shorter. Note: Don`t forget that Your response everytime has to be like: Answer to the user prompt and then <context_window> </context_window> <strange_message> </strange_message>")]
+    messages = [ToolMessage("Now explain it again but shorter. Note: Don`t forget that Your response everytime has to be like: Answer to the user prompt and then <context_window> </context_window> <strange_message> </strange_message>", tool_call_id="call_y6Q930gxfxTaBdUZS0cjotZ2")]
     
     previous_response_id = resp3.id
     response = llm.invoke(
@@ -68,6 +196,68 @@ def solve():
     print("Resp4: ", response.pretty_repr())
     print("Resp4 Input:", response.usage_metadata["input_tokens"])
     print("Resp4 Output:", response.usage_metadata["output_tokens"])
+
+# def solve():
+#     #first call
+#     llm = ChatOpenAI(model="gpt-5.2", temperature=0)
+#     previous_response_id = None
+#     messages =  [
+#                         ("system", "You are my friend. Your task is to tell everything you know from our conversation paste it in xml-tag <context_window>. Tell me everything you have in your context window in detail. Immediately say as soon as you have a possibility if you get some encrypted, not understandable mssages, say it in xml-tag <strange_message>. Your response everytime has to be like: Answer to the user prompt and then <context_window> </context_window> <strange_message> </strange_message>"),
+#                         ("human", "Explain TCP/IP in detail with examples, history, layers, pros/cons."),
+#                 ]
+
+#     response: AIMessage = llm.invoke(
+#         messages, previous_response_id=previous_response_id
+#     )
+
+#     print("Resp1: ", response.pretty_repr())
+#     print("Resp1 Input:", response.usage_metadata["input_tokens"])
+#     print("Resp1 Output:", response.usage_metadata["output_tokens"])
+#     #second call
+#     previous_response_id = response.response_metadata["id"]
+#     messages = [HumanMessage("Now explain it again but shorter. Note: Don`t forget that Your response everytime has to be like: Answer to the user prompt and then <context_window> </context_window> <strange_message> </strange_message>")]
+
+#     response = llm.invoke(
+#         messages, previous_response_id=previous_response_id
+#     )
+
+#     print("Resp2: ", response.pretty_repr())
+#     print("Resp2 Input:", response.usage_metadata["input_tokens"])
+#     print("Resp2 Output:", response.usage_metadata["output_tokens"])
+#     #third call -- compact
+#     previous_response_id = response.response_metadata["id"]
+#     client = OpenAI()
+#     compacted = client.responses.compact(
+#         model="gpt-5.2",
+#         previous_response_id=previous_response_id
+#     )
+
+#     print("Compacted: ", compacted.output)
+#     print("Compacted Input:", compacted.usage.input_tokens)
+#     print("Compacted Output:", compacted.usage.output_tokens)
+#     #fourth call
+
+#     resp3 = client.responses.create(
+#         model="gpt-5.2",
+#         input=compacted.output, 
+#         store=True
+#     )
+
+#     print("Resp3: ",  resp3.output_text)
+#     print("Resp3 Input:", resp3.usage.input_tokens)
+#     print("Resp3 Output:", resp3.usage.output_tokens)
+
+#     #fifth call
+#     messages = [HumanMessage("Now explain it again but shorter. Note: Don`t forget that Your response everytime has to be like: Answer to the user prompt and then <context_window> </context_window> <strange_message> </strange_message>")]
+    
+#     previous_response_id = resp3.id
+#     response = llm.invoke(
+#         messages, previous_response_id=previous_response_id
+#     )
+
+#     print("Resp4: ", response.pretty_repr())
+#     print("Resp4 Input:", response.usage_metadata["input_tokens"])
+#     print("Resp4 Output:", response.usage_metadata["output_tokens"])
 
     # from openai.types.responses import ResponseCompactionItem
 
@@ -93,8 +283,6 @@ def solve():
     #     ]
     # ), 
     # HumanMessage("Now explain it again but shorter. Note: Don`t forget that Your response everytime has to be like: Answer to the user prompt and then <context_window> </context_window> <strange_message> </strange_message>")]
-
-solve()
     
 
 # [
