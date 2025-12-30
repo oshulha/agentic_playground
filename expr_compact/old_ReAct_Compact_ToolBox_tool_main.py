@@ -431,7 +431,7 @@ class TaskProcessor:
                                             "role": "assistant",
                                             "content": [{
                                                 "type": "output_text",
-                                                "text": resp.content
+                                                "text": resp.content #or here can be problem openai.BadRequestError: Error code: 400 - {'error': {'message': "Invalid type for 'input[2].content[0].text': expected a string, but got an array instead.", 'type': 'invalid_request_error', 'param': 'input[2].content[0].text', 'code': 'invalid_type'}}
                                             }]
                                         })
 
@@ -461,7 +461,7 @@ class TaskProcessor:
                                                     "content": [
                                                         {
                                                             "type": "output_text",
-                                                            "text": block.text
+                                                            "text": block.text #or here can be problem: openai.BadRequestError: Error code: 400 - {'error': {'message': "Invalid type for 'input[2].content[0].text': expected a string, but got an array instead.", 'type': 'invalid_request_error', 'param': 'input[2].content[0].text', 'code': 'invalid_type'}}
                                                         }
                                                         for block in item.content
                                                         if block.type == "output_text"
