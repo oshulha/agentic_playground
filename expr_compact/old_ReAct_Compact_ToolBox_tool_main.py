@@ -34,6 +34,45 @@ from tools.ToolRegistry import get_tools as get_tools_selector
 from utils.log import LoggerStream, logger
 from openai import OpenAI #for compact tool
 
+import json
+from typing import List
+
+from openai.types.responses import Response, ResponseOutputItem, ResponseOutputMessage
+from openai.types.responses.response_function_call_output_item_list_param import (
+    ResponseFunctionCallOutputItemListParam,
+    ResponseFunctionCallOutputItemParam,
+)
+from openai.types.responses.response_function_tool_call_param import (
+    ResponseFunctionToolCallParam,
+)
+from openai.types.responses.response_input_file_param import ResponseInputFileParam
+from openai.types.responses.response_input_image_param import ResponseInputImageParam
+from openai.types.responses.response_input_message_content_list_param import (
+    ResponseInputMessageContentListParam,
+)
+from openai.types.responses.response_input_param import (
+    FunctionCallOutput,
+    Message,
+    ResponseInputParam,
+)
+from openai.types.responses.response_input_text_param import ResponseInputTextParam
+
+def UserMessage(
+    content: ResponseInputMessageContentListParam | ResponseInputParam | dict | str,
+) -> Message:
+    if isinstance(content, dict):
+        # Not recommended, but supported for clearer object creation
+        content = [content]  # type: ignore
+    return Message(role="user", content=content)
+
+
+def SystemMessage(
+    content: ResponseInputMessageContentListParam | ResponseInputParam | dict | str,
+) -> Message:
+    if isinstance(content, dict):
+        # Not recommended, but supported for clearer object creation
+        content = [content]  # type: ignore
+    return Message(role="system", content=content)
 
 def prepare_container_env(
     runtime: "DockerRuntime",
@@ -160,13 +199,15 @@ class TaskProcessor:
         self.current_total_tokens_used = 0
         self.encoding = tiktoken.get_encoding("cl100k_base")  # For gpt-4 and others
         self._oai = OpenAI()
+        self.compact_sensory_summary = ""
     
     def create_compact_tool(self):
 
         @tool
-        def compact(): 
+        def compact(sensory_summary: str = ""): 
             """
             Perform a compaction pass over the conversation history.
+            Passing a `sensory_summary` provides a short summary or message that will be preserved verbatim after compaction.
 
             This tool must not be called as the first tool invocation and must not
             be invoked consecutively. It compacts the existing conversation context
@@ -178,12 +219,28 @@ class TaskProcessor:
             *   The complete details of that work done are no longer needed for the *next* phase of the task.
 
             Note: This tool cannot be invoked from within Python tool execution
+            
+            Passing a sensory_summary is a short summary/message you want to keep verbatim after compaction.
+            This have to be a summary of discoveries, insights, that will allow you to resume work efficiently in a future context window. Be thorough and actionable.
+            Mention: 
+            ### What has been successfully accomplished at the moment.
+            Be specific. Summary should include exact information inside it: 
+            - Actions Taken: Files modified, commands run, APIs called.
+            - Concrete Data Discovered: What exact file paths, URLs, configuration details, or other key data was found.
+
+            ### Next Steps After Compaction
+            - **Immediate Actions:** List the specific, concrete actions needed to complete the task.
+
+            Args:
+                str: The summary or message to preserve verbatim after compaction.
 
             Returns:
                 str: A status message indicating that the compaction was triggered.
             """
 
-            return "Compaction initiated successfully. Check next assistant message about result of compaction. After compaction, continue your actions in order to complete the task."
+            self.compact_sensory_summary = sensory_summary
+
+            return f"Compaction initiated successfully. Check next assistant message about result of compaction. After compaction, continue your actions in order to complete the task."
 
         return compact
 
@@ -291,19 +348,25 @@ class TaskProcessor:
         """Handle tasks requiring ReAct pattern with tools."""
         logger.info("Starting REACT stage...")
 
-        llm = ChatOpenAI(
-            model="gpt-5.2", 
-            output_version="responses/v1", 
-            reasoning={"effort": "xhigh",
-                       "summary": "auto"}
-        ).bind_tools(self.registry.get_tools())
+        #TODO
+        # llm = ChatOpenAI(
+        #     model="gpt-5.2", 
+        #     output_version="responses/v1", 
+        #     reasoning={"effort": "xhigh",
+        #                "summary": "auto"}
+        # ).bind_tools(self.registry.get_tools())
 
         base_prompt = SYSTEM_REACT_PROMPT.format(
             tools=self.registry.get_def_manifest(),
         )
         prompt = base_prompt + retry_context if retry_context else base_prompt
 
-        messages = [("system", prompt), ("human", user_input)]
+        #TODO
+        #messages = [("system", prompt), ("human", user_input)]
+        messages = [
+            SystemMessage(prompt),
+            UserMessage(user_input),
+        ]
         previous_response_id = None
 
         self.response_checkpoints = []
@@ -320,6 +383,7 @@ class TaskProcessor:
         for step in range(self.MAX_STEPS):
             try:
                 if step == self.MAX_STEPS - 1:
+                    #TODO
                     messages.append(
                         (
                             "system",
@@ -330,6 +394,7 @@ class TaskProcessor:
                 if self.current_total_tokens_used > self.TOKEN_THRESHOLD and (
                     last_reminder_token_count == -1 or self.current_total_tokens_used >= last_reminder_token_count + self.REMINDER_TOKEN_STEP
                 ):
+                    #TODO
                     reminder_message = (
                         "user",
                         """[SYSTEM NOTIFICATION]: The conversation history is growing long. To optimize performance and consolidate your progress, recall what does compact tool do and consider using the compact now. You MUST output the explanation of your decision now!"""
@@ -351,11 +416,22 @@ class TaskProcessor:
                     previous_response_id = None
                 else:
                     previous_response_id = self.response_checkpoints[-1]
-
-                response = llm.invoke(
-                    messages, previous_response_id=previous_response_id
+                
+                #TODO
+                response = client.responses.create(
+                    input=messages,
+                    model="gpt-5.2",
+                    reasoning={
+                        "effort": "xhigh"
+                    },
+                    tools=tools if tools else [],
+                    previous_response_id=response_id,
                 )
+                # response = llm.invoke(
+                #     messages, previous_response_id=previous_response_id
+                # )
 
+                #TODO
                 self.current_total_tokens_used = response.usage_metadata["input_tokens"]
                 logger.info(f"Current tokens used so far (compaction decreased): {self.current_total_tokens_used}")
 
@@ -369,6 +445,7 @@ class TaskProcessor:
                 logger.info(f"Tokens used so far: {self.total_tokens_used} (+{output_tokens} output)")
                 logger.info(f"Current tokens used so far (compaction decreased): {self.current_total_tokens_used} (+{output_tokens} input)")
 
+                #TODO
                 self.response_checkpoints.append(response.response_metadata["id"])
                 self.last_responses.append(response)
                 content = response.content
@@ -417,7 +494,7 @@ class TaskProcessor:
                             try:
                                 messages = []
                                 client = self._oai
-
+                                
                                 seen_tool_call_ids = set()
 
                                 def response_to_input_items(response):
@@ -431,7 +508,7 @@ class TaskProcessor:
                                             "role": "assistant",
                                             "content": [{
                                                 "type": "output_text",
-                                                "text": resp.content #or here can be problem openai.BadRequestError: Error code: 400 - {'error': {'message': "Invalid type for 'input[2].content[0].text': expected a string, but got an array instead.", 'type': 'invalid_request_error', 'param': 'input[2].content[0].text', 'code': 'invalid_type'}}
+                                                "text": resp.content
                                             }]
                                         })
 
@@ -461,7 +538,7 @@ class TaskProcessor:
                                                     "content": [
                                                         {
                                                             "type": "output_text",
-                                                            "text": block.text #or here can be problem: openai.BadRequestError: Error code: 400 - {'error': {'message': "Invalid type for 'input[2].content[0].text': expected a string, but got an array instead.", 'type': 'invalid_request_error', 'param': 'input[2].content[0].text', 'code': 'invalid_type'}}
+                                                            "text": block.text
                                                         }
                                                         for block in item.content
                                                         if block.type == "output_text"
@@ -517,7 +594,8 @@ class TaskProcessor:
                                 messages.append(("assistant", f"Compaction failed due to an unexpected error. In detail: {e}"))
                             else:
                                 logger.info("Compaction completed successfully.")
-                                messages.append(("assistant", "Compaction completed successfully. Continue your actions in order to complete the task."))
+                                messages.append(("user", f"Summary of discoveries, insights, that will allow you to resume work efficiently in a future context window and agent decided to keep verbatim: {self.compact_sensory_summary}"))
+                                messages.append(("assistant", "Compaction completed successfully. Continue your actions in order to complete the task"))
 
                 if not messages: #and not rewind_occurred:
                     # self._store_execution_context(
