@@ -150,6 +150,10 @@ This file encapsulates the full Delphi reasoning pipeline.
 * Optimized for readability of long, structured responses
 
 ---
+### `task3 delphi method.py`
+This file contains the initial implementation of the Delphi system as a single-file prototype.
+To improve usability and structure, the project was later refactored to include Flask and a simple web-based UI, resulting in a more convenient and user-friendly application.
+---
 
 ## Delphi Logic Summary (Textual Diagram)
 
