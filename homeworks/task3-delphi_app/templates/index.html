@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Delphi AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        textarea {
+            font-size: 16px;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 18px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Delphi AI</h1>
+    <form method="POST">
+        <label for="question">Input complex question:</label><br>
+        <textarea name="question" rows="4" cols="50"></textarea><br><br>
+        <input type="submit" value="Get Answer">
+    </form>
+
+    {% if answer %}
+        <h2>Result:</h2>
+        <div style="white-space: pre-wrap; word-wrap: break-word; font-size: 18px;">{{ answer|safe }}</div>
+    {% endif %}
+</body>
+</html>

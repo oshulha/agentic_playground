@@ -1,0 +1,100 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" version="27.0.5">
+  <diagram name="Сторінка-1" id="TXpaQfkryDQE-BUI_APu">
+    <mxGraphModel dx="513" dy="578" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-13" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="285" y="480" width="175" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="10" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-2" value="Start" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="10" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-3" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="90" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-4" value="Коли натиснуто Ctrl+Shift+R:&lt;br&gt;Починається запис" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="285" y="90" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-5" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="285" y="170" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-6" value="Коли натиснуто ще раз Ctrl+Shift+R:&lt;br&gt;Закінчується запис" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="285" y="170" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-7" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="282.5" y="280" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-8" value="Зберігається до буферу" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="285" y="290" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-10" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="282.5" y="380" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-9" value="Надіслати &lt;code data-start=&quot;857&quot; data-end=&quot;869&quot;&gt;audio_file з буферу&lt;/code&gt; до Whisper API" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="289" y="390" width="161" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-12" value="Отримати розпізнаний текст" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="289" y="490" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-17" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="283.75" y="560" width="175" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-16" value="Виклик GPT-4.1-nano з system + розпізнаний текст" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="283.75" y="565" width="177.5" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-19" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="640" width="170" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-18" value="Отримати очищену версію" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="294" y="655" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-20" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.402;entryY=0.035;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="9GvRLMCZ59WaCL7k9zHj-2" target="9GvRLMCZ59WaCL7k9zHj-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="130" as="sourcePoint" />
+            <mxPoint x="490" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-21" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.381;exitY=1.015;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.385;entryY=-0.045;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="9GvRLMCZ59WaCL7k9zHj-4" target="9GvRLMCZ59WaCL7k9zHj-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="310" as="sourcePoint" />
+            <mxPoint x="490" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-22" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.395;exitY=1.077;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.428;entryY=0.003;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="9GvRLMCZ59WaCL7k9zHj-5" target="9GvRLMCZ59WaCL7k9zHj-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="310" as="sourcePoint" />
+            <mxPoint x="490" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-23" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.46;exitY=0.99;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="9GvRLMCZ59WaCL7k9zHj-7" target="9GvRLMCZ59WaCL7k9zHj-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="310" as="sourcePoint" />
+            <mxPoint x="490" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-24" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="9GvRLMCZ59WaCL7k9zHj-10" target="9GvRLMCZ59WaCL7k9zHj-13">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="310" as="sourcePoint" />
+            <mxPoint x="490" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-25" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.415;exitY=1.095;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.451;entryY=0.06;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="9GvRLMCZ59WaCL7k9zHj-12" target="9GvRLMCZ59WaCL7k9zHj-16">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="470" as="sourcePoint" />
+            <mxPoint x="490" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9GvRLMCZ59WaCL7k9zHj-26" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.444;exitY=1.044;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.439;entryY=0.047;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="9GvRLMCZ59WaCL7k9zHj-17" target="9GvRLMCZ59WaCL7k9zHj-19">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="470" as="sourcePoint" />
+            <mxPoint x="490" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
