@@ -64,12 +64,19 @@ Working memory acts as an active workspace that manages information between epis
 
 For Example: 
 HUMAN: Hello!
+
 AI Agent: Hello!
+
 HUMAN: What's my name?
+
 AI Agent: I do not have access to that information
+
 HUMAN: My name is Adam
+
 AI Agent: It's nice to meet you, Adam!
+
 HUMAN: What is my name?
+
 AI Agent: You said your name is Adam
 
 To be continued...?
@@ -123,12 +130,19 @@ Also, episodic memory can be trigerred on some words like "always do like this",
 ### Examples
 **Example**
 HUMAN: Hello!
+
 AI Agent: Hello! How can I assist you today?
+
 HUMAN: What's my name
+
 AI Agent: I'm sorry, but I don't have access to personal information, so I don't know your name.
+
 HUMAN: Oh my name is Adam!
+
 AI Agent: Nice to meet you, Adam! How can I help you today?
+
 HUMAN: What's my name?
+
 AI Agent: Your name is Adam.
 
 Stage of Reflection After Conversation...
@@ -144,6 +158,7 @@ Result of Reflection:
 
 **Example Of Using A Tool `recall_episodic`:**
 Conversation 1:
+
 HUMAN:
 Hi! Here is my lab: {content_of_lab}.
 Can you check and correct whether the lab:
@@ -152,11 +167,15 @@ has a title page
 has page numbers on all pages
 includes a conclusion
 includes captions for all figures
+
 AI Agent:
 Sure. Here is the lab with all formatting and structural issues corrected:
 {content_of_corrected_lab}
+
 Conversation 2:
+
 HUMAN: Hi! Your task is to create a Word template for a laboratory report based on my previous lab works that we completed together.
+
 AI Agent: 
 <reasoning>I need to know the formatting and structural requirements used in the user's previous labs.
 This information is not general knowledge, but comes from a past interaction.
@@ -268,6 +287,7 @@ AI Agent: Zhang Wei is responsible for databases in RisingWave.
 
 **Example Of Using A Tool `recall_semantic`:** Is It Really The Same As In Episodic Memory?
 Conversation 1:
+
 HUMAN:
 Hi! Here is my lab: {content_of_lab}.
 Can you check and correct whether the lab:
@@ -276,11 +296,14 @@ has a title page
 has page numbers on all pages
 includes a conclusion
 includes captions for all figures
+
 AI Agent:
 Sure. Here is the lab with all formatting and structural issues corrected:
 {content_of_corrected_lab}
+
 Conversation 2:
 HUMAN: Hi! Your task is to create a Word template for a laboratory report based on my previous lab works that we completed together.
+
 AI Agent: 
 <reasoning>I need to know the formatting and structural requirements used in the user's previous labs.
 This information is not general knowledge, but comes from a past interaction.
@@ -293,6 +316,7 @@ has page numbers on all pages
 includes a conclusion
 includes captions for all figures"
 python({"code": "from docx import Document\nfrom docx.shared import Pt\nfrom docx.enum.text import WD_ALIGN_PARAGRAPH\ndoc = Document()\nstyle = doc.styles['Normal']\nstyle.font.name = 'Times New Roman'\nstyle.font.size = Pt(14)..."})
+
 AI Agent: Here is the template according to our previous lab that we worked together: {template.docx}.
 
 ## Procedural Memory
