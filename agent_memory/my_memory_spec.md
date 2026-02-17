@@ -2,63 +2,152 @@
 
 Memory subsystem is the information storage and retrieval part of our AI Agent. It consists of a single vector store that contains several collections. It directly interacts with the Brains subsystem (PlanExecutor and ReAct) and operates at multiple levels, such as storing memories from the PlanExecutor as well as memories from each ReAct worker invoked by the PlanExecutor. At the moment, our Memory subsystem is composed of four underlying memory components: working, episodic, semantic, and procedural memory.
 
+Memory Architecture Diagram:
+![Memory Architecture Diagram](memory_schema.png)
+
+# Table Of Contents
+
+[**Explicit & Implicit Memory**](#explicit-memory-conscious--implicit-memory-subconscious)
+
+`Status: Done`
+
+Division of the memory subsystem into two major categories: Explicit and Implicit.  
+Explains how they differ, which memory types belong to each category, and discusses their trade-offs in latency, architectural separation, and update mechanisms.
+
+[**Working Memory**](#working-memory)
+
+`Status: Done By OpenAI`
+
+**This paragraph is provided for context only;** it does not contain any implementation ideas at the moment. 
+Temporary, active workspace of the agent. Maintains current interaction state, conversation history, and short-term reasoning context.
+
+[**Episodic Memory**](#episodic-memory)
+
+`Status: Done(v1)`
+
+Stores past experiences and task executions.  
+Includes structured reflections such as `what_worked`, `what_to_avoid`, summaries, and context tags.
+
+[**Semantic Memory**](#semantic-memory)
+
+`Status: Done(v1)`
+
+Represents structured factual knowledge and concepts.  
+Implemented through RAG-style retrieval from vector databases or knowledge sources.
+
+[**Procedural Memory**](#procedural-memory)
+
+`Status: Done(v1)`
+
+Encodes behavioral rules and execution strategies.  
+Derived from episodic reflections and stored as concise operational instructions.
+
+[**Autobiographical / User-Personalized Memory**](#autobiographical-memory----user-personalized-memory)
+
+`Status: To Do`
+
+Specialized form of episodic memory focused on user-specific patterns, preferences, and long-term identity modeling.
+
+[**What Agent Needs to Remember and What Not**](#what-agent-needs-to-remember-and-what-is-not)
+
+`Status: To Do`
+
+Defines criteria for deciding which information is memory-worthy.  
+Includes discussion about relevance to task, user intent, and long-term utility.
+
+[**Forgetting**](#forgeting)
+
+`Status: In Progress`
+
+Selective forgetting strategies based on time decay, usage frequency, contradiction handling, and summarization-based replacement.
+
+[**Replacing (Contradiction Resolution)**](#replacing)
+
+`Status: To Do | In Progress`
+
+Mechanisms for resolving conflicting memories and determining which information should be treated as authoritative.
+
+[**Retrieving Methods (Variants)**](#retrieving-methods-how-to-retrieve----variants-to-retrieve)
+
+Overview of different retrieval strategies beyond standard vector search.
+
+[RLM](#rlm)
+
+Recursive Language Model-based retrieval strategy with deeper reasoning loops.
+
+[Single-vector Search Improvement](#single-vector-search-improvement)
+
+Improvements over naive embedding search, including agentic query refinement.
+
+[DRIFT Search and GraphRAG (Fav)](#drift-search-and-graphrag-fav)
+
+Graph-enhanced retrieval strategies inspired by hierarchical and community-based reasoning.
+
+[File System](#file-system)
+
+File-based memory storage approach aligned with LLM pretraining priors.
+
+[LSH](#lsh)
+
+Two-stage approximate retrieval: LSH grouping followed by similarity search.
+
+[Multi-vector Search](#multi-vector-search)
+
+Token-level or multi-representation matching approach with higher precision but higher latency.
+
+[**Priming & Classical Conditioning & Non-Associative Memory**](#priming--classical-conditioning--non-associative-memory)
+
+`Status: To Do`
+
+Exploration of cognitive-inspired mechanisms and whether they are practically needed in agent systems.
+
+[**Benchmarks for Memory**](#benchmarks-for-memory)
+
+`Status: To Do`
+
+Evaluation strategies to measure effectiveness of different memory types.
+
+[**Questions To Answer Still**](#questions-to-answer-still)
+
+Open architectural questions regarding shared memory between PlanExecutor and ReAct workers.
+
+[**Ideas**](#ideas)
+
+Experimental directions such as MMR, improved memory controller logic, and hybrid retrieval systems.
+
+---
 
 ## Explicit Memory (Conscious) && Implicit Memory (Subconscious)
 
 As a starting point, we can categorize memory into Explicit and Implicit.
-At this stage, all memory types — namely episodic, semantic, and procedural — will be both Explicit and Implicit at the same time.
+At this stage, all memory types — namely episodic, semantic, procedural, tool-level and user-personalized — will be both Explicit and Implicit at the same time.
 
 Memory types categorized as Explicit expose a dedicated tool for recall (i.e., searching the memory store) based on an agent query.
-Detailed description of functions you can see below in corresponding headings: Episodic Memory, Semantic Memory, Procedural Memory.
+Detailed description of functions you can see below in corresponding headings: Episodic Memory, Semantic Memory, Procedural Memory, Tool-Level Memory, User-personalized Memory.
 ```python
 recall_semantic()
 recall_episodic()
 recall_procedural()
+recall_tool_level()
+recall_user_personalized()
 ```
 
 Memory types categorized as Implicit are running in the background for the agent(ReAct/Planner) by Memory subsystem. 
 
 Comparing Implicit and Explicit memories, the Explicit approach has the downside of introducing some extra latency before any response is delivered. It also requires combining the memory logic with the agent logic. However, memories categorized as Implicit avoids those issues - there’s no added latency, and memory logic remains separate. But running “in the background” also has its own drawbacks: the memory is not updated immediately, and extra logic is needed determine when to kick off the background process.
 
-Another way to updating memory involves user feedback, which is particularly relevant to episodic memory. For example, If the user marks an interaction as a positive one, you can save that feedback to recall in the future.
+[In_Progress] Another way to updating memory involves user feedback, which is particularly relevant to episodic memory. For example, If the user marks an interaction as a positive one, you can save that feedback to recall in the future.
 
 As I mentioned before at the moment we categorize all types of memories as both Explicit and Implicit at the same time. By this I mean that every type of memory has its own tool for recall (i.e., searching the memory store) based on an agent query.
 
-In the future, we can evaluate usage patterns and identify cases where certain memory types should be only Explicit or only Implicit, depending on how they are accessed and utilized.
-
-## What agent needs to remember and what is not
-
-Agent needs to know what is his purpose so that he knows what to remember, what to remember better. For ReAct it has to be his task, given by PlanExecutor and for PlanExecutor it has to be user prompt.
-
-Maybe we have to make some special treatment to the information that somehow correlates with user prompt
-
-{No Mechanism at the moment}
-
-For Example:
-ReAct agent execution
-Task from PlanExecutor: “Research competitors and summarize key differentiators.”
-Relevant memory to store:
-Identified competitors
-Extracted differentiators
-Final summarized insights
-
-Memory that can be unuseful:
-Individual search queries
-Raw tool outputs used only once
+[Temporary] In the future, we can evaluate usage patterns and identify cases where certain memory types should be only Explicit or only Implicit, depending on how they are accessed and utilized.
 
 ## Working Memory 
-This paragraph is provided for context only; it does not contain any implementation ideas at the moment.
+[Temporary?]This paragraph is provided for context only; it does not contain any implementation ideas at the moment.
 
 Working memory is what helps you keep track of information you are using right now and make sense of it as things change. For our Agents, it means remembering **the current conversation** and using it to respond properly in real time. 
 
 At the moment, we can say that OpenAI provides a solution for working memory, but maintaining a consistently growing list of all user inputs, tool calls, tool outputs, and reasoning items—appended each time the agent receives inputs and produces outputs—looks like not the best solution.
-
-There is where Context Engineering methods like compaction and summarization come into play.
-
-[Here can be explained difference between this two methods and how, when to use each and details of implementation. compaction -- compact, summarization -- rewind. This way summarization can be the way of forgeting? [link](https://drive.google.com/file/d/1QGJ-BrdiTGslS71sYH4OJoidsry3Ps9g/view)
-How OpenAI Compaction works? Does OpenAI Compaction work like described in the link above?
-Codex CLI is written on Rust, but it is an endpoint how I will look into OpenAI implementation of compaction?
-I can look just into usage of it in codex cli written on Rust. There is more information on Anthropic's compaction((((]
 
 Working memory acts as an active workspace that manages information between episodic experience retrieval and semantic knowledge access, while keeping track of the exact state of the current interaction.
 
@@ -83,7 +172,7 @@ To be continued...?
 
 ## Episodic Memory
 
-Change Vector Search With Graph Rag Ideas?
+[To_Do]Change Vector Search With Graph Rag Ideas?
 
 Episodic memory is a historical collection of prior experiences, or episodes. It includes what happened, how it happened, and the lessons or insights learned from those experiences, even if they were never clearly stated.
 
@@ -98,9 +187,10 @@ The creation of the JSON (or Python dictionary) is performed by the ReAct agent 
 
 Then, a vector (semantic) search is performed when a new ReAct worker is invoked by the PlanExecutor to retrieve the JSON (or Python dictionary) with the highest semantic similarity to the user prompt. The retrieved entry is then injected into the system prompt with the phrasing: “Here is what you recall about your task: {json_best_match}”. 
 
-Or we can retrieve top-k results(or results above some threshold) and then ask llm in order to make the best out of them (combine or summarize?). Also, this step with llm can say which is from time-to-time is only заважає, але має високий similarity (і треба далі думати що треба робити -- піднімати threshold? top-k? видалити з пам'яті -- forgetting?). 
+[In_Progress]Or we can retrieve top-k results(or results above some threshold) and then ask llm in order to make the best out of them (combine or summarize?). Also, this step with llm can say which is from time-to-time is only заважає, але має високий similarity (і треба далі думати що треба робити -- піднімати threshold? top-k? видалити з пам'яті -- forgetting?). 
 
-Also, because Episodic Memory is categorized as Explicit and Implicit at the same time it has a tool recall_episodic?
+Also, because Episodic Memory is categorized as Explicit and Implicit at the same time it has a tool recall_episodic.
+[In_Progress]
 ```python
 def recall_episodic(
     query: str,
@@ -120,12 +210,12 @@ Best practices:
   """
 ```
 
-### How To Forget???
+### How To Forget???[To_Do]
 
 ---
-[This approach can be improved by reading `Reflexion` paper, in particular by considering Evaluator/Critic role. 
+[To_Do][This approach can be improved by reading `Reflexion` paper, in particular by considering Evaluator/Critic role. 
 
-Also, episodic memory can be trigerred on some words like "always do like this", "good workflow to make this" and save it what user want ot mention. That's examples I saw in [Introducing /remember](https://www.youtube.com/watch?v=6XXH5XecVp4&pp=ygUZL3JlbWVtYmVyIGxhbmdjaGFpbiB2aWRlbw%3D%3D) video from langchain. Their agent saves such replics to agents.md. I hope their Deep Agent is open-source.]
+[To_Do]Also, episodic memory can be trigerred on some words like "always do like this", "good workflow to make this" and save it what user want to mention. That's examples I saw in [Introducing /remember](https://www.youtube.com/watch?v=6XXH5XecVp4&pp=ygUZL3JlbWVtYmVyIGxhbmdjaGFpbiB2aWRlbw%3D%3D) video from langchain. Their agent saves such replics to agents.md. I hope their Deep Agent is open-source.]
 
 ### Examples
 **Example**
@@ -191,7 +281,7 @@ python({"code": "from docx import Document\nfrom docx.shared import Pt\nfrom doc
 AI Agent: Here is the template according to our previous lab that we worked together: {template.docx}.
 
 ### Autobiographical Memory --> User-personalized Memory?
-Autobiographical Memory: A form of episodic memory focusing on events and experiences
+[To_Do]Autobiographical Memory: A form of episodic memory focusing on events and experiences
 related to one’s personal history [238]. While sometimes treated as a sub-category of episodic
 memory, autobiographical memory places particular emphasis on the self and its evolving
 life narrative
@@ -205,17 +295,18 @@ For our Agents, this would be implemented through techniques like Retrieval Augm
 Detailed Implementation
 Much of the organizational information already exists in sources such as Confluence, Jira, Slack, GitHub, and Google Drive. This information can be treated as factual knowledge.
 
-It would be valuable to capture additional facts during the agent's execution. For example, we can include a structured output field called semantic_memory at the end of the agent's run, where it records all facts observed throughout the execution or task completion. Since the agent still has access to its working memory, it can populate this field with relevant knowledge. Maybe it’s hard to keep track of everything when the task is long and the context window is filled with a lot of information. That’s why it makes sense to add ability Memory Controller that selectively extracts only the necessary information at each step—such as before a tool call, after a tool’s output, or when processing new user input.
-
+[In_Progress]It would be valuable to capture additional facts during the agent's execution. For example, we can include a structured output field called semantic_memory at the end of the agent's run, where it records all facts observed throughout the execution or task completion. Since the agent still has access to its working memory, it can populate this field with relevant knowledge. Maybe it’s hard to keep track of everything when the task is long and the context window is filled with a lot of information. That’s why it makes sense to add ability Memory Controller that selectively extracts only the necessary information at each step—such as before a tool call, after a tool’s output, or when processing new user input.
 Because the final structured response may become very large/overwhelming, it may be necessary to split it into multiple separate responses to get high-quality answers. (think about approach?)
 
 All collected information should be stored in a vector database collection named semantic_memory, using high-quality chunking. For example, chunking can be based on markdown formatting or a recursive character chunker, taking advantage of [ChromaDB's custom chunkers](https://research.trychroma.com/evaluating-chunking)(or it is the same?).
+#### How To Chunk? [To_Do]
 
 ### How To Retrieve
 
 When a new ReAct worker is invoked by the PlanExecutor, a semantic (vector) search retrieves the top 10 chunks most semantically similar to the user prompt. These chunks are then injected into the end of user prompt with a phrasing like: “Here are some facts and knowledge that may be relevant to your task and help you complete it: {dict_best_match}”
 
-Also, because Semantic Memory is categorized as Explicit and Implicit at the same time it has a tool recall_semantic?
+Also, because Semantic Memory is categorized as Explicit and Implicit at the same time it has a tool recall_semantic.
+[In_Progress]
 ```python
 def recall_semantic(
     query: str,
@@ -235,7 +326,7 @@ Best practices:
   """
 ```
 
-### How To Forget???
+### How To Forget???[To_Do]
 
 ---
 ### Examples
@@ -330,14 +421,15 @@ After each ReAct agent execution, the system aggregates the existing what_worked
 
 At the first invocation of a ReAct agent, the procedural memory is initialized as empty.
 
-[In this design, procedural memory closely resembles an agents.md-style guideline file. However, alternative approaches should be considered!!!
+[To_Do][In this design, procedural memory closely resembles an agents.md-style guideline file. However, alternative approaches should be considered!!!
 For example, in the LangChain [Introducing /remember](https://www.youtube.com/watch?v=6XXH5XecVp4&pp=ygUZL3JlbWVtYmVyIGxhbmdjaGFpbiB2aWRlbw%3D%3D)
 video, the system incrementally updates an agents.md file and may eventually promote accumulated knowledge into an explicit “skill.” But looks like not very reliable idea at the moment.]
 
 ### How To Retrieve
 Before each execution of the ReAct agent, the last 10 generated procedural memory instructions are added to its system prompt. They are taken from the file named `procedural_memory_instructions.txt`.
 
-Also, because Procedural Memory is categorized as Explicit and Implicit at the same time it has a tool recall_procedural?
+Also, because Procedural Memory is categorized as Explicit and Implicit at the same time it has a tool recall_procedural.
+[In_Progress]
 ```python
 def recall_procedural(
     query: str,
@@ -357,16 +449,36 @@ Best practices:
   """
 ```
 
-### How To Forget???
+### How To Forget???[To_Do]
 
 ---
-### Examples
+### Examples[To_Do]
 **Example**
 
 ---
 
+## What agent needs to remember and what is not
+
+Agent needs to know what is his purpose so that he knows what to remember, what to remember better, his focus in other words. For ReAct it has to be his task, given by PlanExecutor and for PlanExecutor it has to be user prompt.
+
+Maybe we have to make some special treatment to the information that somehow correlates with user prompt
+
+[To_Do]{No Mechanism at the moment}
+
+For Example:
+ReAct agent execution
+Task from PlanExecutor: “Research competitors and summarize key differentiators.”
+Relevant memory to store:
+Identified competitors
+Extracted differentiators
+Final summarized insights
+
+Memory that can be unuseful:
+Individual search queries
+Raw tool outputs used only once
+
 ## Priming && Classical Conditioning && Non-Associative Memory
-Does we really need them? At The Moment Didn't See Papers Demonstarting Usage Of Them And Didn't Overlap With Existing Ones (Semantic, Episodic, Procedural, Working(?))
+[To_Do|Think]Does we really need them? At The Moment Didn't See Papers Demonstarting Usage Of Them And Didn't Overlap With Existing Ones (Semantic, Episodic, Procedural, Working(?))
 
 * Priming: The phenomenon in which prior exposure to a stimulus influences subsequent responses, often without explicit recognition of the previous encounter [242]. 
 
@@ -374,9 +486,29 @@ Does we really need them? At The Moment Didn't See Papers Demonstarting Usage Of
 
 * Non-Associative Memory: Adaptive modifications in behavior following repeated exposure to a single stimulus. Habituation (reduced response to a repeated, harmless stimulus) and sensitization (increased response after exposure to a noxious or intense stimulus) are representative examples [244, 245].
 
-## Forgeting -- Is it the same as Selective Forgetting From MetaResearch?
+## Forgeting[In_Progress]
 
-### Replacing
+Selective forgetting [371] is the crucial process of removing or down-weighting memories that are deemed
+
+irrelevant, redundant, or outdated. This is essential for maintaining memory efficiency and preventing
+
+cognitive overload. Forgetting mechanisms can be based on time (older memories are more likely to be
+
+forgotten) [301], usage frequency (infrequently accessed memories are more likely forgotten) [257], and
+
+relevance to the current task or context [309]. In more fine-grained forgetting mechanisms, MemoryBank [261]
+
+applies **!!!the Ebbinghaus Forgetting Curve!!!** to quantify the forgetting rate, accounting for both time decay and
+
+the spacing effect, i.e., the principle that relearning information is easier than learning it for the first time.
+
+In contrast, Lyfe Agent [308] adopts a hierarchical summarize-and-forget strategy: it first clusters related
+
+memories, refines them into concise summaries, and then removes older memories that are highly similar to
+
+newer ones. This approach enables efficient, low-cost memory updates for real-time social interactions.
+
+### Replacing[To_Do]
 If Smth Older Information Contradicts Newer Information. There we need to make some sort of choice by the agent or Memory Controller which will decide which info is truthful, up-to-date.
 
 Can the same information be stored simultaneously in semantic, episodic, and procedural memory? -- Yes, it can be. Like this:
@@ -393,15 +525,37 @@ How to Forgot It? Are there more applicable situation like skill writing PDFs or
 
 ### RLM
 Still vector database retrieval is bad, this is where we need to improve a lot. As example, we can use as an idea/mechnism of [RLM (Resursive Language Model), which is a recent paper](https://arxiv.org/pdf/2512.24601). - Much more effective, still not the best, isn't very cost-effective solution (but better than giving whole context to llm), have pretty big latency(maybe use cheap and fast llm) -- looks like whole agent. 
+!!! -- [Video for this idea I've told](https://www.youtube.com/watch?v=7fbY8k9Mz3M&t=132s)
 
 ### Single-vector search improvement
 [Have to consider watching [RAG videos](https://www.youtube.com/watch?v=6vG_amAshTk&list=PL31XFvSmiPKEMco1JXKtIBttlAOOxE8aO) and consider doing some Agentic RAG, inspiring by [RLM](https://arxiv.org/pdf/2512.24601)]
 
-### DRIFT Search and GraphRAG
+### DRIFT Search and GraphRAG (Fav)
 At the moment, this mainly comes down to ideas from [DRIFT Search and GraphRAG](https://youtu.be/6vG_amAshTk?si=h9iNUk7xXOjvMJfI) ideas. These approach(es) need to be studied in detail to extract the strongest ideas and combine them into a more effective solution.
+
+Существует множество библиотек (фреймворков), которые используются для создания RAG-систем на основе графов знаний:
+
+GraphRAG (MIT license): В июле 2024 года Microsoft Research открыла код проекта GraphRAG и сделала его доступным на GitHub. Процесс GraphRAG включает в себя извлечение графа знаний из необработанного текста, построение иерархии сообществ, генерацию сводок для этих сообществ, а затем использование этих структур при выполнении задач на основе RAG.
+
+LightRAG (MIT license): Инновационный подход, основанный на GraphRAG, который сочетает атрибуты графов знаний с системами поиска на основе эмбеддингов, что делает его быстрым и производительным, достигая результатов SOTA (State-of-the-Art).
+
+fast-graphrag (MIT license): Оптимизированный и быстрый фреймворк GraphRAG, разработанный для интерпретируемых, высокоточных рабочих процессов поиска, управляемых агентами.
+
+HiRAG (MIT license): Новый RAG-подход, который использует иерархические знания для улучшения семантического понимания и возможностей захвата структуры RAG-систем в процессах индексации и поиска.
+
+nano-graphrag (MIT license): Этот фреймворк предоставляет более легкий, быстрый и чистый GraphRAG, сохраняя при этом основную функциональность. Проекты, в которых использовался данный фреймворк: LightRAG, fast-graphrag, HiRAG.
 
 ### File system
 The file system is currently one of the most popular storage options for agent-based systems. This may be because LLMs are already well fine-tuned to work with file-based structures confidently and reliably.
+
+### LSH
+**mentioned in Think-In-Memory paper**
+Retrieval for Memory Recalling
+Built on the memory storage, the memory retrieval operates a two-stage retrieval task for the most relevant thoughts, i.e., LSHbased retrieval followed by similarity-based retrieval. The paradigm involves the following detailed points. 
+• Stage-1: LSH-based Retrieval. For a new query 𝑄, we first obtain its embedding vector 𝑥 based on LLM agent. Then LSH function (i.e., Eq. 1) can produce the hash index of the query. This hash index also indicates the its nearest group for similar thoughts in the memory cache according to the property of LSH.
+• Stage-2: Similarity-based Retrieval. Within the nearest group,we calculate the pairwise similarity between the query and each piece of thought in the group. Then top-𝑘 thoughts are recalled as the relevant history for accurately answering the query. It should be noticed that pairwise similarity is calculated within a group rather than the whole memory cache, which can achieve more efficient retrieval than previous memory mechanisms.
+
+It is just older, faster and has less recall than HNSW. Both are mechanism to solve problem of ANN.
 
 ### Multi-vector search
 Multi-vector search has relatively high latency, even with various optimizations.
@@ -415,13 +569,7 @@ One idea would be to borrow the concept of multi-vector search but apply it to s
 
 A more reasonable approach might be to ask an LLM to extract truly key terms from both the query and the documents, keep their number small, and still rely on multi-vector search. In general, combining multi-vector search with keyword-based retrieval seems promising, where the query is optimized in a Google-like manner and documents are filtered or indexed by keywords.
 
-## Questions To Answer Still:
-Does PlanExecutor has to have exactly the same memory subsystem as ReAct workers? Because I thought ReAct workers have one memory system.
-
-Concept mentioned by Manus AI CEO on Langchain webinar (which he saw in [programming languages](https://go.dev/blog/codelab-share)): “Do not communicate by sharing memory;
-instead, share memory by communicating.”
-
-## Benchmarks for Memory
+## Benchmarks for Memory[To_Do]
 
 Passing the TACXXL Benchmark 
 
@@ -435,8 +583,17 @@ In other words, these should be tasks where activating different types of memory
 
 LoCoMo
 
----
+## Questions To Answer Still:
+Does PlanExecutor has to have exactly the same memory subsystem as ReAct workers? Because I thought ReAct workers have one memory system.
+
+Concept mentioned by Manus AI CEO on Langchain webinar (which he saw in [programming languages](https://go.dev/blog/codelab-share)): “Do not communicate by sharing memory;
+instead, share memory by communicating.”
+
 
 ## Ideas
 
+Concept Of Memory Controller!!!
+
 MMR (Maximum Marginal Relevance) — for retrieving very similar and contradictory information
+
+Як Меморі Контроллер має розуміти, що треба зберігати, а що ні? -- Так, справді можуть бути релевантні думки, які можуть там суперечити, тому 
