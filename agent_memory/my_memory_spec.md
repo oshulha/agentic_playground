@@ -246,6 +246,7 @@ Using just find(or grep) function by tool name found the category(collection of 
 2. Rewriting Contradictatory Memories
 
 Обидва методи базуються на ЛЛМці.
+
 Prompt for Rewriting Contradictatory Memories
 ```python
 """
@@ -255,7 +256,7 @@ Example 1.
 Input:
 run_cmd collection:
 ls was made in Root directory.
-Root directory has input.txt, intermediate.txt.(НУ СУКА НУ КАК ОН ДОЛЖЕН ПОНЯТЬ КОМУ ВЕРИТЬ А КОМУ НЕТ, ЕСЛИ МИ НЕБУДЕМ ПИСАТЬ ДАТУ, ВРЕМЯ, БЛЯТЬ -- НУЖНО МЕНЯТЬ КОНЦЕПЦИЮ ПОСТРОЕНИЯ СПОГАДІВ, ПЕЙПЕР ЕТО НЕ ПРОДУМАЛ!!!)
+Root directory has input.txt, intermediate.txt.(КАК ОН ДОЛЖЕН ПОНЯТЬ КОМУ ВЕРИТЬ А КОМУ НЕТ, ЕСЛИ МИ НЕБУДЕМ ПИСАТЬ ДАТУ, ВРЕМЯ,-- НУЖНО МЕНЯТЬ КОНЦЕПЦИЮ ПОСТРОЕНИЯ СПОГАДІВ, ПЕЙПЕР ЕТО НЕ ПРОДУМАЛ!!!)
 ls was made in Root directory.
 Root directory has input.txt, intermeadiate.txt, output.txt
 Output:
@@ -271,9 +272,9 @@ Output:
 """
 ```
 
+Prompt for Merging Thoughts
 ```python
 """
-Prompt for Merging Thoughts
 Given the following thoughts, please merge the similar thoughts with the same entity:
 Example 1.
 Input:
