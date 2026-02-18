@@ -21,6 +21,14 @@ Explains how they differ, which memory types belong to each category, and discus
 **This paragraph is provided for context only;** it does not contain any implementation ideas at the moment. 
 Temporary, active workspace of the agent. Maintains current interaction state, conversation history, and short-term reasoning context.
 
+[**Tool-Level Memory**](#tool-level-memory)
+
+`Status: In Progress`
+
+Stores structured reflections about individual tool executions.
+Captures inductive thoughts extracted from each (tool_call, tool_output) pair, representing relations such as (subject, relation, object).
+Organized per tool (separate collection per tool name) and used to improve future tool selection, parameterization, and execution reliability through recall, merging, and contradiction resolution mechanisms.
+
 [**Episodic Memory**](#episodic-memory)
 
 `Status: Done(v1)`
@@ -170,13 +178,178 @@ AI Agent: You said your name is Adam
 
 To be continued...?
 
+## Tool-Level Memory
+
+As you remember, our agent has a ReAct architecture.
+Tool-level memory is the agent’s memory that operates by retrieving and creating memories for each pair of tool call and tool output.
+
+So, let’s start with the mechanism.
+Workflow. Overall framework is divided into two stages:
+• Stage-1: Recall. Generated a new tool-call by our ReAct agent, tool call goes to commit mechanism. Commit mechanism is mechanism, when agent is asked “Are you sure that this is a correct tool call that will help you get closer to completing the task?” like a AI prompt. In our case, in addition to AI prompt we will add "Here is what you recall about this tool: {relevant_memories}". So as you can understand there is a Recall mechanism is triggered.
+
+Не Описаний Коміт механізм. Якщо після пригадування про тулу, він вирішує змінити свій вибір до іншої тули, то він перекомічує??? І тоді має згадати тепер про цю тулу ж.
+
+After reading the AI prompt from commit mechanism, agent can change his tool-call decision or approve that he is sure that this tool-call will help him get closer to completing the task.
+
+Retrieving relevant thoughts helps generating accurate tool-calls.
+
+• Stage-2: Post-think and Update. After answering the question,
+Memory Controller has to post-think upon tool call and tool output pair and insert the newly self-generated reasoning thoughts into memory (to vector db collection according to tool name).
+
+### How To Update/Save? (Post-think)
+
+In detail, the post-thinking stage happens right after each tool output. Each post-thinking stage generates one memory.
+
+The memory thought is formed by the Memory Controller in the following way:
+Memory thought will be stored as Inductive Thought. The inductive thought is defined as the text which contains the relation between two entities, i.e., satisfying a relation triple (𝐸ℎ, 𝑟𝑖, 𝐸𝑡). 𝐸ℎ is head entity connected with tail entity 𝐸𝑡 via the relation 𝑟𝑖, where 𝑖 ∈ [0, 𝑁] and 𝑁 is the relation number. Conceptually, 𝑅ℎ = {𝑟1, · · · , 𝑟𝑁 } consists of all the one-hop relations for the entity 𝐸ℎ.
+
+Prompt for Generating Thoughts:
+```python
+"""
+Given the following tool-call and tool-output pairs, please extract the relation (subject, relation, object) with corresponding text:
+Example 1.
+Input:
+Tool-call: run_cmd("rm -rf valuable.txt")
+Tool Output: You didn't have enough rights. You need to use sudo.
+Output:
+(Deletion of valuable.txt, requires, sudo rights).
+Deletion of valuable.txt requires sudo rights.
+
+Example 2.
+Input:
+Tool-call: deep_research("For which Ukrainian university authors of the paper `Large Language Models as Oracles for Ontology Alignment` ")
+Tool Output: Ukrainian Catolic University
+Output:
+(Some authors of `Large Language Models as Oracles for Ontology Alignment`, are from, Ukrainian Catolic University).
+Some authors of `Large Language Models as Oracles for Ontology Alignment` are from Ukrainian Catolic University.
+
+Here is current tool-call: 
+{current_tool_call}
+Here is current tool output:
+{current_tool_output}
+
+Also, you need to враховувати спогади, які вже були пригадані, аби позбутися повторів. Ось вони:
+{recalled_memories}
+"""
+```
+
+Then this memory thought will be categorized according to tool name of called tool. This way we will have a vector database collection named as tool name. In this collection we will add this memory thought. 
+
+### How To Retrieve (Recall Mechanism)
+
+Using just find(or grep) function by tool name found the category(collection of vector db named by tool name) and then we need to take out the best out of this category (or all of them).
+
+Але Тут Вмішується Локальний Механізм Забування Tool-Level Memory.
+(Звісно, Якщо Кількість Елементів не Захмарна!!! Інакше Шо Лі Доведеться Відмовитись Від цього Механізму???)
+Цей Механізм скаладається з двох етапів:
+1. Merging Memories
+2. Rewriting Contradictatory Memories
+
+Обидва методи базуються на ЛЛМці.
+Prompt for Rewriting Contradictatory Memories
+```python
+"""
+Given the following thoughts, please remove the
+counterfactual thoughts or contradictory thoughts:
+Example 1.
+Input:
+run_cmd collection:
+ls was made in Root directory.
+Root directory has input.txt, intermediate.txt.(НУ СУКА НУ КАК ОН ДОЛЖЕН ПОНЯТЬ КОМУ ВЕРИТЬ А КОМУ НЕТ, ЕСЛИ МИ НЕБУДЕМ ПИСАТЬ ДАТУ, ВРЕМЯ, БЛЯТЬ -- НУЖНО МЕНЯТЬ КОНЦЕПЦИЮ ПОСТРОЕНИЯ СПОГАДІВ, ПЕЙПЕР ЕТО НЕ ПРОДУМАЛ!!!)
+ls was made in Root directory.
+Root directory has input.txt, intermeadiate.txt, output.txt
+Output:
+ls was made in Root directory.
+ls was made in Root directory.
+Root directory has input.txt, intermeadiate.txt, output.txt
+Example 2.
+Input:
+???
+Output:
+???
+[A group of thoughts]
+"""
+```
+
+```python
+"""
+Prompt for Merging Thoughts
+Given the following thoughts, please merge the similar thoughts with the same entity:
+Example 1.
+Input:
+ls was made in Root directory.
+ls was made in Root directory.
+Root directory has input.txt, intermeadiate.txt, output.txt
+Output:
+ls was made in Root directory.
+Root directory has input.txt, intermeadiate.txt, output.txt
+Example 2.
+Input:
+ls was made in Root directory.
+ls was made in /home/oleksandr/Downloads directory. (ТРЕБА ДАТУВАННЯ)
+Root directory has input.txt, intermeadiate.txt, output.txt
+Output: (а чи треба робити такий мердж? а чи не зіб'є він)
+ls was made in Root directory and then /home/oleksandr/Downloads directory. 
+Root directory has input.txt, intermeadiate.txt, output.txt
+Input:
+[A group of thoughts]
+"""
+```
+
+Що краще спочатку робити Merging, Rewriting? Чи дати це в одному промпті?
+
+Навіть якщо Post-processing створить такий самий або майже такий самий спогад, що вже лежить у Tool-level Memory. У наступному етапі Recall він матиме зробити Merging + Rewriting Contradictatory Memories, що вирішує проблему.
+
+[To_Do] Як правильно робити query до БД, яка зберігає tool-level memory?
+Оскільки по сирому tool-call нічого у векторній БД фіг відкличеться, бо ми засунемо в категорію цієї тули спогади з трьох слів походу...(типу скоріш за все відповідно до параметрів робити запит...). Якщо їх мало, то можна було б вертати всі і потім відбирати ллмкою.
+
+[To_Do](Still optional if latency will be high enough) 
+Then these all retrieved memories will be given to Memory Controller. Memory Controller (which is LLM-based) will take out the only relevant ones according to his context. And Will DO Some Scoring Of Relevance Or Reward System To Memories With The Memory Thoughts He will take from the list.
+
+Final output of Memory Controller is what will added to the AI prompt, which ReAct Agent will read after commiting the tool.
+
+Also, because Tool-level Memory is categorized as Explicit and Implicit at the same time it has a tool recall_tool_level.
+[In_Progress]
+```python
+def recall_tool_level(
+    toolname: str,
+    query: str,
+    alpha: int
+) -> dict:
+  """Recall relevant memories from Tool-level memory for explicit query.
+
+Recommended scenarios:
+- When the agent needs to retrieve factual or conceptual knowledge...
+
+Best practices:
+- Use this tool to ...
+
+  Args:
+    toolname: Over which toolname memory thoughts you want to search.
+    query: The search query in vector db collection of specific tool.
+    alpha: (Optional) Defaults to 0.7. This means the search result is influenced by 70% vector similarity and 30% BM25 ranking.
+  """
+```
+### How To Forget???[To_Do]
+
+Тут є два механізми забування:
+Локальний механізм забування,
+Глобальний механізм забування.
+Локальний механізм забування в Tool-Level Memory:
+Кожен раз, коли відбувається коміт тули, 
+
+Глобальний механізм забування - це те, що розглянуто у параграфі Forgetting з другим рівнем заголовку. Він побудований відносно Меморі Контроллера, який як ЛЛМка відбирає потрібні релевантні спогади відповідно до його контекстного вікна. Спогади відібрані релеватними отримують бал/бали, а спогади, що не були вибрані релевантними не отримують балів або отримують від'ємні бали. Періодично будуть відсікатися та видалятися спогади, що мають загальний бал дуже низьким відносно інших спогадів. Це зроблено для того, щоб система пам'яті могла коректно працювати та надавати лише справді потрібні спогади. 
+
+### Examples
+**Example**
+
 ## Episodic Memory
 
 [To_Do]Change Vector Search With Graph Rag Ideas?
 
 Episodic memory is a historical collection of prior experiences, or episodes. It includes what happened, how it happened, and the lessons or insights learned from those experiences, even if they were never clearly stated.
 
-### How To Update (How To Save?)
+### How To Update/Save?
 
 For our agents, this includes past conversations from all ReAct workers, 2-4 keywords (context tags) that would help identify similar future conversations, one-sentence summaries of what was done in the immediately preceding conversation, and structured fields such as what_worked and what_to_avoid. The what_worked field captures the most effective approaches and strategies used as well as information that can be leveraged in subsequent iterations. The what_to_avoid field records critical pitfalls, ineffective approaches, and factors that may lead the agent down incorrect paths or into dead ends.
 
@@ -291,7 +464,7 @@ life narrative
 Semantic memory represents our structured knowledge of facts, concepts, and their relationships - essentially what we "know" rather than what we "remember experiencing."
 For our Agents, this would be implemented through techniques like Retrieval Augmented Generation (RAG), where relevant information is dynamically pulled from a knowledge base to ground and inform responses.
 
-### How To Update (How To Save?)
+### How To Update/Save?
 Detailed Implementation
 Much of the organizational information already exists in sources such as Confluence, Jira, Slack, GitHub, and Google Drive. This information can be treated as factual knowledge.
 
@@ -416,7 +589,7 @@ Procedural memory is different from working, semantic, and episodic memory since
 
 In our system, we adopt a simplified implementation. Procedural memory is represented as a list of up to 10 concise instructions that guide the agent’s behavior. These instructions are derived from episodic memory.
 
-### How To Update (How To Save?)
+### How To Update/Save
 After each ReAct agent execution, the system aggregates the existing what_worked and what_to_avoid entries with newly generated insights obtained during the Reflexion stage. Based on this updated information, the procedural memory is revised by updating the list of 10 instructions, which are saved into the file named `procedural_memory_instructions.txt`.
 
 At the first invocation of a ReAct agent, the procedural memory is initialized as empty.
@@ -597,3 +770,5 @@ Concept Of Memory Controller!!!
 MMR (Maximum Marginal Relevance) — for retrieving very similar and contradictory information
 
 Як Меморі Контроллер має розуміти, що треба зберігати, а що ні? -- Так, справді можуть бути релевантні думки, які можуть там суперечити, тому 
+
+[Вирівнювання онтологій(термінологій)](https://arxiv.org/abs/2508.08500) між різними підсистемами пам'яті може бути справді траблом, але це вже так чисто ідея для майбутнього я думаю.
