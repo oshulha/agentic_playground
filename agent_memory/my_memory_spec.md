@@ -2,8 +2,98 @@
 
 Memory subsystem is the information storage and retrieval part of our AI Agent. It consists of a single vector store that contains several collections. It directly interacts with the Brains subsystem (PlanExecutor and ReAct) and operates at multiple levels, such as storing memories from the PlanExecutor as well as memories from each ReAct worker invoked by the PlanExecutor. At the moment, our Memory subsystem is composed of four underlying memory components: working, episodic, semantic, and procedural memory.
 
-Memory Architecture Diagram:
-![Memory Architecture Diagram](memory_schema.png)
+Tool-Level Memory Architecture Diagram:
+![Tool-Level Memory Architecture Diagram](memory_schema.png)
+
+```mermaid
+%%{init: {'themeVariables': { 
+    'fontSize': '28px',
+    'sequenceNumberFontSize': '28px',
+}}}%%
+sequenceDiagram
+    title Tool-Level Memory Flow
+
+    actor ReAct
+    participant MC as Memory Controller
+    participant VS as Vector Store
+
+    activate ReAct
+
+    ReAct->>ReAct: System Prompt
+    ReAct->>ReAct: User Prompt
+    ReAct->>ReAct: commit(python("sum(2, 2)"))
+
+    ReAct->>MC: retrieve(tool="python", params="sum(2,2)")
+    Note right of ReAct: HTTP POST /memory/retrieve
+
+    MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="python", query="sum(2,2)")
+    VS->>MC: relevant memories
+
+    MC->>ReAct: You are recalling such memories: {relevant_memories}.<br/>Are you sure you want to make python("sum(2, 2)")?
+
+    ReAct->>ReAct: Commits (yes, I am sure)
+    ReAct->>ReAct: tool-output: Sum is 4.
+
+    ReAct->>ReAct: commit(run_cmd("{"command": "ls", "path":"/home/oleksandr"}"))
+
+    ReAct->>MC: retrieve(tool="run_cmd",<br/>params="{"command": "ls", "path":"/home/oleksandr"}")
+    Note right of ReAct: HTTP POST /memory/retrieve
+
+    MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="run_cmd",<br/>query="{"command": "ls", "path":"/home/oleksandr"}")
+
+    VS->>MC: relevant memories:<br/>file.txt file2.txt
+
+    MC->>ReAct: You are recalling such memories: file.txt file2.txt.<br/>Are you sure you want to make run_cmd<br/>("{"command": "ls", "path":"/home/oleksandr"}")?
+
+    ReAct->>ReAct: Commits (no, I am not sure).<br/>I want to make tool-call: rocketchat_send_msg({user: "Bob", text: "Hi!"})
+
+    ReAct->>ReAct: commit(rocketchat_send_msg({user: "Bob", text: "Hi!"}))
+
+    ReAct->>MC: retrieve(tool="rocketchat_send_msg",<br/>params="{user: "Bob", text: "Hi!"}")
+    Note right of ReAct: HTTP POST /memory/retrieve
+
+    MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="rocketchat_send_msg",<br/>query="{user: "Bob", text: "Hi!"}")
+
+    VS->>MC: relevant memories
+
+    MC->>ReAct: You are recalling such memories: {relevant_memories}.<br/>Are you sure you want to make rocketchat_send_msg<br/>("{user: "Bob", text: "Hi!"}")?
+
+    ReAct->>ReAct: Commits (yes, I am sure)
+    ReAct->>ReAct: tool-output: {"success": True}
+
+    ReAct->>ReAct: tool-call: rocketchat_wait_for_msg()
+
+    ReAct->>MC: Do you accept tool call: rocketchat_wait_for_msg() and<br/> tool output: {"success": True, "text": "Hi! How are you?"}? Or you want to summarize tool output?
+    Note right of ReAct: HTTP POST /memory/accept
+
+    MC->>ReAct: Yes, I do accept.
+
+    ReAct->>ReAct: tool-output: {"success": True, "text": "Hi! How are you?"}
+
+    ReAct-->>ReAct: ..........more pairs of tool-call & tool-output......
+
+    ReAct->>ReAct: filling a structured output schema with 50 fields<br/>per each pair of tool-call & tool-output
+
+    Note right of ReAct: some python code will make out of 50 fields structured output<br/>small JSONs having only params, tool-outputs, memory thought<br/>that was chosen as if it did smth valuable.
+
+    ReAct->>MC: sends final JSONs to Tool-Level Memory
+    MC->>VS: sends final JSONs to Tool-Level Memory Vector Store
+    VS->>MC: {success: True}
+    MC->>ReAct: {success: True}
+```
+
+    ReAct -> MC: send a structured output schema with 10 fields per each pair of tool-call & tool-output (with asking a question: Is It Necessary To Remember For Next Iterations (e.g. What Worked Well? What To Avoid In Order Not To Make Such An Error Once Again)?) -- I Do Need To Read About Reflexion A Lot!!! What IS The Prompt Better To Use For It?
+
+Будемо віддавати Меморі Контроллеру, що зберігати, а що ні. Він обирає які зберігати, а які нє відповідно до совго контексту. Зберігає він це у відповідну collection, яка має назву tool у вигляді JSON у векторній БД у вигляді як:
+{
+  "parameters": params
+  "memory_thought": memory_thought
+}
+
+Складно уявляється Reflexion по кожній тулі(what worked, what to avoid?). Якесь особливе перевикористання тули, чи неправильна робота параметрів, тули, функціонал не зазначений у описі тули, тріггер системи безпеки, можна дістати кукі які просе користувач. Але коміт це більше про предостерегание, а ніж encourage, але може бути цікаве і краще поєднання параметрів, і агент може змінити свою думку в сторону кращих параметрів.
+
+50 полів --
+Дуже облегшує життя такий підхід. 
 
 # Table Of Contents
 
