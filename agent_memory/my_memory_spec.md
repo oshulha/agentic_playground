@@ -275,23 +275,6 @@ sequenceDiagram
     MC->>ReAct: {success: True}
 ```
 
-!!! А Tool-level память — это когда ты на каком-то шаге вызываешь конкретную тулу, и ты запомнил, что именно она имеет какую-то специфику работы. Вплоть до того, что она там типа не работает на какой-то системе. Что типа "не делай вот так, иди сразу через браузер". Типа эта тула поломана в этом MCP, я уже там пробовал типа два дня назад, один день назад, и она не работает, типа даже не пытайся. Иди сразу через браузер. То есть это уже как бы воспоминание уровня тулы конкретной. То есть оно не про стратегию, куда направлять траекторию вообще своего там мышления и действий, а про параметры вызова конкретной тулы. Типа сюда такое-то мы не передаем, здесь мы серчим так-то и тому подобное. Вот, и я ожидаю на самом деле, что таких воспоминаний будет немного. Что чего-то такого примечательного в вызовах тулов не должно быть часто.
-
-ReAct -> MC: send a structured output schema with 10 fields per each pair of tool-call & tool-output (with asking a question: Is It Necessary To Remember For Next Iterations (e.g. What Worked Well? What To Avoid In Order Not To Make Such An Error Once Again)?) -- I Do Need To Read About Reflexion A Lot!!! What IS The Prompt Better To Use For It?
-
-Будемо віддавати Меморі Контроллеру, що зберігати, а що ні. Він обирає які зберігати, а які нє відповідно до совго контексту. Зберігає він це у відповідну collection, яка має назву tool у вигляді JSON у векторній БД у вигляді як:
-{
-  "parameters": params
-  "memory_thought": memory_thought
-}
-
-Складно уявляється Reflexion по кожній тулі(what worked, what to avoid?). Якесь особливе перевикористання тули, чи неправильна робота параметрів, тули, функціонал не зазначений у описі тули, тріггер системи безпеки, можна дістати кукі які просе користувач. Але коміт це більше про предостерегание, а ніж encourage, але може бути цікаве і краще поєднання параметрів, і агент може змінити свою думку в сторону кращих параметрів.
-
-50 полів --
-Дуже облегшує життя такий підхід. 
-
----
-
 As described earlier, our agent is built on a ReAct architecture.
 Tool-Level Memory is a specialized memory layer that operates at the granularity of tool interactions. Specifically, it stores and retrieves structured memories for each (tool call, tool output) pair generated during a ReAct execution cycle.
 
@@ -376,6 +359,7 @@ def extract_toolname_and_parameters(tool_call: str) -> tuple:
 
     return (tool_call[:start], tool_call[start + 1:end])
 
+# Recall Tool-Level Memory Mechanism
 MEMORY_CONTROLLER_URL = os.getenv("MEMORY_CONTROLLER_URL")
 PARAMS_THRESHOLD = 200
 def recall_tool_level(
@@ -473,11 +457,11 @@ def recall_tool_level(
 
 ### How To Update/Save? (Post-think)
 
-After ReAct has done his task, automatically code has to generate dynamic structured output schema (or model) with the function like create_post_processing_model made during execution of ReAct. 
+After ReAct has done his task, automatically code has to generate dynamic structured output schema (or model) with the function like create_post_think_model made during execution of ReAct. 
 
 In this schema ReAct has to fill such fields like: "what_worked", "what_to_avoid" for exact pair of tool-call & tool-output and fill fields "is_success" and "errors" if there is some problems with selecting tools.
 
-Example of function:
+Example of function create_post_think_model:
 ```python
 ?????????????class InitAnalysis(BaseModel):??????????????????
     is_success: bool = Field(
@@ -545,10 +529,15 @@ Your task is to extract key elements that would be most helpful when encounterin
 
 Review the trajectory and create a memory reflection following these rules:
 
-1. If you do not have enough information for a field, the field is not relevant or field doesn't contain anything useful, leave it empty.
-2. Do not include generic advice — only extract insights grounded in this specific tool-call and tool-output pair.
+1. If you do not have enough information for a field, the tool call-tool output pair is not relevant, contains nothing useful, or only includes generic advice, leave that field empty.
+2. Do not include generic advice — extract only insights grounded in this specific tool-call and tool-output pair.
 3. Be extremely concise - each string should be one clear, actionable sentence
 4. Focus only on information that would be useful for handling similar future situations
+
+Only a small number of insights is expected per trajectory (approximately 0–10% of the total number of tool call–tool output pairs).
+
+It is completely normal for most fields to be empty.
+It is also normal to fill only one field (e.g., what_worked or what_to_avoid) when applicable.
 
 **Output Format:**
 You must answer using the Structured Output format required by the system. In that format:
@@ -565,6 +554,7 @@ Examples:
 Good "what_worked":
 - "Using curl with the -L flag correctly followed redirects and retrieved the final page content."
 - "Specifying the exact file path reduced unnecessary directory exploration."
+- ""
 
 Bad "what_worked":
 - "It is better to use it like this."
@@ -573,6 +563,7 @@ Bad "what_worked":
 Good "what_to_avoid":
 - "Reading secret_passwords.md with cat triggered a security alert."
 - "Calling the search tool without a query parameter caused an execution error."
+- ""
 
 Bad "what_to_avoid":
 - "Do not read that file."
@@ -690,6 +681,8 @@ Input:
 Що краще спочатку робити Merging, Rewriting? Чи дати це в одному промпті?
 
 Навіть якщо Post-processing створить такий самий або майже такий самий спогад, що вже лежить у Tool-level Memory. У наступному етапі Recall він матиме зробити Merging + Rewriting Contradictatory Memories, що вирішує проблему. Може робити після кожного Post-think stage Merging + Rewriting Contradictory. Або ми будемо зберігати, що ми в основному брали з векторної бази даних і кому повертали, щоб робити аналіз після РеАкта, а не під час. Або якось робити паралельно 
+
+Датування (Володимир казав, що є 3 варіанти забування міт 25.02, як він бачить працюючих)
 
 ### Examples
 **Example**
@@ -1219,7 +1212,18 @@ instead, share memory by communicating.”
 
 ## Ideas
 
-Також я думаю, що РеАкт воркеру треба буде в System prompt пояснити як працює Memory Subsystem, бо як мінімум Commit Mechanism буде капець яким незвичним для нього. І це буде взагалі не дуже, якщо буде постійно забувати, що цей механізм буде з'являтись і як він працює. 
+Стратегія написання спеки:
+  Спочатку коротко опиши Розділ і потім розширюй деталями
+
+**Тул Левел Меморі**
+  Розуміння Та Приклади:
+    !!! А Tool-level память — это когда ты на каком-то шаге вызываешь конкретную тулу, и ты запомнил, что именно она имеет какую-то специфику работы. Вплоть до того, что она там типа не работает на какой-то системе. Что типа "не делай вот так, иди сразу через браузер". Типа эта тула поломана в этом MCP, я уже там пробовал типа два дня назад, один день назад, и она не работает, типа даже не пытайся. Иди сразу через браузер. То есть это уже как бы воспоминание уровня тулы конкретной. То есть оно не про стратегию, куда направлять траекторию вообще своего там мышления и действий, а про параметры вызова конкретной тулы. Типа сюда такое-то мы не передаем, здесь мы серчим так-то и тому подобное. Вот, и я ожидаю на самом деле, что таких воспоминаний будет немного. Что чего-то такого примечательного в вызовах тулов не должно быть часто.
+
+    Складно уявляється Reflexion по кожній тулі(what worked, what to avoid?). Якесь особливе перевикористання тули, чи неправильна робота параметрів, тули, функціонал не зазначений у описі тули, тріггер системи безпеки, можна дістати кукі які просе користувач. Але коміт це більше про предостерегание, а ніж encourage, але може бути цікаве і краще поєднання параметрів, і агент може змінити свою думку в сторону кращих параметрів.
+
+  Ми використовуємо what_worked, what_to_avoid в Tool-Level Memory Post-think Stage -- I Do Need To Read About Reflexion A Lot!!! What IS The Prompt Better To Use For It? Maybe there is some useful ideas to think about, borrow and implement
+
+  Також я думаю, що РеАкт воркеру треба буде в System prompt пояснити як працює Memory Subsystem, бо як мінімум Commit Mechanism буде капець яким незвичним для нього. І це буде взагалі не дуже, якщо буде постійно забувати, що цей механізм буде з'являтись і як він працює.
 
 Concept Of Memory Controller!!!
 
