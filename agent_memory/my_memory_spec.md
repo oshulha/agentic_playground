@@ -211,7 +211,7 @@ sequenceDiagram
     ReAct->>ReAct: tool-call: python("sum(2, 2)")
     ReAct->>ReAct: Commit Mechanism initiated
 
-    ReAct->>MC: recall_tool_level(tool="python", params="sum(2,2)")
+    ReAct->>MC: recall_tool_level(tool="python", tool_parameters="sum(2,2)")
     Note right of ReAct: HTTP POST /memory/recall_tool_level
 
     MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="python", query="sum(2,2)")
@@ -226,7 +226,7 @@ sequenceDiagram
 
     ReAct->>ReAct: Commit Mechanism initiated
 
-    ReAct->>MC: recall_tool_level(tool="run_cmd",<br/>params="{"command": "ls", "path":"/home/oleksandr"}")
+    ReAct->>MC: recall_tool_level(tool="run_cmd",<br/>tool_parameters="{"command": "ls", "path":"/home/oleksandr"}")
     Note right of ReAct: HTTP POST /memory/recall_tool_level
 
     MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="run_cmd",<br/>query="{"command": "ls", "path":"/home/oleksandr"}")
@@ -240,7 +240,7 @@ sequenceDiagram
     ReAct->>ReAct: tool-call: rocketchat_send_msg({user: "Bob", text: "Hi!"})
     ReAct->>ReAct: Commit Mechanism initiated
 
-    ReAct->>MC: recall_tool_level(tool="rocketchat_send_msg",<br/>params="{user: "Bob", text: "Hi!"}")
+    ReAct->>MC: recall_tool_level(tool="rocketchat_send_msg",<br/>tool_parameters="{user: "Bob", text: "Hi!"}")
     Note right of ReAct: HTTP POST /memory/recall_tool_level
 
     MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="rocketchat_send_msg",<br/>query="{user: "Bob", text: "Hi!"}")
@@ -256,7 +256,7 @@ sequenceDiagram
     ReAct->>ReAct: Accept Mechanism initiated
 
     ReAct->>MC: Do you accept tool call: rocketchat_wait_for_msg() and<br/> tool output: {"success": True, "text": "Hi! How are you?"}? Or you want to summarize tool output?
-    Note right of ReAct: HTTP POST /memory/accept
+    Note right of ReAct: HTTP POST /memory/recall_tool_level
 
     MC->>ReAct: Yes, I do accept.
 
@@ -264,9 +264,10 @@ sequenceDiagram
 
     ReAct-->>ReAct: ..........more pairs of tool-call & tool-output......
 
-    ReAct->>ReAct: filling a structured output schema with 50 fields<br/>per each pair of tool-call & tool-output
+    ReAct->>ReAct: filling a structured output schema with number of pairs of tool call and tool output fields<br/>per each pair of tool-call & tool-output
 
-    Note right of ReAct: some python code will make out of 50 fields structured output<br/>small JSONs having only params, tool-outputs, memory thought<br/>that was chosen as if it did smth valuable.
+    Note right of ReAct: some python code will make out of structured output with number of pairs of tool call and tool output<br/>small JSONs having only toolname, tool_parameters, tool-outputs, what_worked, what_to_avoid<br/>that was chosen as if it did smth valuable.
+    Note right of ReAct: HTTP POST /memory/store_tool_level
 
     ReAct->>MC: sends final JSONs to Tool-Level Memory
     MC->>VS: sends final JSONs to Tool-Level Memory Vector Store
@@ -303,7 +304,7 @@ The system retrieves relevant past memories associated with the same toolname, t
 
 • Stage-2: Post-think and Update. 
 After ReAct completes its task, a structured post-processing step is triggered. Code extracts all tool-call and tool-output pairs generated during execution. Proposes a structured output to the agent.
-The agent fills strcutured output fields such as: `what worked`, `what to avoid`.
+The agent fills struсtured output fields such as: `what worked`, `what to avoid`.
 
 After ReAct has done his task, automatically code has to generate structured output with the number of pairs of tool call and tool outputs made during execution of ReAct. 
 And then being proposed to agent where agent has to fill necessary fields: what worked, what to avoid for exact pair of tool-call & tool-output.
@@ -312,20 +313,23 @@ categorized by tool name,
 stored in a dedicated vector collection per tool,
 optionally processed by memory consolidation mechanisms(?).
 
-### How To Retrieve (Recall Mechanism) list_of_relevant_memories
+### How To Retrieve (Recall Mechanism)
 
-Отже, коли агент зробив тул-колл, а тул-колл потрапив до коміт механізму. У коміт механізмі робиться API-виклик до Memory Controller. Я думаю, що це буде HTTP POST /memory/recall. Можливо, аби не робити сирий запит його можна обгорнути в функцію recall_tool_level. Ця ж функція отримує результат API виклику, тобто після того як Меморі Контроллер зробив запит до Тул-Левел Меморі Vector Store. 
+So, when the agent makes a tool call and that tool call is passed to the commit mechanism, the commit mechanism performs calling of function `recall_tool_level` to the Memory Controller. Detailed description of function `recall_tool_level`. `recall_tool_level` will return list of relevant memories. After all, relevant memories will be inserted in Commit Mechanism message.
 
-Also, because Tool-level Memory is categorized as Explicit and Implicit at the same time it has a tool recall_tool_level.
-Тому я думаю, що функція recall_tool_level буде доступна РеАкту як тула.
-[In_Progress]
+Since Tool-Level Memory is considered both explicit and implicit, that's why the `recall_tool_level` function is also available to ReAct as a tool in order to make possible ReAct to search smth necessary for him.
 
+**How To Query In Tool-Level Memory Vector DB?**
 
-Коли використовувати дану функцію? - Використовувати буде Memory Controller як в Recall, Post-processing.
+A query to a specific collection (e.g., run_cmd) must be constructed based on the tool parameters.
+For example, if the tool call is: run_cmd(cat list_of_emails_by_worker).txt, then the query embedding should be "cat list_of_emails_by_worker.txt" and used to search within the corresponding run_cmd collection.
+
+Here is how approximately I see implementation of `recall_tool_level()` and `summarize_long_params()`:
 ```python
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+import requests
 
 load_dotenv()
 
@@ -334,41 +338,35 @@ client = OpenAI(
 )
 
 def summarize_long_params(toolname: str, tool_parameters: str):
-    PARAMS_THRESHOLD = 200
+    response = client.responses.create(
+      model="gpt-5-nano",
+      input=f"""
+      You must generate a precise, single-sentence summary of the following tool call.
+      Tool call:
+      {toolname}({tool_parameters})
+      Requirements:
+      - Use exactly ONE sentence.
+      - Clearly state the action being performed.
+      - Do NOT mention the tool name.
+      - Explicitly mention the key argument(s) or target resource.
+      - Be specific about what is being accessed, modified, computed, or retrieved.
+      - Avoid vague phrases like "processed data", "handled file", "did operation", or "read emails".
+      - Do NOT infer results — describe only the intended action of the tool call.
+      Good Example:
+      tool-call: run_cmd("cat list_of_emails_by_worker.txt")
+      result: Executed to read the file "list_of_emails_by_worker.txt" using the cat command.
+      Bad Example:
+      tool-call: run_cmd(cat list_of_emails_by_worker.txt)
+      result: Read emails using run_cmd.
+      """
+    )
+  return response.output[0].content[0].text
+  
+# Comment To The Code:
+# Why PARAMS_THRESHOLD is set to 200 characters. According to ChatGPT big 1 simple sentence is at max 150 characters.
 
-    if len(tool_parameters) > PARAMS_THRESHOLD:
-      response = client.responses.create(
-        model="gpt-5-nano",
-        input=f"""
-        You must generate a precise, single-sentence summary of the following tool call.
-        Tool call:
-        {tool}({tool_parameters})
-        Requirements:
-        - Use exactly ONE sentence.
-        - Clearly state the action being performed.
-        - Do NOT mention the tool name.
-        - Explicitly mention the key argument(s) or target resource.
-        - Be specific about what is being accessed, modified, computed, or retrieved.
-        - Avoid vague phrases like "processed data", "handled file", "did operation", or "read emails".
-        - Do NOT infer results — describe only the intended action of the tool call.
-        Good Example:
-        tool-call: run_cmd(cat list_of_emails_by_worker.txt)
-        result: Executed to read the file "list_of_emails_by_worker.txt" using the cat command.
-        Bad Example:
-        tool-call: run_cmd(cat list_of_emails_by_worker.txt)
-        result: Read emails using run_cmd.
-        """
-      )
-      query = response.output[0].content[0].text
-    else:
-      query = tool_parameters
-    return query
-```
-Comment To The Code:
-Why PARAMS_THRESHOLD is set to 200 characters. ChatGPT said that big 1 simple sentence are at max 150 characters.
+# Note: If you don’t have the toolname and tool_parameters, you can extract them from tool_call using a method similar to the following.
 
-Note: If you don’t have the toolname and tool_parameters, you can extract them from tool_call using a method similar to the following.
-```python
 def extract_toolname_and_parameters(tool_call: str) -> tuple:
     start = tool_call.find("(")
     end = tool_call.rfind(")")
@@ -377,41 +375,19 @@ def extract_toolname_and_parameters(tool_call: str) -> tuple:
         return ""  # or give error
 
     return (tool_call[:start], tool_call[start + 1:end])
-```
 
-**How To Query In Tool-Level Memory Vector DB?**
-
-A query to a specific collection (e.g., run_cmd) must be constructed based on the tool parameters.
-For example, if the tool call is: cat list_of_emails_by_worker.txt, then the query embedding should be "cat list_of_emails_by_worker.txt" and used to search within the corresponding run_cmd collection.
-
-**How To Query for Tools with Large Inputs (e.g., Python, run_cmd)?**
-
-For tools that accept large inputs — such as multi-line Python code or long shell commands — raw parameters should not be embedded directly.
-Instead, a semantic abstraction called "tool_signature" must be generated using LLM. 
-Agent making a sumarization is not an option due to high latency on each stage of Recalling. 
-The tool_signature is a one-sentence summarization of the tool call that captures its intent and behavioral pattern.
-
-For example:
-If parameters looks like this: {"code": "for email in emails:\n    send_email(email)"}, then tool_signature should be "Python loop sending emails from a list".
-The query to the python collection is then performed using the embedding of this tool_signature, rather than the raw code.
-
-Example of tool usage:
-```python
-recall_tool_level(toolname="python", query="sum(2, 2)")
-```
-
-```python
-import requests
+MEMORY_CONTROLLER_URL = os.getenv("MEMORY_CONTROLLER_URL")
+PARAMS_THRESHOLD = 200
 def recall_tool_level(
     toolname: str,
-    query: str,
-    alpha: int = 0.7
-) -> dict:
+    tool_parameters: str,
+    alpha: int = 0.7,
+    top_k: 5
+) -> list:
   """Recall relevant memories from Tool-level memory for a specific tool.
 
   This function is a wrapper over the Memory Controller API 
-    (e.g., POST /memory/recall). It retrieves previously stored 
-    tool-call experiences related to the given tool.
+    (e.g., POST /memory/recall_tool_level). It retrieves previously stored tool-call experiences related to the given tool.
 
   Purpose:
     The goal of recall is to provide the agent with past 
@@ -422,7 +398,7 @@ def recall_tool_level(
   Recommended Query Strategy:
     The query should be constructed using:
     - Tool parameters 
-    - Or a short summarization of the tool call if query is big enough
+    - Or a short summarization of the tool call if query is more then PARAMS_THRESHOLD
 
   This is important because Tool-Level Vector DB stores:
     - tool_signature (1-sentence summary of the tool call)
@@ -437,7 +413,7 @@ def recall_tool_level(
         "tool_parameters": "cat list_of_emails_by_worker.txt",
         "tool_signature": "Read .txt file containing email list using cat",
         "tool_output": "ivan.petrenko@gmail.com ...",
-        "what_worked": "I have access to this file.",
+        "what_worked": "I have access to list_of_emails_by_worker.txt.",
         "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert."
     }
 
@@ -445,9 +421,8 @@ def recall_tool_level(
     toolname (str):
         The name of the tool whose memory collection should be searched.
 
-    query (str):
-        Semantic search query used inside the tool-specific vector collection.
-        Should reflect parameters or summarized intent of the tool call.
+    tool_parameters (str):
+        It should be a tool parameters from tool call.
 
     alpha (float, optional):
         Hybrid search weight parameter (default = 0.7).
@@ -455,85 +430,46 @@ def recall_tool_level(
             - 70% vector similarity
             - 30% BM25 lexical ranking
 
+    top-k (int, optional):
+        How many elements to retrieve if there is more than k elements. (default = 5).
+
     Returns:
-        Dict:
-            API response containing a list_of_relevant_memories.  """
-    
+        List:
+            API response containing a list_of_relevant_memories.
+    Example of tool usage:
+      recall_tool_level(toolname="run_cmd", tool_parameters="cat list_of_emails_by_worker.txt")
+"""
+    if len(tool_parameters) >= PARAMS_THRESHOLD:
+      query = summarize_long_params(toolname, tool_parameters)
+    else:
+      query = tool_parameters
+
+    url = f"{MEMORY_CONTROLLER_URL}/memory/recall_tool_level"
+
+    payload = {
+        "collection": toolname,
+        "query": query,
+        "alpha": alpha,
+        "top_k": top_k
+    }
+
+     try:
+        response = requests.post(url, json=payload)
+        response.raise_for_status()
+
+        data = response.json()
+
+        # Expected format:
+        # {
+        #     "memories": [...]
+        # }
+
+        return data.get("memories", [])
+
+    except requests.exceptions.RequestException as e:
+        print(f"[Tool-Level Recall Error] {e}")
+        return []
 ```
-
----
-
-Using just find(or grep) function by tool name found the category(collection of vector db named by tool name) and then we need to take out the best out of this category (or all of them).
-
-Але Тут Вмішується Локальний Механізм Забування Tool-Level Memory.
-(Звісно, Якщо Кількість Елементів не Захмарна!!! Інакше Шо Лі Доведеться Відмовитись Від цього Механізму???)
-Цей Механізм скаладається з двох етапів:
-1. Merging Memories
-2. Rewriting Contradictatory Memories
-
-Обидва методи базуються на ЛЛМці.
-
-Prompt for Rewriting Contradictatory Memories
-```python
-"""
-Given the following thoughts, please remove the
-counterfactual thoughts or contradictory thoughts:
-Example 1.
-Input:
-run_cmd collection:
-ls was made in Root directory.
-Root directory has input.txt, intermediate.txt.(КАК ОН ДОЛЖЕН ПОНЯТЬ КОМУ ВЕРИТЬ А КОМУ НЕТ, ЕСЛИ МИ НЕБУДЕМ ПИСАТЬ ДАТУ, ВРЕМЯ,-- НУЖНО МЕНЯТЬ КОНЦЕПЦИЮ ПОСТРОЕНИЯ СПОГАДІВ, ПЕЙПЕР ЕТО НЕ ПРОДУМАЛ!!!)
-ls was made in Root directory.
-Root directory has input.txt, intermeadiate.txt, output.txt
-Output:
-ls was made in Root directory.
-ls was made in Root directory.
-Root directory has input.txt, intermeadiate.txt, output.txt
-Example 2.
-Input:
-???
-Output:
-???
-[A group of thoughts]
-"""
-```
-
-Prompt for Merging Thoughts
-```python
-"""
-Given the following thoughts, please merge the similar thoughts with the same entity:
-Example 1.
-Input:
-ls was made in Root directory.
-ls was made in Root directory.
-Root directory has input.txt, intermeadiate.txt, output.txt
-Output:
-ls was made in Root directory.
-Root directory has input.txt, intermeadiate.txt, output.txt
-Example 2.
-Input:
-ls was made in Root directory.
-ls was made in /home/oleksandr/Downloads directory. (ТРЕБА ДАТУВАННЯ)
-Root directory has input.txt, intermeadiate.txt, output.txt
-Output: (а чи треба робити такий мердж? а чи не зіб'є він)
-ls was made in Root directory and then /home/oleksandr/Downloads directory. 
-Root directory has input.txt, intermeadiate.txt, output.txt
-Input:
-[A group of thoughts]
-"""
-```
-
-Що краще спочатку робити Merging, Rewriting? Чи дати це в одному промпті?
-
-Навіть якщо Post-processing створить такий самий або майже такий самий спогад, що вже лежить у Tool-level Memory. У наступному етапі Recall він матиме зробити Merging + Rewriting Contradictatory Memories, що вирішує проблему.
-
-[To_Do] Як правильно робити query до БД, яка зберігає tool-level memory?
-Оскільки по сирому tool-call нічого у векторній БД фіг відкличеться, бо ми засунемо в категорію цієї тули спогади з трьох слів походу...(типу скоріш за все відповідно до параметрів робити запит...). Якщо їх мало, то можна було б вертати всі і потім відбирати ллмкою.
-
-[To_Do](Still optional if latency will be high enough) 
-Then these all retrieved memories will be given to Memory Controller. Memory Controller (which is LLM-based) will take out the only relevant ones according to his context. And Will DO Some Scoring Of Relevance Or Reward System To Memories With The Memory Thoughts He will take from the list.
-
-Final output of Memory Controller is what will added to the AI prompt, which ReAct Agent will read after commiting the tool.
 
 ### How To Update/Save? (Post-think)
 
@@ -563,7 +499,7 @@ class PairToolCallOutput(BaseModel):
         description="If there is something useful in this pair of tool call and tool output that will be good to avoid, then write it down. For example, include examples of poor parameter choices, incorrect usage patterns, or situations where the tool should not have been used.",
     )
 
-def create_post_processing_model(
+def create_post_think_model(
     list_of_pairs: List[Tuple[str, str]]
 ) -> Type[BaseModel]:
     """Dynamically create a Pydantic model for structured output based on the number of tool-call and tool-output pairs agent performed in the task.
@@ -653,7 +589,7 @@ What to avoid examples:
 ``` 
 
 **Transform Structured Output Into Final Dict To Save**
-After generating the structured schema and filling it, the output must be transformed by Memory Controller into a list of dictionaries.
+After generating the structured schema and filling it, the output is sent over POST /memory/store_tool_level to Memory Controller and then schema must be transformed by Memory Controller into a list of dictionaries.
 
 **How To Transform**
 - Each dictionary must contain the following fields:
@@ -670,7 +606,7 @@ Example of a single dictionary:
   "tool_parameters": "cat list_of_emails_by_worker.txt",
   "tool_signature": "Read .txt file containing email list using cat", #One-sentence summary of the tool call using summarize_long_params()
   "tool_output": "ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net maria.bondar@outlook.com dmytro.tkachenko@gmail.com iryna.melnyk@yahoo.com vlad.kozlov@ukr.net sofia.hrytsenko@gmail.com maksym.danilenko@outlook.com kateryna.polishchuk@yahoo.com",
-  "what_worked": "I have access to this file.",
+  "what_worked": "I have access to list_of_emails_by_worker.txt.",
   "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call." 
 }
 ```
@@ -691,6 +627,69 @@ This ensures that memory is organized per tool, allowing future retrieval of rel
 Кожен раз, коли відбувається коміт тули, 
 
 Глобальний механізм забування - це те, що розглянуто у параграфі Forgetting з другим рівнем заголовку. Він побудований відносно Меморі Контроллера, який як ЛЛМка відбирає потрібні релевантні спогади відповідно до його контекстного вікна. Спогади відібрані релеватними отримують бал/бали, а спогади, що не були вибрані релевантними не отримують балів або отримують від'ємні бали. Періодично будуть відсікатися та видалятися спогади, що мають загальний бал дуже низьким відносно інших спогадів. Це зроблено для того, щоб система пам'яті могла коректно працювати та надавати лише справді потрібні спогади. 
+
+
+Але Тут Вмішується Локальний Механізм Забування Tool-Level Memory.
+(Звісно, Якщо Кількість Елементів не Захмарна!!! Інакше Шо Лі Доведеться Відмовитись Від цього Механізму???)
+Цей Механізм скаладається з двох етапів:
+1. Merging Memories
+2. Rewriting Contradictatory Memories
+
+Обидва методи базуються на ЛЛМці.
+
+Prompt for Rewriting Contradictatory Memories
+```python
+"""
+Given the following thoughts, please remove the
+counterfactual thoughts or contradictory thoughts:
+Example 1.
+Input:
+run_cmd collection:
+ls was made in Root directory.
+Root directory has input.txt, intermediate.txt.(КАК ОН ДОЛЖЕН ПОНЯТЬ КОМУ ВЕРИТЬ А КОМУ НЕТ, ЕСЛИ МИ НЕБУДЕМ ПИСАТЬ ДАТУ, ВРЕМЯ,-- НУЖНО МЕНЯТЬ КОНЦЕПЦИЮ ПОСТРОЕНИЯ СПОГАДІВ, ПЕЙПЕР ЕТО НЕ ПРОДУМАЛ!!!)
+ls was made in Root directory.
+Root directory has input.txt, intermeadiate.txt, output.txt
+Output:
+ls was made in Root directory.
+ls was made in Root directory.
+Root directory has input.txt, intermeadiate.txt, output.txt
+Example 2.
+Input:
+???
+Output:
+???
+[A group of thoughts]
+"""
+```
+
+Prompt for Merging Thoughts
+```python
+"""
+Given the following thoughts, please merge the similar thoughts with the same entity:
+Example 1.
+Input:
+ls was made in Root directory.
+ls was made in Root directory.
+Root directory has input.txt, intermeadiate.txt, output.txt
+Output:
+ls was made in Root directory.
+Root directory has input.txt, intermeadiate.txt, output.txt
+Example 2.
+Input:
+ls was made in Root directory.
+ls was made in /home/oleksandr/Downloads directory. (ТРЕБА ДАТУВАННЯ)
+Root directory has input.txt, intermeadiate.txt, output.txt
+Output: (а чи треба робити такий мердж? а чи не зіб'є він)
+ls was made in Root directory and then /home/oleksandr/Downloads directory. 
+Root directory has input.txt, intermeadiate.txt, output.txt
+Input:
+[A group of thoughts]
+"""
+```
+
+Що краще спочатку робити Merging, Rewriting? Чи дати це в одному промпті?
+
+Навіть якщо Post-processing створить такий самий або майже такий самий спогад, що вже лежить у Tool-level Memory. У наступному етапі Recall він матиме зробити Merging + Rewriting Contradictatory Memories, що вирішує проблему. Може робити після кожного Post-think stage Merging + Rewriting Contradictory. Або ми будемо зберігати, що ми в основному брали з векторної бази даних і кому повертали, щоб робити аналіз після РеАкта, а не під час. Або якось робити паралельно 
 
 ### Examples
 **Example**
@@ -752,7 +751,7 @@ The Commit Mechanism is triggered every time the agent generates a tool call. Th
 Execution Flow:
 1. The agent generates a tool call.
 2. The Commit Mechanism initiated and takes the tool-call.
-3. Tool-Level Memory Recall is triggered.
+3. `recall_tool_level()` is called and returns list of relevant memories.
 4. The agent receives a reflection prompt instead of tool output.
 
 Reflection Prompt (With Relevant Memories)
@@ -780,10 +779,6 @@ After receiving the reflection prompt, the agent may:
 - Approve the tool call by invoking commit(...)
 - Modify the tool call and re-enter the Commit Mechanism (This way agent can iterate multiple times until confident)
 The tool is executed only after explicit commit confirmation.
-
-
-As you can see sentence "Here is what you recall about this tool-call: {list_of_relevant_memories}", so as you can understand there is a Tool-Level Memory Recall mechanism is triggered.
-Retrieving relevant thoughts helps generating accurate tool-calls.
 
 ### Accept Mechanism (Tool-Call Confirmation Layer)
 
@@ -1223,6 +1218,8 @@ instead, share memory by communicating.”
 
 
 ## Ideas
+
+Також я думаю, що РеАкт воркеру треба буде в System prompt пояснити як працює Memory Subsystem, бо як мінімум Commit Mechanism буде капець яким незвичним для нього. І це буде взагалі не дуже, якщо буде постійно забувати, що цей механізм буде з'являтись і як він працює. 
 
 Concept Of Memory Controller!!!
 
