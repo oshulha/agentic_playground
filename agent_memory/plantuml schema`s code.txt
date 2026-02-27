@@ -1,0 +1,89 @@
+@startuml
+title Memory Store Flow
+actor ReAct
+participant "Memory Controller" as MC
+database "Vector Store" as VS
+activate ReAct
+ReAct -> ReAct: System Prompt
+
+ReAct -> ReAct: User Prompt
+
+ReAct -> ReAct: commit(python("sum(2, 2)"))
+
+ReAct -> MC: recall(toolname="python", params="sum(2,2)")
+
+note right of ReAct
+HTTP POST /memory/recall
+end note
+
+MC -> VS: Tool-Level Memory: \nsimilarity_search(collection="python", query="sum(2,2)")
+
+VS -> MC: relevant memories
+
+MC -> ReAct: You are recalling such memories: {relevant_memories}.\nAre you sure you want to make python("sum(2, 2)")?
+
+ReAct -> ReAct: Commits (yes, I am sure)
+
+ReAct -> ReAct: tool-output: Sum is 4.
+
+ReAct -> ReAct: commit(run_cmd("{"command": "ls", "path":"/home/oleksandr"}"))
+
+ReAct -> MC: recall(toolname="run_cmd", \nparams="{"command": "ls", "path":"/home/oleksandr"}")
+
+note right of ReAct
+HTTP POST /memory/recall
+end note
+
+MC -> VS: Tool-Level Memory: \nsimilarity_search(collection="run_cmd", \nquery="{"command": "ls", "path":"/home/oleksandr"}")
+
+VS -> MC: relevant memories:\nfile.txt file2.txt
+
+MC -> ReAct: You are recalling such memories: file.txt file2.txt.\nAre you sure you want to make run_cmd\n("{"command": "ls", "path":"/home/oleksandr"}")?
+
+ReAct -> ReAct: Commits (no, I am not sure).\nI want to make tool-call: rocketchat_send_msg({user: "Bob", text: "Hi!"})
+
+ReAct -> ReAct: commit(rocketchat_send_msg({user: "Bob", text: "Hi!"}))
+
+ReAct -> MC: recall(toolname="rocketchat_send_msg", \nparams="{user: "Bob", text: "Hi!"}")
+
+note right of ReAct
+HTTP POST /memory/recall
+end note
+
+MC -> VS: Tool-Level Memory: \nsimilarity_search(collection="rocketchat_send_msg", \nquery="{user: "Bob", text: "Hi!"}")
+
+VS -> MC: relevant memories
+
+MC -> ReAct: You are recalling such memories: {relevant_memories}.\nAre you sure you want to make rocketchat_send_msg\n("{user: "Bob", text: "Hi!"}")?
+
+ReAct -> ReAct: Commits (yes, I am sure)
+
+ReAct -> ReAct: tool-output: {"success": True}
+
+ReAct -> ReAct: tool-call: rocketchat_wait_for_msg()
+
+ReAct -> MC: Do you accept tool call: rocketchat_wait_for_msg() and \ntool output: {"success": True, "text": "Hi! How are you?"}? Or you want to summarize tool output?
+
+note right of ReAct
+HTTP POST /memory/accept
+end note
+
+MC -> ReAct: Yes, I do accept.
+
+ReAct -> ReAct: tool-output: {"success": True, "text": "Hi! How are you?"}
+
+ReAct --> ReAct: ..........more pairs of tool-call & tool-output......
+
+ReAct -> ReAct: filling a structured output schema with 50 fields\n per each pair of tool-call & tool-output
+
+note right of ReAct: some python code will make out of 50 fields structured output \n small JSONs having only params, tool-outputs, memory thought \nthat was chosen as if it did smth valuable.
+
+ReAct -> MC: sends final JSONs to Tool-Level Memory
+
+MC -> VS: sends final JSONs to Tool-Level Memory Vector Store
+
+VS -> MC: {success: True}
+
+MC -> ReAct: {success: True}
+
+@enduml

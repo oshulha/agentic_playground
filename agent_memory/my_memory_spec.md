@@ -2,98 +2,8 @@
 
 Memory subsystem is the information storage and retrieval part of our AI Agent. It consists of a single vector store that contains several collections. It directly interacts with the Brains subsystem (PlanExecutor and ReAct) and operates at multiple levels, such as storing memories from the PlanExecutor as well as memories from each ReAct worker invoked by the PlanExecutor. At the moment, our Memory subsystem is composed of four underlying memory components: working, episodic, semantic, and procedural memory.
 
-Tool-Level Memory Architecture Diagram:
-![Tool-Level Memory Architecture Diagram](memory_schema.png)
-
-```mermaid
-%%{init: {'themeVariables': { 
-    'fontSize': '28px',
-    'sequenceNumberFontSize': '28px',
-}}}%%
-sequenceDiagram
-    title Tool-Level Memory Flow
-
-    actor ReAct
-    participant MC as Memory Controller
-    participant VS as Vector Store
-
-    activate ReAct
-
-    ReAct->>ReAct: System Prompt
-    ReAct->>ReAct: User Prompt
-    ReAct->>ReAct: commit(python("sum(2, 2)"))
-
-    ReAct->>MC: retrieve(tool="python", params="sum(2,2)")
-    Note right of ReAct: HTTP POST /memory/retrieve
-
-    MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="python", query="sum(2,2)")
-    VS->>MC: relevant memories
-
-    MC->>ReAct: You are recalling such memories: {relevant_memories}.<br/>Are you sure you want to make python("sum(2, 2)")?
-
-    ReAct->>ReAct: Commits (yes, I am sure)
-    ReAct->>ReAct: tool-output: Sum is 4.
-
-    ReAct->>ReAct: commit(run_cmd("{"command": "ls", "path":"/home/oleksandr"}"))
-
-    ReAct->>MC: retrieve(tool="run_cmd",<br/>params="{"command": "ls", "path":"/home/oleksandr"}")
-    Note right of ReAct: HTTP POST /memory/retrieve
-
-    MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="run_cmd",<br/>query="{"command": "ls", "path":"/home/oleksandr"}")
-
-    VS->>MC: relevant memories:<br/>file.txt file2.txt
-
-    MC->>ReAct: You are recalling such memories: file.txt file2.txt.<br/>Are you sure you want to make run_cmd<br/>("{"command": "ls", "path":"/home/oleksandr"}")?
-
-    ReAct->>ReAct: Commits (no, I am not sure).<br/>I want to make tool-call: rocketchat_send_msg({user: "Bob", text: "Hi!"})
-
-    ReAct->>ReAct: commit(rocketchat_send_msg({user: "Bob", text: "Hi!"}))
-
-    ReAct->>MC: retrieve(tool="rocketchat_send_msg",<br/>params="{user: "Bob", text: "Hi!"}")
-    Note right of ReAct: HTTP POST /memory/retrieve
-
-    MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="rocketchat_send_msg",<br/>query="{user: "Bob", text: "Hi!"}")
-
-    VS->>MC: relevant memories
-
-    MC->>ReAct: You are recalling such memories: {relevant_memories}.<br/>Are you sure you want to make rocketchat_send_msg<br/>("{user: "Bob", text: "Hi!"}")?
-
-    ReAct->>ReAct: Commits (yes, I am sure)
-    ReAct->>ReAct: tool-output: {"success": True}
-
-    ReAct->>ReAct: tool-call: rocketchat_wait_for_msg()
-
-    ReAct->>MC: Do you accept tool call: rocketchat_wait_for_msg() and<br/> tool output: {"success": True, "text": "Hi! How are you?"}? Or you want to summarize tool output?
-    Note right of ReAct: HTTP POST /memory/accept
-
-    MC->>ReAct: Yes, I do accept.
-
-    ReAct->>ReAct: tool-output: {"success": True, "text": "Hi! How are you?"}
-
-    ReAct-->>ReAct: ..........more pairs of tool-call & tool-output......
-
-    ReAct->>ReAct: filling a structured output schema with 50 fields<br/>per each pair of tool-call & tool-output
-
-    Note right of ReAct: some python code will make out of 50 fields structured output<br/>small JSONs having only params, tool-outputs, memory thought<br/>that was chosen as if it did smth valuable.
-
-    ReAct->>MC: sends final JSONs to Tool-Level Memory
-    MC->>VS: sends final JSONs to Tool-Level Memory Vector Store
-    VS->>MC: {success: True}
-    MC->>ReAct: {success: True}
-```
-
-    ReAct -> MC: send a structured output schema with 10 fields per each pair of tool-call & tool-output (with asking a question: Is It Necessary To Remember For Next Iterations (e.g. What Worked Well? What To Avoid In Order Not To Make Such An Error Once Again)?) -- I Do Need To Read About Reflexion A Lot!!! What IS The Prompt Better To Use For It?
-
-Будемо віддавати Меморі Контроллеру, що зберігати, а що ні. Він обирає які зберігати, а які нє відповідно до совго контексту. Зберігає він це у відповідну collection, яка має назву tool у вигляді JSON у векторній БД у вигляді як:
-{
-  "parameters": params
-  "memory_thought": memory_thought
-}
-
-Складно уявляється Reflexion по кожній тулі(what worked, what to avoid?). Якесь особливе перевикористання тули, чи неправильна робота параметрів, тули, функціонал не зазначений у описі тули, тріггер системи безпеки, можна дістати кукі які просе користувач. Але коміт це більше про предостерегание, а ніж encourage, але може бути цікаве і краще поєднання параметрів, і агент може змінити свою думку в сторону кращих параметрів.
-
-50 полів --
-Дуже облегшує життя такий підхід. 
+**Memory Architecture Diagram:**
+![Memory Architecture Diagram](memory_schema.png)
 
 # Table Of Contents
 
@@ -110,6 +20,13 @@ Explains how they differ, which memory types belong to each category, and discus
 
 **This paragraph is provided for context only;** it does not contain any implementation ideas at the moment. 
 Temporary, active workspace of the agent. Maintains current interaction state, conversation history, and short-term reasoning context.
+
+
+[**Memory Controller**](#memory-controller)
+
+`Status: In Progress`
+
+Central component which will be опрацьовувати/обробляти різноманітні запити від РеАкта чи механізмів як Recall, де він буде виконувати операції та взаємодіяти з різноманітними базами даних/знань різних підтипів пам'яті.
 
 [**Tool-Level Memory**](#tool-level-memory)
 
@@ -268,64 +185,283 @@ AI Agent: You said your name is Adam
 
 To be continued...?
 
+## Memory Controller
+
+
 ## Tool-Level Memory
 
-As you remember, our agent has a ReAct architecture.
-Tool-level memory is the agent’s memory that operates by retrieving and creating memories for each pair of tool call and tool output.
+Tool-Level Memory Architecture Diagram:
 
-So, let’s start with the mechanism.
-Workflow. Overall framework is divided into two stages:
-• Stage-1: Recall. Generated a new tool-call by our ReAct agent, tool call goes to commit mechanism. Commit mechanism is mechanism, when agent is asked “Are you sure that this is a correct tool call that will help you get closer to completing the task?” like a AI prompt. In our case, in addition to AI prompt we will add "Here is what you recall about this tool: {relevant_memories}". So as you can understand there is a Recall mechanism is triggered.
+```mermaid
+%%{init: {'themeVariables': { 
+    'fontSize': '28px',
+    'sequenceNumberFontSize': '28px',
+}}}%%
+sequenceDiagram
+    title Tool-Level Memory Flow
 
-Не Описаний Коміт механізм. Якщо після пригадування про тулу, він вирішує змінити свій вибір до іншої тули, то він перекомічує??? І тоді має згадати тепер про цю тулу ж.
+    actor ReAct
+    participant MC as Memory Controller
+    participant VS as Vector Store
 
-After reading the AI prompt from commit mechanism, agent can change his tool-call decision or approve that he is sure that this tool-call will help him get closer to completing the task.
+    activate ReAct
 
-Retrieving relevant thoughts helps generating accurate tool-calls.
+    ReAct->>ReAct: System Prompt
+    ReAct->>ReAct: User Prompt
+    ReAct->>ReAct: tool-call: python("sum(2, 2)")
+    ReAct->>ReAct: Commit Mechanism initiated
 
-• Stage-2: Post-think and Update. After answering the question,
-Memory Controller has to post-think upon tool call and tool output pair and insert the newly self-generated reasoning thoughts into memory (to vector db collection according to tool name).
+    ReAct->>MC: recall_tool_level(tool="python", params="sum(2,2)")
+    Note right of ReAct: HTTP POST /memory/recall_tool_level
 
-### How To Update/Save? (Post-think)
+    MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="python", query="sum(2,2)")
+    VS->>MC: relevant memories
 
-In detail, the post-thinking stage happens right after each tool output. Each post-thinking stage generates one memory.
+    MC->>ReAct: You are recalling such memories: {relevant_memories}.<br/>Are you sure you want to make python("sum(2, 2)")?
 
-The memory thought is formed by the Memory Controller in the following way:
-Memory thought will be stored as Inductive Thought. The inductive thought is defined as the text which contains the relation between two entities, i.e., satisfying a relation triple (𝐸ℎ, 𝑟𝑖, 𝐸𝑡). 𝐸ℎ is head entity connected with tail entity 𝐸𝑡 via the relation 𝑟𝑖, where 𝑖 ∈ [0, 𝑁] and 𝑁 is the relation number. Conceptually, 𝑅ℎ = {𝑟1, · · · , 𝑟𝑁 } consists of all the one-hop relations for the entity 𝐸ℎ.
+    ReAct->>ReAct: Commits (yes, I am sure)
+    ReAct->>ReAct: tool-output: Sum is 4.
 
-Prompt for Generating Thoughts:
-```python
-"""
-Given the following tool-call and tool-output pairs, please extract the relation (subject, relation, object) with corresponding text:
-Example 1.
-Input:
-Tool-call: run_cmd("rm -rf valuable.txt")
-Tool Output: You didn't have enough rights. You need to use sudo.
-Output:
-(Deletion of valuable.txt, requires, sudo rights).
-Deletion of valuable.txt requires sudo rights.
+    ReAct->>ReAct: tool-call: run_cmd("{"command": "ls", "path":"/home/oleksandr"}")
 
-Example 2.
-Input:
-Tool-call: deep_research("For which Ukrainian university authors of the paper `Large Language Models as Oracles for Ontology Alignment` ")
-Tool Output: Ukrainian Catolic University
-Output:
-(Some authors of `Large Language Models as Oracles for Ontology Alignment`, are from, Ukrainian Catolic University).
-Some authors of `Large Language Models as Oracles for Ontology Alignment` are from Ukrainian Catolic University.
+    ReAct->>ReAct: Commit Mechanism initiated
 
-Here is current tool-call: 
-{current_tool_call}
-Here is current tool output:
-{current_tool_output}
+    ReAct->>MC: recall_tool_level(tool="run_cmd",<br/>params="{"command": "ls", "path":"/home/oleksandr"}")
+    Note right of ReAct: HTTP POST /memory/recall_tool_level
 
-Also, you need to враховувати спогади, які вже були пригадані, аби позбутися повторів. Ось вони:
-{recalled_memories}
-"""
+    MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="run_cmd",<br/>query="{"command": "ls", "path":"/home/oleksandr"}")
+
+    VS->>MC: relevant memories:<br/>file.txt file2.txt
+
+    MC->>ReAct: You are recalling such memories: file.txt file2.txt.<br/>Are you sure you want to make run_cmd<br/>("{"command": "ls", "path":"/home/oleksandr"}")?
+
+    ReAct->>ReAct: Commits (no, I am not sure).<br/>I want to make tool-call: rocketchat_send_msg({user: "Bob", text: "Hi!"})
+
+    ReAct->>ReAct: tool-call: rocketchat_send_msg({user: "Bob", text: "Hi!"})
+    ReAct->>ReAct: Commit Mechanism initiated
+
+    ReAct->>MC: recall_tool_level(tool="rocketchat_send_msg",<br/>params="{user: "Bob", text: "Hi!"}")
+    Note right of ReAct: HTTP POST /memory/recall_tool_level
+
+    MC->>VS: Tool-Level Memory:<br/>similarity_search(collection="rocketchat_send_msg",<br/>query="{user: "Bob", text: "Hi!"}")
+
+    VS->>MC: relevant memories
+
+    MC->>ReAct: You are recalling such memories: {relevant_memories}.<br/>Are you sure you want to make rocketchat_send_msg<br/>("{user: "Bob", text: "Hi!"}")?
+
+    ReAct->>ReAct: Commits (yes, I am sure)
+    ReAct->>ReAct: tool-output: {"success": True}
+
+    ReAct->>ReAct: tool-call: rocketchat_wait_for_msg()
+    ReAct->>ReAct: Accept Mechanism initiated
+
+    ReAct->>MC: Do you accept tool call: rocketchat_wait_for_msg() and<br/> tool output: {"success": True, "text": "Hi! How are you?"}? Or you want to summarize tool output?
+    Note right of ReAct: HTTP POST /memory/accept
+
+    MC->>ReAct: Yes, I do accept.
+
+    ReAct->>ReAct: tool-output: {"success": True, "text": "Hi! How are you?"}
+
+    ReAct-->>ReAct: ..........more pairs of tool-call & tool-output......
+
+    ReAct->>ReAct: filling a structured output schema with 50 fields<br/>per each pair of tool-call & tool-output
+
+    Note right of ReAct: some python code will make out of 50 fields structured output<br/>small JSONs having only params, tool-outputs, memory thought<br/>that was chosen as if it did smth valuable.
+
+    ReAct->>MC: sends final JSONs to Tool-Level Memory
+    MC->>VS: sends final JSONs to Tool-Level Memory Vector Store
+    VS->>MC: {success: True}
+    MC->>ReAct: {success: True}
 ```
 
-Then this memory thought will be categorized according to tool name of called tool. This way we will have a vector database collection named as tool name. In this collection we will add this memory thought. 
+!!! А Tool-level память — это когда ты на каком-то шаге вызываешь конкретную тулу, и ты запомнил, что именно она имеет какую-то специфику работы. Вплоть до того, что она там типа не работает на какой-то системе. Что типа "не делай вот так, иди сразу через браузер". Типа эта тула поломана в этом MCP, я уже там пробовал типа два дня назад, один день назад, и она не работает, типа даже не пытайся. Иди сразу через браузер. То есть это уже как бы воспоминание уровня тулы конкретной. То есть оно не про стратегию, куда направлять траекторию вообще своего там мышления и действий, а про параметры вызова конкретной тулы. Типа сюда такое-то мы не передаем, здесь мы серчим так-то и тому подобное. Вот, и я ожидаю на самом деле, что таких воспоминаний будет немного. Что чего-то такого примечательного в вызовах тулов не должно быть часто.
 
-### How To Retrieve (Recall Mechanism)
+ReAct -> MC: send a structured output schema with 10 fields per each pair of tool-call & tool-output (with asking a question: Is It Necessary To Remember For Next Iterations (e.g. What Worked Well? What To Avoid In Order Not To Make Such An Error Once Again)?) -- I Do Need To Read About Reflexion A Lot!!! What IS The Prompt Better To Use For It?
+
+Будемо віддавати Меморі Контроллеру, що зберігати, а що ні. Він обирає які зберігати, а які нє відповідно до совго контексту. Зберігає він це у відповідну collection, яка має назву tool у вигляді JSON у векторній БД у вигляді як:
+{
+  "parameters": params
+  "memory_thought": memory_thought
+}
+
+Складно уявляється Reflexion по кожній тулі(what worked, what to avoid?). Якесь особливе перевикористання тули, чи неправильна робота параметрів, тули, функціонал не зазначений у описі тули, тріггер системи безпеки, можна дістати кукі які просе користувач. Але коміт це більше про предостерегание, а ніж encourage, але може бути цікаве і краще поєднання параметрів, і агент може змінити свою думку в сторону кращих параметрів.
+
+50 полів --
+Дуже облегшує життя такий підхід. 
+
+---
+
+As described earlier, our agent is built on a ReAct architecture.
+Tool-Level Memory is a specialized memory layer that operates at the granularity of tool interactions. Specifically, it stores and retrieves structured memories for each (tool call, tool output) pair generated during a ReAct execution cycle.
+
+The primary purpose of Tool-Level Memory is to improve tool-call accuracy, reduce repeated mistakes, and enable self-reflection before performing potentially costly or state-modifying actions.
+
+The overall framework operates in two main stages:
+• Stage-1: Recall Stage. 
+When the agent generates a new tool call, tool call goes to the Commit Mechanism. 
+The system retrieves relevant past memories associated with the same toolname, tool's parameters, similar execution contex(?) and presents them to the agent for reflection and confirmation.
+
+• Stage-2: Post-think and Update. 
+After ReAct completes its task, a structured post-processing step is triggered. Code extracts all tool-call and tool-output pairs generated during execution. Proposes a structured output to the agent.
+The agent fills strcutured output fields such as: `what worked`, `what to avoid`.
+
+After ReAct has done his task, automatically code has to generate structured output with the number of pairs of tool call and tool outputs made during execution of ReAct. 
+And then being proposed to agent where agent has to fill necessary fields: what worked, what to avoid for exact pair of tool-call & tool-output.
+The resulting memory thought is then:
+categorized by tool name,
+stored in a dedicated vector collection per tool,
+optionally processed by memory consolidation mechanisms(?).
+
+### How To Retrieve (Recall Mechanism) list_of_relevant_memories
+
+Отже, коли агент зробив тул-колл, а тул-колл потрапив до коміт механізму. У коміт механізмі робиться API-виклик до Memory Controller. Я думаю, що це буде HTTP POST /memory/recall. Можливо, аби не робити сирий запит його можна обгорнути в функцію recall_tool_level. Ця ж функція отримує результат API виклику, тобто після того як Меморі Контроллер зробив запит до Тул-Левел Меморі Vector Store. 
+
+Also, because Tool-level Memory is categorized as Explicit and Implicit at the same time it has a tool recall_tool_level.
+Тому я думаю, що функція recall_tool_level буде доступна РеАкту як тула.
+[In_Progress]
+
+
+Коли використовувати дану функцію? - Використовувати буде Memory Controller як в Recall, Post-processing.
+```python
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
+
+def summarize_long_params(toolname: str, tool_parameters: str):
+    PARAMS_THRESHOLD = 200
+
+    if len(tool_parameters) > PARAMS_THRESHOLD:
+      response = client.responses.create(
+        model="gpt-5-nano",
+        input=f"""
+        You must generate a precise, single-sentence summary of the following tool call.
+        Tool call:
+        {tool}({tool_parameters})
+        Requirements:
+        - Use exactly ONE sentence.
+        - Clearly state the action being performed.
+        - Do NOT mention the tool name.
+        - Explicitly mention the key argument(s) or target resource.
+        - Be specific about what is being accessed, modified, computed, or retrieved.
+        - Avoid vague phrases like "processed data", "handled file", "did operation", or "read emails".
+        - Do NOT infer results — describe only the intended action of the tool call.
+        Good Example:
+        tool-call: run_cmd(cat list_of_emails_by_worker.txt)
+        result: Executed to read the file "list_of_emails_by_worker.txt" using the cat command.
+        Bad Example:
+        tool-call: run_cmd(cat list_of_emails_by_worker.txt)
+        result: Read emails using run_cmd.
+        """
+      )
+      query = response.output[0].content[0].text
+    else:
+      query = tool_parameters
+    return query
+```
+Comment To The Code:
+Why PARAMS_THRESHOLD is set to 200 characters. ChatGPT said that big 1 simple sentence are at max 150 characters.
+
+Note: If you don’t have the toolname and tool_parameters, you can extract them from tool_call using a method similar to the following.
+```python
+def extract_toolname_and_parameters(tool_call: str) -> tuple:
+    start = tool_call.find("(")
+    end = tool_call.rfind(")")
+
+    if start == -1 or end == -1 or start > end:
+        return ""  # or give error
+
+    return (tool_call[:start], tool_call[start + 1:end])
+```
+
+**How To Query In Tool-Level Memory Vector DB?**
+
+A query to a specific collection (e.g., run_cmd) must be constructed based on the tool parameters.
+For example, if the tool call is: cat list_of_emails_by_worker.txt, then the query embedding should be "cat list_of_emails_by_worker.txt" and used to search within the corresponding run_cmd collection.
+
+**How To Query for Tools with Large Inputs (e.g., Python, run_cmd)?**
+
+For tools that accept large inputs — such as multi-line Python code or long shell commands — raw parameters should not be embedded directly.
+Instead, a semantic abstraction called "tool_signature" must be generated using LLM. 
+Agent making a sumarization is not an option due to high latency on each stage of Recalling. 
+The tool_signature is a one-sentence summarization of the tool call that captures its intent and behavioral pattern.
+
+For example:
+If parameters looks like this: {"code": "for email in emails:\n    send_email(email)"}, then tool_signature should be "Python loop sending emails from a list".
+The query to the python collection is then performed using the embedding of this tool_signature, rather than the raw code.
+
+Example of tool usage:
+```python
+recall_tool_level(toolname="python", query="sum(2, 2)")
+```
+
+```python
+import requests
+def recall_tool_level(
+    toolname: str,
+    query: str,
+    alpha: int = 0.7
+) -> dict:
+  """Recall relevant memories from Tool-level memory for a specific tool.
+
+  This function is a wrapper over the Memory Controller API 
+    (e.g., POST /memory/recall). It retrieves previously stored 
+    tool-call experiences related to the given tool.
+
+  Purpose:
+    The goal of recall is to provide the agent with past 
+    experiences (successes, failures, security alerts, rate limits, etc.) 
+    related to similar tool calls, so that the agent can adapt 
+    its reasoning before continuing execution.
+
+  Recommended Query Strategy:
+    The query should be constructed using:
+    - Tool parameters 
+    - Or a short summarization of the tool call if query is big enough
+
+  This is important because Tool-Level Vector DB stores:
+    - tool_signature (1-sentence summary of the tool call)
+    - tool_parameters
+    - tool_output
+    - what_worked
+    - what_to_avoid
+
+  Example of stored memory:
+    {
+        "tool": "run_cmd",
+        "tool_parameters": "cat list_of_emails_by_worker.txt",
+        "tool_signature": "Read .txt file containing email list using cat",
+        "tool_output": "ivan.petrenko@gmail.com ...",
+        "what_worked": "I have access to this file.",
+        "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert."
+    }
+
+  Args:
+    toolname (str):
+        The name of the tool whose memory collection should be searched.
+
+    query (str):
+        Semantic search query used inside the tool-specific vector collection.
+        Should reflect parameters or summarized intent of the tool call.
+
+    alpha (float, optional):
+        Hybrid search weight parameter (default = 0.7).
+        0.7 means:
+            - 70% vector similarity
+            - 30% BM25 lexical ranking
+
+    Returns:
+        Dict:
+            API response containing a list_of_relevant_memories.  """
+    
+```
+
+---
 
 Using just find(or grep) function by tool name found the category(collection of vector db named by tool name) and then we need to take out the best out of this category (or all of them).
 
@@ -399,28 +535,153 @@ Then these all retrieved memories will be given to Memory Controller. Memory Con
 
 Final output of Memory Controller is what will added to the AI prompt, which ReAct Agent will read after commiting the tool.
 
-Also, because Tool-level Memory is categorized as Explicit and Implicit at the same time it has a tool recall_tool_level.
-[In_Progress]
+### How To Update/Save? (Post-think)
+
+After ReAct has done his task, automatically code has to generate dynamic structured output schema (or model) with the function like create_post_processing_model made during execution of ReAct. 
+
+In this schema ReAct has to fill such fields like: "what_worked", "what_to_avoid" for exact pair of tool-call & tool-output and fill fields "is_success" and "errors" if there is some problems with selecting tools.
+
+Example of function:
 ```python
-def recall_tool_level(
-    toolname: str,
-    query: str,
-    alpha: int
-) -> dict:
-  """Recall relevant memories from Tool-level memory for explicit query.
+?????????????class InitAnalysis(BaseModel):??????????????????
+    is_success: bool = Field(
+        ..., description="Were all tools selected successfully?"
+    )
+    errors: Optional[str] = Field(
+        None,
+        description="Describe any errors or issues during tool creation and selection.",
+    )
 
-Recommended scenarios:
-- When the agent needs to retrieve factual or conceptual knowledge...
 
-Best practices:
-- Use this tool to ...
+class PairToolCallOutput(BaseModel):
+    what_worked: Optional[str] = Field(
+        None,
+        description="If there is something useful in this pair of tool call and tool output, then write it down. For example, include specific examples of successful tool usage(not basic one), well-chosen parameters, and the situations where the tool was used appropriately.",
+    )
+    what_to_avoid: Optional[str] = Field(
+        None,
+        description="If there is something useful in this pair of tool call and tool output that will be good to avoid, then write it down. For example, include examples of poor parameter choices, incorrect usage patterns, or situations where the tool should not have been used.",
+    )
 
-  Args:
-    toolname: Over which toolname memory thoughts you want to search.
-    query: The search query in vector db collection of specific tool.
-    alpha: (Optional) Defaults to 0.7. This means the search result is influenced by 70% vector similarity and 30% BM25 ranking.
-  """
+def create_post_processing_model(
+    list_of_pairs: List[Tuple[str, str]]
+) -> Type[BaseModel]:
+    """Dynamically create a Pydantic model for structured output based on the number of tool-call and tool-output pairs agent performed in the task.
+
+    Args:
+        list_of_pairs (List[Tuple[str, str]]): A list of tuples where each tuple contains the tool-call and tool-output.
+    Returns:
+        Type[BaseModel]: A Pydantic model class for structured output.
+        Fields:
+        - init_analysis: InitAnalysis
+        - pair1, pair2, ..., pairN: PairToolCallOutput
+    """
+
+    # Build all fields at once
+    fields = {}
+    fields["init_analysis"] = (??????????????????????
+        InitAnalysis,
+        Field(..., description="Initial analysis phase"),
+    )
+
+    # Add steps and grades
+    for i, tool_call, tool_output in enumerate(list_of_pairs):
+        fields[f"pair_{i+1}"] = (
+            PairToolCallOutput, 
+            Field(
+                ..., 
+                description=(
+                    f"Analyze the following tool interaction.\n\n"
+                    f"Tool Call:\n{tool_call}\n\n"
+                    f"Tool Output:\n{tool_output}\n\n"
+                    f"Provide analysis of this interaction."
+                ),
+            )
+    return create_model("ToolLevelAnalysis", **fields)
 ```
+
+The prompt you need to provide to the Agent:
+
+```python
+user_prompt_to_agent = """
+You are analyzing your own trajectory of solving a task in order to create memories that will help guide future interactions.
+Your task is to extract key elements that would be most helpful when encountering similar situations in the future.
+
+Review the trajectory and create a memory reflection following these rules:
+
+1. If you do not have enough information for a field, the field is not relevant or field doesn't contain anything useful, leave it empty.
+2. Do not include generic advice — only extract insights grounded in this specific tool-call and tool-output pair.
+3. Be extremely concise - each string should be one clear, actionable sentence
+4. Focus only on information that would be useful for handling similar future situations
+
+**Output Format:**
+You must answer using the Structured Output format required by the system. In that format:
+"what_worked" (string):
+If there is something useful in this pair of tool call and tool output, 
+then write it down. For example, include specific examples of 
+successful tool usage(not basic one), well-chosen parameters, and the situations where the tool was used appropriately. 
+"what_to_avoid" (string):
+If there is something useful in this pair of tool call and tool output that will be good to avoid,
+then write it down. For example, include examples of 
+poor parameter choices, incorrect usage patterns, or situations where the tool should not have been used.
+
+Examples:
+Good "what_worked":
+- "Using curl with the -L flag correctly followed redirects and retrieved the final page content."
+- "Specifying the exact file path reduced unnecessary directory exploration."
+
+Bad "what_worked":
+- "It is better to use it like this."
+- "The tool worked well."
+
+Good "what_to_avoid":
+- "Reading secret_passwords.md with cat triggered a security alert."
+- "Calling the search tool without a query parameter caused an execution error."
+
+Bad "what_to_avoid":
+- "Do not read that file."
+- "Avoid mistakes."
+
+What worked examples:
+- "Providing a precise query string improved the relevance of search results."
+- "Using structured arguments instead of free text reduced parsing errors."
+
+What to avoid examples:
+- "Invoking the tool from Python code too frequently resulted in rate limit errors."
+- "Using broad queries returned too many irrelevant results."
+"""
+``` 
+
+**Transform Structured Output Into Final Dict To Save**
+After generating the structured schema and filling it, the output must be transformed by Memory Controller into a list of dictionaries.
+
+**How To Transform**
+- Each dictionary must contain the following fields:
+`toolname`, `tool_parameters`, `tool_signature`, `tool_output`, `what_worked`, `what_to_avoid`.
+- Each dictionary represents a single tool interaction (a tool-call & tool-output pair) and contains only meaningful memory entries. 
+- The fields `toolname`, `tool_parameters`, and `tool_output` must be added programmatically (not generated inside the structured output). This ensures that the Agent, as an LLM, cannot arbitrarily populate these fields — they must be filled strictly by code.
+- `tool_signature` is a summarized version of the tool call generated by the summarize_long_params() function. A description of this function can be found in the section “How To Retrieve (Recall Mechanism)”.
+- If both `what_worked` and `what_to_avoid` are empty, this pair should be skipped and not added to the resulting list.
+
+Example of a single dictionary:
+```python
+{
+  "toolname": "run_cmd",
+  "tool_parameters": "cat list_of_emails_by_worker.txt",
+  "tool_signature": "Read .txt file containing email list using cat", #One-sentence summary of the tool call using summarize_long_params()
+  "tool_output": "ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net maria.bondar@outlook.com dmytro.tkachenko@gmail.com iryna.melnyk@yahoo.com vlad.kozlov@ukr.net sofia.hrytsenko@gmail.com maksym.danilenko@outlook.com kateryna.polishchuk@yahoo.com",
+  "what_worked": "I have access to this file.",
+  "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call." 
+}
+```
+
+**Tool-Level Memory Vector Store**
+After Memory Controller constructed the list of such dictionaries (memory thoughts), it forwards each dictionary to the Tool-Level Memory Vector Store.
+The Tool-Level Memory Vector Store maintains a separate collection for each ReAct tool.
+These collections must be created statically in advance (statically) for all tools registered in the ToolSelector (except tools like?: recall_tool_level)
+Each dictionary is stored in the collection whose name matches the value stored under the "toolname" key as an example above.
+This ensures that memory is organized per tool, allowing future retrieval of relevant tool-specific experience.
+
 ### How To Forget???[To_Do]
 
 Тут є два механізми забування:
@@ -434,9 +695,107 @@ Best practices:
 ### Examples
 **Example**
 
+### Commit Mechanism (Tool-Call Confirmation Layer)
+
+**Purpose**
+The Commit mechanism is wrapper mechanism over the agent's tool-calling. 
+It introduces a validation and reflection step before executing any state-modifying (write-access) tool.
+Instead of executing a generated tool call immediately, the system intercepts it and requires explicit confirmation from the agent after memory-based reflection.
+
+The goal is to:
+- Reduce incorrect or harmful tool usage
+- Enforce self-verification before state-changing actions
+- Integrate Tool-Level Memory Recall into the decision process
+- Improve tool-call precision and long-term agent performance
+
+**Scope**
+The mechanism applies to:
+- All state-modifying (write-access) tool calls initiated by the agent
+- External MCP tools that perform write operations
+
+**Tool Classification**
+Definitions
+Write-Access Tools are the tools that: modify files, execute system commands, change system state, perform destructive operations, send messages or modify external systems.
+
+Read-Access Tools are the tools that: retrieve information, perform analysis without side effects.
+
+**Current Core Tools**
+
+| Tool | Access Type |
+| --- | --- |
+| `run_cmd` | Write |
+| `file_write` | Write |
+| `compact` | Write |
+| `python` | Write |
+| `file_read` | Read |
+| `deep_research` | Read |
+| `web_search` | Read |
+| `text_analysis` | Read |
+
+---
+
+**Existing External MCP Services**
+
+Tools from the following systems must be statically categorized (not dynamically classified):
+- Slack MCP
+- Google Workspace MCP
+- Jira MCP
+- GitHub MCP
+- Confluence MCP (maybe also)
+
+Must be categorized into:
+- **Read-only**
+- **Write-access**
+
+**Commit Mechanism Behavior**
+The Commit Mechanism is triggered every time the agent generates a tool call. The original tool call is not executed immediately.
+Execution Flow:
+1. The agent generates a tool call.
+2. The Commit Mechanism initiated and takes the tool-call.
+3. Tool-Level Memory Recall is triggered.
+4. The agent receives a reflection prompt instead of tool output.
+
+Reflection Prompt (With Relevant Memories)
+If relevant memories are retrieved:
+```python
+f"""You want to make such a tool-call: {curr_tool_call}. 
+Here is what you recall about this tool-call: {list_of_relevant_memories}.
+Are you sure that this is a correct tool call? 
+Are you sure that this will help you get closer to completing the task? 
+If you are sure, then call commit tool. 
+If you are not sure, then make correct tool-call."""
+```
+If no relevant memories are retrieved:
+```python
+f"""You want to make such a tool-call: {curr_tool_call}. 
+You can't recall anything about this tool-call. 
+It seems like you are making this tool-call for the first time.
+Are you sure that this is a correct tool call? 
+Are you sure that this will help you get closer to completing the task? 
+If you are sure, then call commit tool. 
+If you are not sure, then make correct tool-call."""
+```
+
+After receiving the reflection prompt, the agent may:
+- Approve the tool call by invoking commit(...)
+- Modify the tool call and re-enter the Commit Mechanism (This way agent can iterate multiple times until confident)
+The tool is executed only after explicit commit confirmation.
+
+
+As you can see sentence "Here is what you recall about this tool-call: {list_of_relevant_memories}", so as you can understand there is a Tool-Level Memory Recall mechanism is triggered.
+Retrieving relevant thoughts helps generating accurate tool-calls.
+
+### Accept Mechanism (Tool-Call Confirmation Layer)
+
+---
+
 ## Episodic Memory
 
 [To_Do]Change Vector Search With Graph Rag Ideas?
+
+Вот, а отдельный подшаг в этом всем алгоритме может быть, что: "Я сейчас пойду в свою эту базу рефлексий(ЕПІЗОДИЧНА ПАМ'ЯТЬ?????) и найду по схожим задачам не было ли у меня рефлексий?
+
+А траекторию можно каждую анализировать и какой-то рефлекшн на ней делать. Вопрос, конечно, как потом вспоминать эту зарефлекшенную траекторию, типа когда задача будет действительно типа похожа. Условно я бы, возможно, это как-то собирал в Memory Controller-е в Memory контекст, а потом его еще обрезал LLM-кой, которая, ну примерно как Tool Selector, да? Смотрит на разные куски воспоминаний, смотрит на вот эти вот рефлексии, которые мы там как-то, не знаю, может быть через векторный поиск подоставали или каким-то другим образом. И выбрасывает те, которые ну очевидно логически не подходят сюда. А может быть наоборот — это типа работает как Tool Selector в плане, что она смотрит на все рефлексии в целом и пытается подсказать типа какая может быть полезна. Но тут, наверное, будет непрактично, потому что просто количество этих рефлексий очень быстро там перевалит за сотню, и ты не можешь заставить LLM-ку качественно подумать про 100 одновременно разных типа подходов и дать свой ответ. Поэтому, короче, нужно здесь думать про скейл. Какой-то такой скейл на Tool-level memory сработает, но там задержки будут плохие, поэтому LLM-кой не стоит очищать. Вот, а на рефлекшн траекториях я бы думал в сторону, наверное, какого-то более глупого селектора, более как бы широкого, а затем очищения того, что лишнее попало нам сюда вот таким вот прунингом, где LLM-ка выбирает, что из этого типа будет бесполезным в конкретном случае. Семантически похоже, звучит похоже задача та, для которой у нас есть рефлекшн и текущая, но на самом деле совет там вредный или как минимум не полезный. Это все мысли на ходу, я не думаю, что это прям критическая фича. То есть наш агент сможет и без этого перформить, без рефлекшна. А перформить без семантической памяти он не сможет. Поэтому условно семантическая память мне кажется более приоритетной. 
 
 Episodic memory is a historical collection of prior experiences, or episodes. It includes what happened, how it happened, and the lessons or insights learned from those experiences, even if they were never clearly stated.
 
@@ -551,6 +910,12 @@ memory, autobiographical memory places particular emphasis on the self and its e
 life narrative
 
 ## Semantic Memory
+
+Да, то есть у нас, например, есть... стартует агент. Он еще никаких Tool Call-ов не запускал. Мы еще даже тулы не населектили. Дергается Memory Controller с вопросом, типа: "Вот у нас такая задача к такому-то виду агента (к воркеру или оркестратору соответственно), вспомни все релевантное". И он пойдет посмотрит на эту задачу, скажет: "Ой, тут система такая-то упомянута, я сейчас достану, кто ее там менеджерит, какой у него имейл" и тому подобное. Вот это все как бы про семантические знания, которые могут быть полезны для решения задачи. 
+
+Поэтому условно семантическая память мне кажется более приоритетной. То есть способность прочитать вику, прочитать длинный какой-нибудь там диалог объяснения человека специфики его работы, его департамента и так далее. И все это замапить в какой-то там граф знаний, какую-то короче схему. Вот это важнее, чтобы можно было насыщать контекст вот этой вот надставкой работы агента.
+
+Ну вот семантическая память — она да, про факты и про взаимосвязи между этими фактами, между этими знаниями. Типа что Confluence — это на самом деле, например, там https://www.google.com/search?q=wiki.softtech.com. И там что у него есть условно администратор, у него есть инструкция пользования где-нибудь там лежит, и тому подобное. То есть чтобы у... здесь мне кажется как раз больше графовая какая-то структура может быть полезна для того, чтобы можно было все эти связанные вещи выискивать. Вот, соответственно, обновлять ее тоже нужно придумать способ. Придумать такую структуру, которую будет удобно обновлять, когда это будет необходимо. Вот, то есть семантика — она про то, что когда тебе говорят: "Иди и на конлфюэнс сделай что-то", а типа у нас ну нет ничего, что называется Confluence, у нас есть там домен, который называется https://www.google.com/search?q=wiki.softtech.com. И как типа система должна понять, что от нее просили? Как она должна эти воспоминания хранить? Вот.
 
 Semantic memory represents our structured knowledge of facts, concepts, and their relationships - essentially what we "know" rather than what we "remember experiencing."
 For our Agents, this would be implemented through techniques like Retrieval Augmented Generation (RAG), where relevant information is dynamically pulled from a knowledge base to ground and inform responses.
@@ -786,6 +1151,9 @@ Can the same information be stored simultaneously in semantic, episodic, and pro
 How to Forgot It? Are there more applicable situation like skill writing PDFs or PowerPoint presentations?
 
 ## Retrieving Methods (How To Retrieve??) -- Variants To Retrieve
+
+Ще не розглядав чи є якісь методи динамічного категоризування відповідно до вхідних даних(спогадів, які ми зберігаємо).
+Але згадав, що в рішенні GraphRAG + DRIFT search фактично є такий механізм для графу, щоб рагом швидше шукати. Але це точно поганий варіант для tool-level memory, бо на 99% він напевне не влізе по швидкості.
 
 ### RLM
 Still vector database retrieval is bad, this is where we need to improve a lot. As example, we can use as an idea/mechnism of [RLM (Resursive Language Model), which is a recent paper](https://arxiv.org/pdf/2512.24601). - Much more effective, still not the best, isn't very cost-effective solution (but better than giving whole context to llm), have pretty big latency(maybe use cheap and fast llm) -- looks like whole agent. 
