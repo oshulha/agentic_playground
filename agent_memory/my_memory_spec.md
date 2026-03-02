@@ -187,6 +187,98 @@ To be continued...?
 
 ## Memory Controller
 
+Memory Controller is a stateless microservice responsible for managing the lifecycle of agent memories. It exposes an HTTP API and serves as the abstraction layer between the cognitive system (ReAct/Brains) and persistent memory storage systems.
+
+It implements:
+
+Tool-level memory recall
+Structured post-execution memory saving
+Embedding generation and vector indexing
+
+### Tool-Level Memory Responsibilities
+
+Memory Controller listens for the HTTP endpoint:
+```code
+POST /memory/recall_tool_level
+```
+When this endpoint is invoked, the Memory Controller understands that the agent is requesting relevant past memories from the Tool-Level Memory layer.
+The request payload must contain:
+```python
+payload = {
+  "collection": toolname, # the name of the tool; name of collection where to search
+  "query": query, # raw or summarized tool parameters from tool call
+  "alpha": alpha, # hybrid search weight parameter. e.g. 0.7 means: 70% vector similarity and 30% BM25 lexical ranking
+  "top_k": top_k # how many elements to retrieve if there is more than k elements
+}
+```
+Preconditions (More details can be found in `Tool-Level Memory Vector Store` paragpaph under `Tool-Level Memory` paragraph):
+- The Tool-Level Memory Vector Store must already exist.
+- Each tool must have its own collection.
+
+Upon receiving the request, Memory Controller:
+1. Generates an embedding for payload["query"] using the configured embedding model.
+2. Selects the correct collection based on toolname.
+3. Executes hybrid search (vector + BM25) using alpha
+4. Retrieves the top_k most relevant memory entries.
+5. Returns them as structured JSON.
+
+API Response Format
+
+Memory Controller must return an HTTP JSON response:
+```python
+{
+  "memories": [
+    {
+      "tool_call": "...",
+      "tool_output": "...",
+      "what_worked": "...",
+      "what_to_avoid": "..."
+    }
+  ]
+}
+```
+
+Memory Controller listens for the HTTP endpoint:
+```code
+POST /memory/store_tool_level
+```
+When this endpoint is invoked, the Memory Controller understands that the agent wants to зберегти спогади з ітерації РеАкт воркера, що щойно закінчились.
+The request payload must contain:
+```python
+payload = {
+  "collection": toolname, # the name of the tool; name of collection where to search
+  "query": query, # raw or summarized tool parameters from tool call
+  "alpha": alpha, # hybrid search weight parameter. e.g. 0.7 means: 70% vector similarity and 30% BM25 lexical ranking
+  "top_k": top_k # how many elements to retrieve if there is more than k elements
+}
+```
+Preconditions (More details can be found in `Tool-Level Memory Vector Store` paragpaph under `Tool-Level Memory` paragraph):
+- The Tool-Level Memory Vector Store must already exist.
+- Each tool must have its own collection.
+
+Upon receiving the request, Memory Controller:
+1. Generates an embedding for payload["query"] using the configured embedding model.
+2. Selects the correct collection based on toolname.
+3. Executes hybrid search (vector + BM25) using alpha
+4. Retrieves the top_k most relevant memory entries.
+5. Returns them as structured JSON.
+
+API Response Format
+
+Memory Controller must return an HTTP JSON response:
+```python
+{
+  "memories": [
+    {
+      "tool_call": "...",
+      "tool_output": "...",
+      "what_worked": "...",
+      "what_to_avoid": "..."
+    }
+  ]
+}
+```
+
 
 ## Tool-Level Memory
 
@@ -266,7 +358,7 @@ sequenceDiagram
 
     ReAct->>ReAct: filling a structured output schema with number of pairs of tool call and tool output fields<br/>per each pair of tool-call & tool-output
 
-    Note right of ReAct: some python code will make out of structured output with number of pairs of tool call and tool output<br/>small JSONs having only toolname, tool_parameters, tool-outputs, what_worked, what_to_avoid<br/>that was chosen as if it did smth valuable.
+    Note right of ReAct: some python code will make out of structured output with number of pairs of tool call and tool output<br/>small JSONs having only tool_call, tool-outputs, what_worked, what_to_avoid<br/>that was chosen as if it did smth valuable.
     Note right of ReAct: HTTP POST /memory/store_tool_level
 
     ReAct->>MC: sends final JSONs to Tool-Level Memory
@@ -283,31 +375,86 @@ The primary purpose of Tool-Level Memory is to improve tool-call accuracy, reduc
 The overall framework operates in two main stages:
 • Stage-1: Recall Stage. 
 When the agent generates a new tool call, tool call goes to the Commit Mechanism. 
-The system retrieves relevant past memories associated with the same toolname, tool's parameters, similar execution contex(?) and presents them to the agent for reflection and confirmation.
+The system retrieves relevant past memories associated with the same toolname, tool's parameters, tool output, similar execution contex(?) and presents them to the agent for reflection and confirmation.
 
 • Stage-2: Post-think and Update. 
 After ReAct completes its task, a structured post-processing step is triggered. Code extracts all tool-call and tool-output pairs generated during execution. Proposes a structured output to the agent.
-The agent fills struсtured output fields such as: `what worked`, `what to avoid`.
+The agent fills struсtured output fields such as: `what worked`, `what to avoid` - for each tool-call and tool-output pair.
 
-After ReAct has done his task, automatically code has to generate structured output with the number of pairs of tool call and tool outputs made during execution of ReAct. 
-And then being proposed to agent where agent has to fill necessary fields: what worked, what to avoid for exact pair of tool-call & tool-output.
-The resulting memory thought is then:
-categorized by tool name,
-stored in a dedicated vector collection per tool,
-optionally processed by memory consolidation mechanisms(?).
+### Tool-Level Memory Vector Store
+
+The Tool-Level Memory Vector Store maintains a separate collection for each ReAct tool.
+These collections must be created statically in advance for all tools registered in the ToolSelector (except tools like?: recall_tool_level, recall_episodic_memory, recall_semantic_memory, recall_procedural_memory and other memory related tools)
+Each dictionary is stored in the collection whose name matches the value stored under the "toolname" key as an example above.
+
+I decided to use Weaviate as the vector database.
+Collections must be created without auto-vectorization, since we will perform similarity search using the summarization_toolcall function over tool-call (which is a one-sentence summary of the tool call), while storing the entire dictionary as structured properties.
+
+Below is an example of how I envision the implementation:
+```python
+import weaviate
+from openai import OpenAI
+
+example_dict = {
+  "tool_call": "run_cmd(\"cat list_of_emails_by_worker.txt\")"
+  "tool_output": "ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net maria.bondar@outlook.com dmytro.tkachenko@gmail.com iryna.melnyk@yahoo.com vlad.kozlov@ukr.net sofia.hrytsenko@gmail.com maksym.danilenko@outlook.com kateryna.polishchuk@yahoo.com",
+  "what_worked": "I have access to list_of_emails_by_worker.txt.",
+  "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call."
+}
+
+# code below has to be in Memory Controller I think
+
+openai_client = OpenAI()
+
+client = weaviate.connect_to_local()
+
+client.collections.create(
+    name="run_cmd",
+    vectorizer_config=None  # Important
+)
+
+tool_signature = summarize_toolcall(toolname, tool_parameters)
+
+# Saving should be like this
+embedding = openai_client.embeddings.create(
+    model="text-embedding-3-small", #this has to be enough for 1 sentence. Can leverage to text-embedding-3-large
+    input=tool_signature
+).data[0].embedding
+
+collection = client.collections.get("run_cmd")
+
+collection.data.insert(
+    properties=example_dict,
+    vector=embedding
+)
+
+# Search (Recall) should be like this
+query_embedding = openai_client.embeddings.create(
+    model="text-embedding-3-small",  # same model!
+    input=tool_signature
+).data[0].embedding
+
+collection = client.collections.get("run_cmd")
+
+results = collection.query.near_vector(
+    near_vector=query_embedding,
+    limit=5,
+    return_properties=["tool_call", "tool_output", "what_worked", "what_to_avoid"]
+)
+```
+Embedding model choice:
+
+text-embedding-3-small is sufficient for one-sentence summaries.
+text-embedding-3-large can be used if higher semantic precision is required.
+
 
 ### How To Retrieve (Recall Mechanism)
 
 So, when the agent makes a tool call and that tool call is passed to the commit mechanism, the commit mechanism performs calling of function `recall_tool_level` to the Memory Controller. Detailed description of function `recall_tool_level`. `recall_tool_level` will return list of relevant memories. After all, relevant memories will be inserted in Commit Mechanism message.
 
-Since Tool-Level Memory is considered both explicit and implicit, that's why the `recall_tool_level` function is also available to ReAct as a tool in order to make possible ReAct to search smth necessary for him.
+Since Tool-Level Memory is considered both explicit and implicit, that's why the `recall_tool_level` function is also available to ReAct as a tool in order to make possible ReAct to search something necessary for him.
 
-**How To Query In Tool-Level Memory Vector DB?**
-
-A query to a specific collection (e.g., run_cmd) must be constructed based on the tool parameters.
-For example, if the tool call is: run_cmd(cat list_of_emails_by_worker).txt, then the query embedding should be "cat list_of_emails_by_worker.txt" and used to search within the corresponding run_cmd collection.
-
-Here is how approximately I see implementation of `recall_tool_level()` and `summarize_long_params()`:
+Here is how approximately I see implementation of `recall_tool_level()` and `summarize_toolcall()`:
 ```python
 import os
 from dotenv import load_dotenv
@@ -320,7 +467,7 @@ client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
 )
 
-def summarize_long_params(toolname: str, tool_parameters: str):
+def summarize_toolcall(toolname: str, tool_parameters: str):
     response = client.responses.create(
       model="gpt-5-nano",
       input=f"""
@@ -343,12 +490,7 @@ def summarize_long_params(toolname: str, tool_parameters: str):
       result: Read emails using run_cmd.
       """
     )
-  return response.output[0].content[0].text
-  
-# Comment To The Code:
-# Why PARAMS_THRESHOLD is set to 200 characters. According to ChatGPT big 1 simple sentence is at max 150 characters.
-
-# Note: If you don’t have the toolname and tool_parameters, you can extract them from tool_call using a method similar to the following.
+    return response.output[0].content[0].text
 
 def extract_toolname_and_parameters(tool_call: str) -> tuple:
     start = tool_call.find("(")
@@ -361,7 +503,6 @@ def extract_toolname_and_parameters(tool_call: str) -> tuple:
 
 # Recall Tool-Level Memory Mechanism
 MEMORY_CONTROLLER_URL = os.getenv("MEMORY_CONTROLLER_URL")
-PARAMS_THRESHOLD = 200
 def recall_tool_level(
     toolname: str,
     tool_parameters: str,
@@ -378,28 +519,6 @@ def recall_tool_level(
     experiences (successes, failures, security alerts, rate limits, etc.) 
     related to similar tool calls, so that the agent can adapt 
     its reasoning before continuing execution.
-
-  Recommended Query Strategy:
-    The query should be constructed using:
-    - Tool parameters 
-    - Or a short summarization of the tool call if query is more then PARAMS_THRESHOLD
-
-  This is important because Tool-Level Vector DB stores:
-    - tool_signature (1-sentence summary of the tool call)
-    - tool_parameters
-    - tool_output
-    - what_worked
-    - what_to_avoid
-
-  Example of stored memory:
-    {
-        "tool": "run_cmd",
-        "tool_parameters": "cat list_of_emails_by_worker.txt",
-        "tool_signature": "Read .txt file containing email list using cat",
-        "tool_output": "ivan.petrenko@gmail.com ...",
-        "what_worked": "I have access to list_of_emails_by_worker.txt.",
-        "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert."
-    }
 
   Args:
     toolname (str):
@@ -423,8 +542,8 @@ def recall_tool_level(
     Example of tool usage:
       recall_tool_level(toolname="run_cmd", tool_parameters="cat list_of_emails_by_worker.txt")
 """
-    if len(tool_parameters) >= PARAMS_THRESHOLD:
-      query = summarize_long_params(toolname, tool_parameters)
+    if len(tool_parameters) > PARAMS_THRESHOLD:
+      query = summarize_toolcall(toolname, tool_parameters)
     else:
       query = tool_parameters
 
@@ -437,7 +556,7 @@ def recall_tool_level(
         "top_k": top_k
     }
 
-     try:
+    try:
         response = requests.post(url, json=payload)
         response.raise_for_status()
 
@@ -459,7 +578,7 @@ def recall_tool_level(
 
 After ReAct has done his task, automatically code has to generate dynamic structured output schema (or model) with the function like create_post_think_model made during execution of ReAct. 
 
-In this schema ReAct has to fill such fields like: "what_worked", "what_to_avoid" for exact pair of tool-call & tool-output and fill fields "is_success" and "errors" if there is some problems with selecting tools.
+In this schema ReAct has to fill such fields like: "what_worked", "what_to_avoid" for exact pair of tool-call & tool-output and fill fields ???"is_success" and "errors" if there is some problems with selecting tools.
 
 Example of function create_post_think_model:
 ```python
@@ -517,6 +636,7 @@ def create_post_think_model(
                     f"Provide analysis of this interaction."
                 ),
             )
+        )
     return create_model("ToolLevelAnalysis", **fields)
 ```
 
@@ -584,30 +704,108 @@ After generating the structured schema and filling it, the output is sent over P
 
 **How To Transform**
 - Each dictionary must contain the following fields:
-`toolname`, `tool_parameters`, `tool_signature`, `tool_output`, `what_worked`, `what_to_avoid`.
+`tool_call`, `tool_output`, `what_worked`, `what_to_avoid`.
 - Each dictionary represents a single tool interaction (a tool-call & tool-output pair) and contains only meaningful memory entries. 
-- The fields `toolname`, `tool_parameters`, and `tool_output` must be added programmatically (not generated inside the structured output). This ensures that the Agent, as an LLM, cannot arbitrarily populate these fields — they must be filled strictly by code.
-- `tool_signature` is a summarized version of the tool call generated by the summarize_long_params() function. A description of this function can be found in the section “How To Retrieve (Recall Mechanism)”.
+- The fields `tool_call` and `tool_output` must be added programmatically (not generated inside the structured output). This ensures that the Agent, as an LLM, cannot arbitrarily populate these fields — they must be filled strictly by code.
 - If both `what_worked` and `what_to_avoid` are empty, this pair should be skipped and not added to the resulting list.
+- If tool-call parameters less or equal PARAMS_THRESHOLD(default: 200) characters, store the raw tool call in the "tool_call" field of dictionary. Then on Memory Controller level embedding of tool parameters (not full tool_call) will be used as the vector. The entire dictionary with all fields as metadata/properties. 
+I envision it like this: 
+```python
+embedding = openai_client.embeddings.create(
+    model="text-embedding-3-small",
+    input=raw_tool_parameters
+).data[0].embedding
+
+collection = client.collections.get("ToolMemory")
+
+collection.data.insert(
+    properties=full_dict,  # full structured dictionary
+    vector=embedding
+)
+```
+- If tool-call parameters more than PARAMS_THRESHOLD(default: 200) characters, summarize the tool call(using `summarize_toolcall`), store tool-call summary + file reference in the "tool_call" field of dictionary. File has to be created in folder named `toolcalls`. Then on Memory Controller level embedding of tool-call summary will be used as the vector. The entire dictionary with all fields as metadata/properties. 
+I envision it like this: 
+```python
+embedding = openai_client.embeddings.create(
+    model="text-embedding-3-small",
+    input=summarize_toolcall(toolname, tool_parameters)
+).data[0].embedding
+
+collection = client.collections.get("ToolMemory")
+
+collection.data.insert(
+    properties=full_dict,  # full structured dictionary
+    vector=embedding
+)
+```
+- If tool output is less or equal than TOOL_OUTPUT_THRESHOLD(default: 1000) characters, store raw tool-output in the "tool_output" field of dictionary. 
+- If tool output is more than TOOL_OUTPUT_THRESHOLD(default: 1000) characters, summarize the tool output(using the `summarize_tooloutput`), store tool-output summary + file reference in the "tool_output" field of dictionary. File has to be created in folder named `tooloutputs`.
+I see implementation of  `summarize_tooloutput` like this:
+```python
+def summarize_tooloutput(toolname: str, tool_parameters: str, tool_output: str):
+    response = client.responses.create(
+        model="gpt-5-nano",
+        input=f"""
+You are generating a structured memory summary of a tool execution.
+
+Your task:
+Produce a precise, informative summary of the tool output in EXACTLY ONE sentence.
+
+Tool output:
+{tool_output}
+
+Context:
+Tool call:
+{toolname}({tool_parameters})
+
+Requirements:
+- Write EXACTLY one sentence (no bullet points, no line breaks).
+- Do NOT copy or repeat raw output verbatim.
+- Do NOT include raw values such as full lists, large numeric sequences, or logs.
+- Clearly describe:
+  1) What action was performed.
+  2) What type of information was obtained or produced.
+  3) The data source if it is identifiable (file name, API, database, system resource, etc.).
+- Avoid vague phrases such as: "processed data", "handled file", "performed operation", "got results".
+- The sentence must be specific enough that someone can understand what happened without seeing the raw output.
+
+Good example:
+Tool output:
+ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net
+
+Result:
+Retrieved the list of employee email addresses from the file list_of_emails_by_worker.txt.
+
+Bad example:
+Result:
+List of emails.
+"""
+    )
+    return response.output[0].content[0].text
+```
+Example:
+```python
+{
+    "tool_call": f"Summary of tool call: {tool_call_summary}. 
+    Link: Full tool call stored at /home/oleksandr/123tool_call.txt",
+    "tool_output": f"Summary of tool output: {tool_output_summary}. 
+    Link: Full tool output stored at /home/oleksandr/123tool_output.txt",
+    "what_worked": "I have access to list_of_emails_by_worker.txt.",
+    "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call."
+}
+```
 
 Example of a single dictionary:
 ```python
 {
-  "toolname": "run_cmd",
-  "tool_parameters": "cat list_of_emails_by_worker.txt",
-  "tool_signature": "Read .txt file containing email list using cat", #One-sentence summary of the tool call using summarize_long_params()
+  "tool_call": "run_cmd(\"cat list_of_emails_by_worker.txt\")"
   "tool_output": "ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net maria.bondar@outlook.com dmytro.tkachenko@gmail.com iryna.melnyk@yahoo.com vlad.kozlov@ukr.net sofia.hrytsenko@gmail.com maksym.danilenko@outlook.com kateryna.polishchuk@yahoo.com",
   "what_worked": "I have access to list_of_emails_by_worker.txt.",
   "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call." 
 }
 ```
 
-**Tool-Level Memory Vector Store**
 After Memory Controller constructed the list of such dictionaries (memory thoughts), it forwards each dictionary to the Tool-Level Memory Vector Store.
-The Tool-Level Memory Vector Store maintains a separate collection for each ReAct tool.
-These collections must be created statically in advance (statically) for all tools registered in the ToolSelector (except tools like?: recall_tool_level)
-Each dictionary is stored in the collection whose name matches the value stored under the "toolname" key as an example above.
-This ensures that memory is organized per tool, allowing future retrieval of relevant tool-specific experience.
 
 ### How To Forget???[To_Do]
 
@@ -1214,6 +1412,8 @@ instead, share memory by communicating.”
 
 Стратегія написання спеки:
   Спочатку коротко опиши Розділ і потім розширюй деталями
+
+  І це ж промпт все таки
 
 **Тул Левел Меморі**
   Розуміння Та Приклади:

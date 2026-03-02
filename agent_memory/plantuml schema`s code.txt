@@ -10,10 +10,10 @@ ReAct -> ReAct: User Prompt
 
 ReAct -> ReAct: commit(python("sum(2, 2)"))
 
-ReAct -> MC: recall(toolname="python", params="sum(2,2)")
+ReAct -> MC: recall_tool_level(toolname="python", params="sum(2,2)")
 
 note right of ReAct
-HTTP POST /memory/recall
+HTTP POST /memory/recall_tool_level
 end note
 
 MC -> VS: Tool-Level Memory: \nsimilarity_search(collection="python", query="sum(2,2)")
@@ -28,10 +28,10 @@ ReAct -> ReAct: tool-output: Sum is 4.
 
 ReAct -> ReAct: commit(run_cmd("{"command": "ls", "path":"/home/oleksandr"}"))
 
-ReAct -> MC: recall(toolname="run_cmd", \nparams="{"command": "ls", "path":"/home/oleksandr"}")
+ReAct -> MC: recall_tool_level(toolname="run_cmd", \nparams="{"command": "ls", "path":"/home/oleksandr"}")
 
 note right of ReAct
-HTTP POST /memory/recall
+HTTP POST /memory/recall_tool_level
 end note
 
 MC -> VS: Tool-Level Memory: \nsimilarity_search(collection="run_cmd", \nquery="{"command": "ls", "path":"/home/oleksandr"}")
@@ -44,10 +44,10 @@ ReAct -> ReAct: Commits (no, I am not sure).\nI want to make tool-call: rocketch
 
 ReAct -> ReAct: commit(rocketchat_send_msg({user: "Bob", text: "Hi!"}))
 
-ReAct -> MC: recall(toolname="rocketchat_send_msg", \nparams="{user: "Bob", text: "Hi!"}")
+ReAct -> MC: recall_tool_level(toolname="rocketchat_send_msg", \nparams="{user: "Bob", text: "Hi!"}")
 
 note right of ReAct
-HTTP POST /memory/recall
+HTTP POST /memory/recall_tool_level
 end note
 
 MC -> VS: Tool-Level Memory: \nsimilarity_search(collection="rocketchat_send_msg", \nquery="{user: "Bob", text: "Hi!"}")
