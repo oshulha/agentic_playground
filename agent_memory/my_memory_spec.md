@@ -294,7 +294,7 @@ If len(tool_parameters) > PARAMS_THRESHOLD:
 - Use summary as embedding input
 - Store summary + file reference in tool_call field
 Else:
-- Store raw tool call
+- Store raw tool call in tool_call field
 - Use raw tool parameters as embedding input
 
 Generating Embedding will be like this:
@@ -308,9 +308,9 @@ embedding = openai_client.embeddings.create(
 3. Handle Tool Output Threshold
 If len(tool_output) > TOOL_OUTPUT_THRESHOLD
 - Summarize using summarize_tooloutput()
-- Store summary + file reference
+- Store summary + file reference in tool_output field
 Else:
-- Store raw tool output
+- Store raw tool output in tool_output field
 
 Implementation of summarize_tooloutput:
 ```python
@@ -321,7 +321,7 @@ def summarize_tooloutput(toolname: str, tool_parameters: str, tool_output: str):
 You are generating a structured memory summary of a tool execution.
 
 Your task:
-Produce a precise, informative summary of the tool output in EXACTLY ONE sentence.
+Produce a concise, precise, informative summary of the tool output.
 
 Tool output:
 {tool_output}
@@ -331,13 +331,13 @@ Tool call:
 {toolname}({tool_parameters})
 
 Requirements:
-- Write EXACTLY one sentence (no bullet points, no line breaks).
 - Do NOT copy or repeat raw output verbatim.
 - Do NOT include raw values such as full lists, large numeric sequences, or logs.
 - Clearly describe:
   1) What action was performed.
   2) What type of information was obtained or produced.
   3) The data source if it is identifiable (file name, API, database, system resource, etc.).
+- Under 100 words.
 - Avoid vague phrases such as: "processed data", "handled file", "performed operation", "got results".
 - The sentence must be specific enough that someone can understand what happened without seeing the raw output.
 
@@ -371,9 +371,9 @@ Examples of what full_dict should contain (i.e., what metadata should be stored)
 ```python
 {
     "tool_call": f"Summary of tool call: {tool_call_summary}. 
-    Link: Full tool call stored at /home/oleksandr/123tool_call.txt",
+    Reference: Full tool call stored at /home/oleksandr/123tool_call.txt",
     "tool_output": f"Summary of tool output: {tool_output_summary}. 
-    Link: Full tool output stored at /home/oleksandr/123tool_output.txt",
+    Reference: Full tool output stored at /home/oleksandr/123tool_output.txt",
     "what_worked": "I have access to list_of_emails_by_worker.txt.",
     "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call."
 }
@@ -524,7 +524,7 @@ These collections must be created statically in advance for all tools registered
 Each dictionary is stored in the collection whose name matches the value stored under the "toolname" key as an example above.
 
 I decided to use Weaviate as the vector database.
-Collections must be created without auto-vectorization, since we will perform similarity search using the summarization_toolcall function over tool-call (which is a one-sentence summary of the tool call), while storing the entire dictionary as structured properties.
+Collections must be created without auto-vectorization, since we will perform similarity search using the summarization_toolcall function over tool-call (which is a one-sentence summary of the tool call and we will perform only if len()), while storing the entire dictionary as structured properties.
 
 Below is an example of how I envision the implementation:
 ```python
@@ -548,8 +548,12 @@ client.collections.create(
     name="run_cmd",
     vectorizer_config=None  # Important
 )
+# have to be created other collections for all tools...
 
-tool_signature = summarize_toolcall(toolname, tool_parameters)
+if len(tool_parameters) > PARAMS_THRESHOLD:
+    tool_signature = summarize_toolcall(toolname, tool_parameters)
+else: 
+    tool_signature = tool_parameters
 
 # Saving should be like this
 embedding = openai_client.embeddings.create(
@@ -968,7 +972,7 @@ Must be categorized into:
 **Commit Mechanism Behavior**
 The Commit Mechanism is triggered every time the agent generates a tool call. The original tool call is not executed immediately.
 Execution Flow:
-1. The agent generates a tool call.
+1. The agent generates a write tool call.
 2. The Commit Mechanism initiated and takes the tool-call.
 3. `recall_tool_level()` is called and returns list of relevant memories.
 4. The agent receives a reflection prompt instead of tool output.
@@ -999,7 +1003,103 @@ After receiving the reflection prompt, the agent may:
 - Modify the tool call and re-enter the Commit Mechanism (This way agent can iterate multiple times until confident)
 The tool is executed only after explicit commit confirmation.
 
-### Accept Mechanism (Tool-Call Confirmation Layer)
+### Accept Mechanism (Tool-Output Compression & Confirmation Layer)
+
+**Purpose**
+
+The Accept Mechanism is a wrapper layer over read-access tool outputs in a ReAct-based agent architecture.
+
+It introduces a validation and compression step after a read-access tool execution, but before the tool output is written into the agent’s working memory.
+
+**Scope**
+
+The Accept Mechanism applies to all read-access tools and only when tool output exceeding a configurable token threshold (default: 1000 tokens).
+
+The mechanism does not apply to write-access tools (those are handled by the Commit Mechanism).
+
+Read-Access Tools (Subject to Accept)
+| Tool | Access Type |
+| --- | --- |
+| `file_read` | Read |
+| `deep_research` | Read |
+| `web_search` | Read |
+| `text_analysis` | Read |
+
+External MCP services categorized as Read-only must also pass through the Accept Mechanism.
+
+**Accept Mechanism Behavior**
+
+The Accept Mechanism is triggered when:
+- A read-access tool returns output (tool output is intercepted).
+- If tool output > 1000 tokens (configurable threshold)
+
+High-Level Behavior
+
+Instead of directly inserting the full tool output into the conversation history, the Accept Mechanism:
+
+1. Stores the full raw tool output in a persistent file.
+2. Generates a structured summary of the tool output.
+3. Returns to the agent:
+  - The generated summary
+  - A file path reference to the full tool output
+
+The agent must explicitly decide whether to:
+- Accept the summary -- Who Generates Summary? - If agent does, it will take time and I didn't see the case when agent can reject his own summary...
+So, I think that it will do some fast llm like gpt-5-nano. But does we need to add option of regenerating a new and how to regenerate and it will take more time...
+Prompt For Generating Summary -- `summarize_tooloutput`
+- Reject the summary and keep the original full output unchanged.
+
+Execution Flow
+
+1. Agent calls a read tool.
+2. Tool executes normally.
+3. Accept Mechanism intercepts tool output.
+4. Full tool output is saved to file: /tool_outputs/accept/{tool_name}/{timestamp}.txt
+5. System generates a structured summary.
+6. Agent receives:
+```python
+f"""
+Tool {tool_name} returned a large output.
+
+Full output stored at:
+{file_path}
+
+Generated summary:
+{summary}
+
+You may:
+- Accept the summary (recommended)
+- Reject the summary and keep the original full output unchanged (not recommended if very large)
+If you accept, call commit().
+"""
+```
+The agent must explicitly confirm the selected version using commit().
+Agent continues hsi work only after commit confirmation.
+
+If summary is accepted:
+- The original tool output in context window is replaced by the summary + file reference.
+If summary is rejected:
+- Full output is inserted into context window of the agent.
+
+**Integration with Commit Mechanism**
+
+To prevent confusion between Accept and Commit mechanisms:
+- Accept confirmation must reuse the same commit() tool.
+- The agent cannot bypass confirmation.
+- Both mechanisms rely on explicit commit confirmation before state transition.
+
+Unified Design Principle
+`commit()` acts as the single confirmation gate for:
+- Write-access tool execution (Commit Mechanism)
+- Read-output memory insertion (Accept Mechanism)
+
+Full raw tool outputs stored by the Accept Mechanism as a file must be deleted immediately after the ReAct agent completes the task. Files generated by the Commit Mechanism are NOT affected by this deletion rule.
+
+Files created by the Accept Mechanism must follow strict access policies:
+Agent:
+Read access: Allowed
+Write access: Not allowed
+Delete access: Not allowed
 
 ---
 
