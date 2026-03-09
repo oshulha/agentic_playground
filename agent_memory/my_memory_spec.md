@@ -192,8 +192,8 @@ Memory Controller is a stateless microservice responsible for managing the lifec
 It implements:
 
 Tool-level memory recall
-Structured post-execution memory saving
-Embedding generation and vector indexing
+Tool-level structured post-execution memory saving
+Multi-vector embedding generation and vector indexing
 
 ### Tool-Level Memory Responsibilities
 
@@ -207,21 +207,30 @@ The request payload must contain:
 ```python
 payload = {
   "collection": toolname, # the name of the tool; name of collection where to search
-  "query": query, # raw or summarized tool parameters from tool call
-  "alpha": alpha, # hybrid search weight parameter. e.g. 0.7 means: 70% vector similarity and 30% BM25 lexical ranking
+  "tool_parameters": params,   # raw structured parameters from tool call
   "top_k": top_k # how many elements to retrieve if there is more than k elements
 }
 ```
 Preconditions (More details can be found in `Tool-Level Memory Vector Store` paragpaph under `Tool-Level Memory` paragraph):
 - The Tool-Level Memory Vector Store must already exist.
 - Each tool must have its own collection.
+- Each collection must contain named vectors corresponding to tool parameters.
 
 Upon receiving the request, Memory Controller:
-1. Generates an embedding for payload["query"] using the configured embedding model.
-2. Selects the correct collection based on toolname.
-3. Executes hybrid search (vector + BM25) using alpha
-4. Retrieves the top_k most relevant memory entries.
-5. Returns them as structured JSON.
+1. Parses the incoming tool parameters.
+2. Generates separate embeddings for each parameter using the configured embedding model.
+3. Selects the correct collection based on toolname.
+4. Performs multi-vector similarity search for each parameter vector.
+5. Aggregates similarity scores using a weighted scoring mechanism.
+6. Retrieves the top_k most relevant memory entries.
+7. Returns them as structured JSON.
+
+The weighted aggregation stage combines similarity scores from different parameter searches into a single ranking score for each memory entry.
+
+Example scoring logic:
+final_score = w1 * similarity(param1) + w2 * similarity(param2) + ...
+
+This approach allows the system to retrieve memories that are semantically similar at the parameter level, rather than relying on a single combined embedding.
 
 API Response Format
 
@@ -274,104 +283,39 @@ Each element in structured_output must correspond by index to the same element i
 Preconditions:
 - The Tool-Level Memory Vector Store must already exist.
 - Each tool must have its own collection.
+- The collection schema must define separate vector fields for relevant tool parameters.
 - More details can be found in `Tool-Level Memory Vector Store` paragpaph under `Tool-Level Memory` paragraph
 
 Upon receiving the request, Memory Controller:
 1. Transform Structured Output Into Final Dictionaries
 Iterate through both arrays using index alignment.
 For each pair:
-Inject tool_call and tool_output programmatically.
-If both what_worked and what_to_avoid are empty - skip this entry.
-Build a list of validated memory dictionaries.
+- Inject tool_call and tool_output programmatically.
+- If both what_worked and what_to_avoid are empty - skip this entry.
+- Build a list of validated memory dictionaries.
 
 2. Extract Tool Name and Parameters  
 From each tool_call, extract:
 ```python
 toolname, tool_parameters = extract_toolname_and_parameters(tool_call)
 ```
-If len(tool_parameters) > PARAMS_THRESHOLD:
-- Summarize tool call using summarize_toolcall()
+
+If len(tool_parameter) > PARAM_THRESHOLD:
+- Summarize tool call using summarize_tool_parameter()
 - Use summary as embedding input
-- Store summary + file reference in tool_call field
+- Store summary + file reference in corresponding field
 Else:
-- Store raw tool call in tool_call field
-- Use raw tool parameters as embedding input
+- Store raw tool parameter in corresponding field
+- Use raw tool parameter as embedding input
 
-Generating Embedding will be like this:
-```python
-embedding = openai_client.embeddings.create(
-    model="text-embedding-3-small",
-    input=embedding_input
-).data[0].embedding
-```
+Tool output can be summarized by the Accept Mechanism if its size exceeds TOOL_OUTPUT_THRESHOLD and the agent decides to create a summary.
 
-3. Handle Tool Output Threshold
-If len(tool_output) > TOOL_OUTPUT_THRESHOLD
-- Summarize using summarize_tooloutput()
-- Store summary + file reference in tool_output field
-Else:
-- Store raw tool output in tool_output field
-
-Implementation of summarize_tooloutput:
-```python
-def summarize_tooloutput(toolname: str, tool_parameters: str, tool_output: str):
-    response = client.responses.create(
-        model="gpt-5-nano",
-        input=f"""
-You are generating a structured memory summary of a tool execution.
-
-Your task:
-Produce a concise, precise, informative summary of the tool output.
-
-Tool output:
-{tool_output}
-
-Context:
-Tool call:
-{toolname}({tool_parameters})
-
-Requirements:
-- Do NOT copy or repeat raw output verbatim.
-- Do NOT include raw values such as full lists, large numeric sequences, or logs.
-- Clearly describe:
-  1) What action was performed.
-  2) What type of information was obtained or produced.
-  3) The data source if it is identifiable (file name, API, database, system resource, etc.).
-- Under 100 words.
-- Avoid vague phrases such as: "processed data", "handled file", "performed operation", "got results".
-- The sentence must be specific enough that someone can understand what happened without seeing the raw output.
-
-Good example:
-Tool output:
-ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net
-
-Result:
-Retrieved the list of employee email addresses from the file list_of_emails_by_worker.txt.
-
-Bad example:
-Result:
-List of emails.
-"""
-    )
-    return response.output[0].content[0].text
-```
-Example:
+Then parse the parameters into a structured dictionary:
 ```python
 {
-    "tool_call": f"Summary of tool call: {tool_call_summary}. 
-    Link: Full tool call stored at /home/oleksandr/123tool_call.txt",
-    "tool_output": f"Summary of tool output: {tool_output_summary}. 
-    Link: Full tool output stored at /home/oleksandr/123tool_output.txt",
-    "what_worked": "I have access to list_of_emails_by_worker.txt.",
-    "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call."
-}
-```
-
-Examples of what full_dict should contain (i.e., what metadata should be stored):
-```python
-{
-    "tool_call": f"Summary of tool call: {tool_call_summary}. 
-    Reference: Full tool call stored at /home/oleksandr/123tool_call.txt",
+    "toolname": "run_cmd",
+    "shell": "bash",
+    "command": f"Summary of tool parameter: {command_summary}. Reference: Full tool parameter stored at /home/oleksandr/123tool_param_command.txt",
     "tool_output": f"Summary of tool output: {tool_output_summary}. 
     Reference: Full tool output stored at /home/oleksandr/123tool_output.txt",
     "what_worked": "I have access to list_of_emails_by_worker.txt.",
@@ -381,23 +325,45 @@ Examples of what full_dict should contain (i.e., what metadata should be stored)
 
 ```python
 {
-  "tool_call": "run_cmd(\"cat list_of_emails_by_worker.txt\")"
+  "toolname": "run_cmd",
+  "shell": "bash",
+  "command": f"\"cat list_of_emails_by_worker.txt\"",
   "tool_output": "ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net maria.bondar@outlook.com dmytro.tkachenko@gmail.com iryna.melnyk@yahoo.com vlad.kozlov@ukr.net sofia.hrytsenko@gmail.com maksym.danilenko@outlook.com kateryna.polishchuk@yahoo.com",
   "what_worked": "I have access to list_of_emails_by_worker.txt.",
   "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call." 
 }
 ```
 
-4. Insert Into Correct Collection
+Each parameter is stored as its own property in the vector store schema.
+Unlike the previous single-vector architecture, no combined tool signature embedding is created.
+Instead: each parameter, which type is string, becomes a separate embedding source; each such parameter is mapped to its own named vector.
+
+Example embedding generation:
+```python
+shell_embedding = embedding_model.encode(shell)
+command_embedding = embedding_model.encode(command)
+```
+These embeddings are automatically indexed by the vector database according to the schema.
+
+
+3. Insert Into Correct Collection
 Collection must match the tool name:
 ```python
 collection = client.collections.get(toolname)
 collection.data.insert(
-    properties=full_dict,
-    vector=embedding
+    {
+        "tool_name": toolname,
+        "shell": shell,
+        "command": command,
+        "tool_call": tool_call,
+        "tool_output": tool_output,
+        "what_worked": what_worked,
+        "what_to_avoid": what_to_avoid
+    }
 )
 ```
 Each tool has its own collection.
+The vector database automatically generates named vectors for each parameter field based on the collection schema.
 
 API Response Format
 Memory Controller must return an HTTP JSON response:
@@ -412,9 +378,6 @@ Failure:
   "error": "Detailed error message from memory transformation or vector store."
 }
 ```
-Final Step
-
-After constructing validated memory dictionaries, Memory Controller forwards each dictionary to the corresponding Tool-Level Memory Vector Store collection.
 
 ## Tool-Level Memory
 
@@ -506,12 +469,12 @@ sequenceDiagram
 As described earlier, our agent is built on a ReAct architecture.
 Tool-Level Memory is a specialized memory layer that operates at the granularity of tool interactions. Specifically, it stores and retrieves structured memories for each (tool call, tool output) pair generated during a ReAct execution cycle.
 
-The primary purpose of Tool-Level Memory is to improve tool-call accuracy, reduce repeated mistakes, and enable self-reflection before performing potentially costly or state-modifying actions.
+The primary purpose of Tool-Level Memory is to: improve tool-call accuracy, reduce repeated mistakes, and enable self-reflection before performing potentially costly or state-modifying actions.
 
 The overall framework operates in two main stages:
 • Stage-1: Recall Stage. 
 When the agent generates a new tool call, tool call goes to the Commit Mechanism. 
-The system retrieves relevant past memories associated with the same toolname, tool's parameters, tool output, similar execution contex(?) and presents them to the agent for reflection and confirmation.
+The system retrieves relevant past memories associated with the same toolname, tool's parameters, similar execution contex(?) and presents them to the agent for reflection and confirmation. Retrieval is performed using multi-vector similarity search across string tool parameters.
 
 • Stage-2: Post-think and Update. 
 After ReAct completes its task, a structured post-processing step is triggered. Code extracts all tool-call and tool-output pairs generated during execution. Proposes a structured output to the agent.
@@ -519,82 +482,143 @@ The agent fills struсtured output fields such as: `what worked`, `what to avoid
 
 ### Tool-Level Memory Vector Store
 
+#### !!! Multi-Vector Search For Each Parameter [Better Be Implemented Like Here And It Is Much Better Than Single-Vector Search Theoretically](https://chatgpt.com/share/69aabb31-2438-8003-8a86-e8cc84fb795d)
+#### !!!
+
 The Tool-Level Memory Vector Store maintains a separate collection for each ReAct tool.
 These collections must be created statically in advance for all tools registered in the ToolSelector (except tools like?: recall_tool_level, recall_episodic_memory, recall_semantic_memory, recall_procedural_memory and other memory related tools)
 Each dictionary is stored in the collection whose name matches the value stored under the "toolname" key as an example above.
+Each collection schema must define:
+- structured properties for tool parameters
+- named vectors corresponding to those parameters
 
 I decided to use Weaviate as the vector database.
-Collections must be created without auto-vectorization, since we will perform similarity search using the summarization_toolcall function over tool-call (which is a one-sentence summary of the tool call and we will perform only if len()), while storing the entire dictionary as structured properties.
 
-Below is an example of how I envision the implementation:
+Example schema:
 ```python
 import weaviate
-from openai import OpenAI
-
-example_dict = {
-  "tool_call": "run_cmd(\"cat list_of_emails_by_worker.txt\")"
-  "tool_output": "ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net maria.bondar@outlook.com dmytro.tkachenko@gmail.com iryna.melnyk@yahoo.com vlad.kozlov@ukr.net sofia.hrytsenko@gmail.com maksym.danilenko@outlook.com kateryna.polishchuk@yahoo.com",
-  "what_worked": "I have access to list_of_emails_by_worker.txt.",
-  "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call."
-}
-
-# code below has to be in Memory Controller I think
-
-openai_client = OpenAI()
+from weaviate.classes.config import Configure, Property, DataType
 
 client = weaviate.connect_to_local()
 
 client.collections.create(
     name="run_cmd",
-    vectorizer_config=None  # Important
-)
-# have to be created other collections for all tools...
-
-if len(tool_parameters) > PARAMS_THRESHOLD:
-    tool_signature = summarize_toolcall(toolname, tool_parameters)
-else: 
-    tool_signature = tool_parameters
-
-# Saving should be like this
-embedding = openai_client.embeddings.create(
-    model="text-embedding-3-small", #this has to be enough for 1 sentence. Can leverage to text-embedding-3-large
-    input=tool_signature
-).data[0].embedding
-
-collection = client.collections.get("run_cmd")
-
-collection.data.insert(
-    properties=example_dict,
-    vector=embedding
-)
-
-# Search (Recall) should be like this
-query_embedding = openai_client.embeddings.create(
-    model="text-embedding-3-small",  # same model!
-    input=tool_signature
-).data[0].embedding
-
-collection = client.collections.get("run_cmd")
-
-results = collection.query.near_vector(
-    near_vector=query_embedding,
-    limit=5,
-    return_properties=["tool_call", "tool_output", "what_worked", "what_to_avoid"]
+    
+    vectorizer_config=[
+        Configure.NamedVectors.text2vec_transformers(
+            name="shell_vector",
+            source_properties=["shell"]
+        ),
+        Configure.NamedVectors.text2vec_transformers(
+            name="command_vector",
+            source_properties=["command"]
+        )
+    ],
+    
+    properties=[
+        Property(name="tool_name", data_type=DataType.TEXT),
+        Property(name="shell", data_type=DataType.TEXT),
+        Property(name="command", data_type=DataType.TEXT),
+        Property(name="tool_call", data_type=DataType.TEXT),
+        Property(name="tool_output", data_type=DataType.TEXT),
+        Property(name="what_worked", data_type=DataType.TEXT),
+        Property(name="what_to_avoid", data_type=DataType.TEXT),
+    ]
 )
 ```
-Embedding model choice:
+Each string parameter is vectorized independently. During retrieval the system executes multiple vector searches, one per parameter vector.
+The results are then merged using weighted similarity scoring to produce the final ranking.
+This architecture allows the system to retrieve memories based on fine-grained parameter similarity, improving recall accuracy compared to traditional single-vector approaches.
 
-text-embedding-3-small is sufficient for one-sentence summaries.
-text-embedding-3-large can be used if higher semantic precision is required.
+Parameter embeddings can be generated using: text-embedding-3-small, text-embedding-3-large.
+For short tool parameters, text-embedding-3-small is typically sufficient. Larger models can be used when higher semantic precision is required.
 
+Here is how I see saving of memory thoughts:
+```python
+# Saving should be like this
+memory = {
+    "tool_name": "run_cmd",
+    "shell": "bash",
+    "command": "cat list_of_emails_by_worker.txt",
+    
+    "tool_call": 'run_cmd(shell="bash", command="cat list_of_emails_by_worker.txt", timeout=30)',
+    
+    "tool_output": """
+ivan.petrenko@gmail.com
+anna.kovalchuk@yahoo.com
+oleg.shevchenko@ukr.net
+maria.bondar@outlook.com
+dmytro.tkachenko@gmail.com
+""",
+    
+    "what_worked": "I have access to list_of_emails_by_worker.txt.",
+    
+    "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert."
+}
+
+collection = client.collections.get("run_cmd")
+
+collection.data.insert(memory)
+```
+
+Here is how I see searching(recalling) memory thoughts:
+```python
+# Search (Recall) should be like this
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("all-MiniLM-L6-v2") #it would be much better to use OpenAI model like text-embedding-3-small
+
+query_shell = model.encode("bash")
+query_command = model.encode("cat list_of_emails_by_worker.txt")
+#query_timeout = model.encode(int(30)) -- because we save only string values
+
+shell_results = collection.query.near_vector(
+    near_vector=query_shell,
+    target_vector="shell_vector",
+    limit=5
+)
+
+command_results = collection.query.near_vector(
+    near_vector=query_command,
+    target_vector="command_vector",
+    limit=5
+)
+
+scores = {}
+
+def add_scores(results, weight):
+    for obj in results.objects:
+        id = obj.uuid
+        sim = 1 - obj.metadata.distance
+        
+        if id not in scores:
+            scores[id] = 0
+            
+        scores[id] += weight * sim
+
+add_scores(shell_results, 0.4)
+add_scores(command_results, 0.6)
+
+best = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+best_id = best[0][0]
+
+memory = collection.query.fetch_object_by_id(best_id)
+
+print(memory.properties["what_worked"])
+print(memory.properties["what_to_avoid"])
+```
 
 ### How To Retrieve (Recall Mechanism)
 
-So, when the agent makes a tool call and that tool call is passed to the commit mechanism, the commit mechanism performs calling of function `recall_tool_level` to the Memory Controller. Detailed description of function `recall_tool_level`. `recall_tool_level` will return list of relevant memories. After all, relevant memories will be inserted in Commit Mechanism message.
+When the agent generates a tool call, that tool call is passed to the Commit Mechanism. The Commit Mechanism invokes the `recall_tool_level` function in the Memory Controller. `recall_tool_level` returns a list of relevant memories retrieved from the Tool-Level Memory Vector Store. After all, relevant memories will be inserted in Commit Mechanism message. Those retrieved memories are then inserted into the Commit Mechanism message, allowing the agent to reflect on past tool usage before executing the new tool call.
 
-Since Tool-Level Memory is considered both explicit and implicit, that's why the `recall_tool_level` function is also available to ReAct as a tool in order to make possible ReAct to search something necessary for him.
+Since Tool-Level Memory is considered both **explicit** and **implicit**, the `recall_tool_level` function is also exposed to ReAct as a tool. This allows the agent to explicitly query its own Tool-Level Memory when necessary.
+Unlike the previous architecture that relied on a **single combined embedding**, the current system performs **multi-vector retrieval across individual tool parameters**.
 
-Here is how approximately I see implementation of `recall_tool_level()` ,`summarize_toolcall()` and `extract_toolname_and_parameters`:
+Each parameter is embedded independently and searched against its corresponding vector index in the Tool-Level Memory Vector Store. Similarity scores from multiple parameter searches are then aggregated using a weighted scoring function.
+
+Here is how approximately I see implementation of `recall_tool_level()` ,`summarize_tool_parameter()` and `extract_toolname_and_parameters()`:
 ```python
 import os
 from dotenv import load_dotenv
@@ -607,30 +631,55 @@ client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
 )
 
-def summarize_toolcall(toolname: str, tool_parameters: str):
+def summarize_tool_parameter(toolname: str, parameter_name: str, parameter_value: str) -> str:
+  """Generate a concise one-sentence summary describing the intent of a tool parameter.
+  The summary explains what the parameter value represents or what action it intends to perform, without mentioning the tool name or parameter name.
+  Args:
+        tool_name (str):
+            Name of the tool being invoked.
+
+        parameter_name (str):
+            Name of the parameter passed to the tool.
+
+        parameter_value (str):
+            Value of the parameter that should be summarized.
+
+    Returns:
+        str:
+            A single-sentence summary describing the intent of the parameter value.
+  """
+  prompt = f"""
+You must produce a precise, single-sentence description of the action implied by a tool parameter value.
+
+Context:
+Tool name: {tool_name}
+Parameter name: {parameter_name}
+Parameter value:
+{parameter_value}
+
+Rules:
+- Output EXACTLY one sentence.
+- Describe what the parameter value is intended to do.
+- Do NOT mention the tool name or parameter name.
+- Be concrete and explicit about the action.
+- Describe only the intended operation, not the result.
+- Avoid vague phrases such as "processed data", "handled file", or "performed operation".
+
+Example (Good):
+Tool name: run_cmd
+Parameter name: command
+Parameter value: cat list_of_emails_by_worker.txt
+Output:
+Read the file "list_of_emails_by_worker.txt" using the cat command.
+
+Example (Bad):
+Read emails using run_cmd.
+"""
     response = client.responses.create(
       model="gpt-5-nano",
-      input=f"""
-      You must generate a precise, single-sentence summary of the following tool call.
-      Tool call:
-      {toolname}({tool_parameters})
-      Requirements:
-      - Use exactly ONE sentence.
-      - Clearly state the action being performed.
-      - Do NOT mention the tool name.
-      - Explicitly mention the key argument(s) or target resource.
-      - Be specific about what is being accessed, modified, computed, or retrieved.
-      - Avoid vague phrases like "processed data", "handled file", "did operation", or "read emails".
-      - Do NOT infer results — describe only the intended action of the tool call.
-      Good Example:
-      tool-call: run_cmd("cat list_of_emails_by_worker.txt")
-      result: Executed to read the file "list_of_emails_by_worker.txt" using the cat command.
-      Bad Example:
-      tool-call: run_cmd(cat list_of_emails_by_worker.txt)
-      result: Read emails using run_cmd.
-      """
+      input=prompt
     )
-    return response.output[0].content[0].text
+    return response.output[0].content[0].text.strip()
 
 def extract_toolname_and_parameters(tool_call: str) -> tuple:
     start = tool_call.find("(")
@@ -646,18 +695,17 @@ MEMORY_CONTROLLER_URL = os.getenv("MEMORY_CONTROLLER_URL")
 def recall_tool_level(
     toolname: str,
     tool_parameters: str,
-    alpha: int = 0.7,
-    top_k: 5
+    top_k: int = 5
 ) -> list:
-  """Recall relevant memories from Tool-level memory for a specific tool.
+  """Recall relevant memories from Tool-level memory for a specific tool using multi-vector parameter search..
 
-  This function is a wrapper over the Memory Controller API 
-    (e.g., POST /memory/recall_tool_level). It retrieves previously stored tool-call experiences related to the given tool.
+  Each parameter is embedded separately inside the Memory Controller and searched against its corresponding named vector index. The Memory Controller aggregates similarity scores across parameters and returns the most relevant memories.
+
+  This function is a wrapper over the Memory Controller API (e.g., POST /memory/recall_tool_level). It retrieves previously stored tool-call experiences related to the given tool.
 
   Purpose:
     The goal of recall is to provide the agent with past 
-    experiences (successes, failures, security alerts, rate limits, etc.) 
-    related to similar tool calls, so that the agent can adapt 
+    experiences (successes, failures, security alerts, rate limits, etc.) related to similar tool calls, so that the agent can adapt 
     its reasoning before continuing execution.
 
   Args:
@@ -666,12 +714,6 @@ def recall_tool_level(
 
     tool_parameters (str):
         It should be a tool parameters from tool call.
-
-    alpha (float, optional):
-        Hybrid search weight parameter (default = 0.7).
-        0.7 means:
-            - 70% vector similarity
-            - 30% BM25 lexical ranking
 
     top-k (int, optional):
         How many elements to retrieve if there is more than k elements. (default = 5).
@@ -682,17 +724,21 @@ def recall_tool_level(
     Example of tool usage:
       recall_tool_level(toolname="run_cmd", tool_parameters="cat list_of_emails_by_worker.txt")
 """
-    if len(tool_parameters) > PARAMS_THRESHOLD:
-      query = summarize_toolcall(toolname, tool_parameters)
-    else:
-      query = tool_parameters
+    list_of_param_names, list_params = extract_params(tool_parameters)
+    ind = 0
+    for param_name in list_of_param_names:
+      ind += 1
+      param = list_params[ind]
+      if len(tool_parameter) > PARAM_THRESHOLD:
+        query = summarize_tool_parameter(param_name, param)
+      else:
+        query = tool_parameter
 
     url = f"{MEMORY_CONTROLLER_URL}/memory/recall_tool_level"
 
     payload = {
         "collection": toolname,
-        "query": query,
-        "alpha": alpha,
+        "tool_parameters": tool_parameters,
         "top_k": top_k
     }
 
@@ -714,24 +760,29 @@ def recall_tool_level(
         return []
 ```
 
+Example usage:
+```python
+tool_call = 'run_cmd({"shell":"bash","command":"cat list_of_emails_by_worker.txt"})'
+
+toolname, params = extract_toolname_and_parameters(tool_call)
+
+memories = recall_tool_level(
+    toolname=toolname,
+    tool_parameters=params
+)
+```
+
 ### How To Update/Save? (Post-think)
 
-After ReAct has done his task, automatically code has to generate dynamic structured output schema (or model) with the function like create_post_think_model made during execution of ReAct. 
+After ReAct completes its task, the system automatically triggers a **post-execution reflection stage**. During this stage, the system extracts all `(tool-call, tool-output)` pairs produced during execution. A dynamic structured output schema is then generated using a function similar to `create_post_think_model`. 
+The agent must analyze each tool interaction and optionally fill the following fields:
+- `what_worked`
+- `what_to_avoid`
 
-In this schema ReAct has to fill such fields like: "what_worked", "what_to_avoid" for exact pair of tool-call & tool-output and fill fields ???"is_success" and "errors" if there is some problems with selecting tools.
+Each filled field represents a **valuable insight** that should be stored in Tool-Level Memory. Only a **small subset of interactions** typically produces useful memories.
 
 Example of function create_post_think_model:
 ```python
-?????????????class InitAnalysis(BaseModel):??????????????????
-    is_success: bool = Field(
-        ..., description="Were all tools selected successfully?"
-    )
-    errors: Optional[str] = Field(
-        None,
-        description="Describe any errors or issues during tool creation and selection.",
-    )
-
-
 class PairToolCallOutput(BaseModel):
     what_worked: Optional[str] = Field(
         None,
@@ -755,13 +806,6 @@ def create_post_think_model(
         - init_analysis: InitAnalysis
         - pair1, pair2, ..., pairN: PairToolCallOutput
     """
-
-    # Build all fields at once
-    fields = {}
-    fields["init_analysis"] = (??????????????????????
-        InitAnalysis,
-        Field(..., description="Initial analysis phase"),
-    )
 
     # Add steps and grades
     for i, tool_call, tool_output in enumerate(list_of_pairs):
@@ -801,14 +845,11 @@ It is also normal to fill only one field (e.g., what_worked or what_to_avoid) wh
 
 **Output Format:**
 You must answer using the Structured Output format required by the system. In that format:
-"what_worked" (string):
-If there is something useful in this pair of tool call and tool output, 
-then write it down. For example, include specific examples of 
-successful tool usage(not basic one), well-chosen parameters, and the situations where the tool was used appropriately. 
-"what_to_avoid" (string):
-If there is something useful in this pair of tool call and tool output that will be good to avoid,
-then write it down. For example, include examples of 
-poor parameter choices, incorrect usage patterns, or situations where the tool should not have been used.
+what_worked:
+Describe a useful tool usage pattern observed in this interaction.
+
+what_to_avoid:
+Describe a tool usage pattern that should be avoided.
 
 Examples:
 Good "what_worked":
@@ -839,15 +880,33 @@ What to avoid examples:
 """
 ``` 
 
+### Memory Storage After Post-Think
+
+After the agent produces the structured reflection output:
+
+1. The system merges:
+
+```
+tool_call
+tool_output
+what_worked
+what_to_avoid
+```
+
+2. Tool parameters are extracted from the tool call.
+
+3. Each parameter is stored as a **separate property** in the Tool-Level Memory collection.
+
+4. The vector database automatically generates **named parameter embeddings** according to the collection schema.
+
+This enables future retrieval using **multi-vector parameter similarity search**.
+
 ### How To Forget???[To_Do]
 
-Тут є два механізми забування:
-Локальний механізм забування,
-Глобальний механізм забування.
-Локальний механізм забування в Tool-Level Memory:
+After each post-thinking stage агент повинен робити забування.
+Створюєтсья список колекцій, які були обновлені від Post-think і по кожній з колекцій проходиться ллмка з промптом зроби rewriting, merging.
+Механізм забування в Tool-Level Memory:
 Кожен раз, коли відбувається коміт тули, 
-
-Глобальний механізм забування - це те, що розглянуто у параграфі Forgetting з другим рівнем заголовку. Він побудований відносно Меморі Контроллера, який як ЛЛМка відбирає потрібні релевантні спогади відповідно до його контекстного вікна. Спогади відібрані релеватними отримують бал/бали, а спогади, що не були вибрані релевантними не отримують балів або отримують від'ємні бали. Періодично будуть відсікатися та видалятися спогади, що мають загальний бал дуже низьким відносно інших спогадів. Це зроблено для того, щоб система пам'яті могла коректно працювати та надавати лише справді потрібні спогади. 
 
 
 Але Тут Вмішується Локальний Механізм Забування Tool-Level Memory.
@@ -1013,87 +1072,58 @@ It introduces a validation and compression step after a read-access tool executi
 
 **Scope**
 
-The Accept Mechanism applies to all read-access tools and only when tool output exceeding a configurable token threshold (default: 1000 tokens).
-
-The mechanism does not apply to write-access tools (those are handled by the Commit Mechanism).
-
-Read-Access Tools (Subject to Accept)
-| Tool | Access Type |
-| --- | --- |
-| `file_read` | Read |
-| `deep_research` | Read |
-| `web_search` | Read |
-| `text_analysis` | Read |
-
-External MCP services categorized as Read-only must also pass through the Accept Mechanism.
+The Accept Mechanism applies to all tools (even external MCP tools, except tool_level_memory(), episodic_memory(), semantic_memory(), commit(), accept() and other memory-related tools) and only when tool output exceeding a configurable token threshold (default: 1000 tokens).
 
 **Accept Mechanism Behavior**
 
-The Accept Mechanism is triggered when:
-- A read-access tool returns output (tool output is intercepted).
-- If tool output > 1000 tokens (configurable threshold)
+The Accept Mechanism is triggered when the tool output exceeds TOOL_OUTPUT_THRESHOLD tokens (a configurable threshold).
+This condition also applies if the tool output exceeds the threshold after passing through the Commit Mechanism.
 
 High-Level Behavior
 
-Instead of directly inserting the full tool output into the conversation history, the Accept Mechanism:
+The agent must explicitly choose one of the following options:
 
-1. Stores the full raw tool output in a persistent file.
-2. Generates a structured summary of the tool output.
-3. Returns to the agent:
-  - The generated summary
-  - A file path reference to the full tool output
-
-The agent must explicitly decide whether to:
-- Accept the summary -- Who Generates Summary? - If agent does, it will take time and I didn't see the case when agent can reject his own summary...
-So, I think that it will do some fast llm like gpt-5-nano. But does we need to add option of regenerating a new and how to regenerate and it will take more time...
-Prompt For Generating Summary -- `summarize_tooloutput`
-- Reject the summary and keep the original full output unchanged.
+* accept() — keep the raw tool output unchanged.
+* accept(summary="...") — provide a summary of the output. In this case, the system automatically stores the full raw output in a file and appends a reference to that file.
 
 Execution Flow
 
-1. Agent calls a read tool.
-2. Tool executes normally.
-3. Accept Mechanism intercepts tool output.
-4. Full tool output is saved to file: /tool_outputs/accept/{tool_name}/{timestamp}.txt
-5. System generates a structured summary.
-6. Agent receives:
+1. The agent calls a tool.
+2. The tool executes normally.
+3. The Accept Mechanism intercepts the tool output.
+4. If the output exceeds TOOL_OUTPUT_THRESHOLD, the agent must choose:
+* accept() — keep the full output as is.
+* accept(summary="...") — replace the output with a summary.
+5. If the agent provides a summary, the full output is stored in: /tool_outputs/accept/{tool_name}/{timestamp}.txt
+6. The agent receives the following instruction:
 ```python
 f"""
 Tool {tool_name} returned a large output.
 
-Full output stored at:
-{file_path}
+Choose one of the following options:
+- accept() — keep the raw output as is.
+- accept(summary="...") — provide a summary. The system will store the full output in a file and append a reference to it.
 
-Generated summary:
-{summary}
+Summary guidelines:
+Include only the most important information needed for further reasoning.
 
-You may:
-- Accept the summary (recommended)
-- Reject the summary and keep the original full output unchanged (not recommended if very large)
-If you accept, call commit().
+If you provide a summary, the full output will be stored at:
+/tool_outputs/accept/{tool_name}/{timestamp}.txt
 """
 ```
-The agent must explicitly confirm the selected version using commit().
-Agent continues hsi work only after commit confirmation.
+Final Result
+- If the summary is accepted:
+The original tool output in the context window is replaced with the summary and a reference to the stored file.
+- If the summary is rejected:
+The full tool output is inserted into the agent’s context window.
 
-If summary is accepted:
-- The original tool output in context window is replaced by the summary + file reference.
-If summary is rejected:
-- Full output is inserted into context window of the agent.
+**Deletion of Files**
 
-**Integration with Commit Mechanism**
+Full raw tool outputs stored by the **Accept Mechanism** must be deleted immediately after the ReAct agent completes the task unless the corresponding summarized tool output has been stored in Tool-Level Memory.
 
-To prevent confusion between Accept and Commit mechanisms:
-- Accept confirmation must reuse the same commit() tool.
-- The agent cannot bypass confirmation.
-- Both mechanisms rely on explicit commit confirmation before state transition.
+If the summarized tool output is stored in Tool-Level Memory, the corresponding raw output file must be preserved.
 
-Unified Design Principle
-`commit()` acts as the single confirmation gate for:
-- Write-access tool execution (Commit Mechanism)
-- Read-output memory insertion (Accept Mechanism)
-
-Full raw tool outputs stored by the Accept Mechanism as a file must be deleted immediately after the ReAct agent completes the task. Files generated by the Commit Mechanism are NOT affected by this deletion rule.
+If the memory entries (thoughts) containing the summarized tool outputs are later deleted from Tool-Level Memory, the corresponding raw output file may also be deleted if no summarized version of that output remains in Tool-Level Memory.
 
 Files created by the Accept Mechanism must follow strict access policies:
 Agent:
@@ -1441,6 +1471,8 @@ forgotten) [301], usage frequency (infrequently accessed memories are more likel
 
 relevance to the current task or context [309]. In more fine-grained forgetting mechanisms, MemoryBank [261]
 
+Глобальний механізм забування - це те, що розглянуто у параграфі Forgetting з другим рівнем заголовку. Він побудований відносно Меморі Контроллера, який як ЛЛМка відбирає потрібні релевантні спогади відповідно до його контекстного вікна. Спогади відібрані релеватними отримують бал/бали, а спогади, що не були вибрані релевантними не отримують балів або отримують від'ємні бали. Періодично будуть відсікатися та видалятися спогади, що мають загальний бал дуже низьким відносно інших спогадів. Це зроблено для того, щоб система пам'яті могла коректно працювати та надавати лише справді потрібні спогади. 
+
 applies **!!!the Ebbinghaus Forgetting Curve!!!** to quantify the forgetting rate, accounting for both time decay and
 
 the spacing effect, i.e., the principle that relearning information is easier than learning it for the first time.
@@ -1515,6 +1547,8 @@ One idea would be to borrow the concept of multi-vector search but apply it to s
 
 A more reasonable approach might be to ask an LLM to extract truly key terms from both the query and the documents, keep their number small, and still rely on multi-vector search. In general, combining multi-vector search with keyword-based retrieval seems promising, where the query is optimized in a Google-like manner and documents are filtered or indexed by keywords.
 
+### Field-level retrieval?
+
 ## Benchmarks for Memory[To_Do]
 
 Passing the TACXXL Benchmark 
@@ -1552,6 +1586,20 @@ instead, share memory by communicating.”
   Ми використовуємо what_worked, what_to_avoid в Tool-Level Memory Post-think Stage -- I Do Need To Read About Reflexion A Lot!!! What IS The Prompt Better To Use For It? Maybe there is some useful ideas to think about, borrow and implement
 
   Також я думаю, що РеАкт воркеру треба буде в System prompt пояснити як працює Memory Subsystem, бо як мінімум Commit Mechanism буде капець яким незвичним для нього. І це буде взагалі не дуже, якщо буде постійно забувати, що цей механізм буде з'являтись і як він працює.
+
+Ідея оптимізації Vector Search
+  Зробити один embedding, який містить усі параметри, але з вагами.
+  Тобто замість:
+  embedding_shell
+  embedding_command
+  embedding_timeout
+
+  робимо:
+  combined_embedding =
+    w_shell   * embedding_shell
+  + w_command * embedding_command
+  + w_timeout * embedding_timeout
+  Це звичайна векторна операція.
 
 Concept Of Memory Controller!!!
 
