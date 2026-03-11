@@ -313,6 +313,7 @@ Tool output can be summarized by the Accept Mechanism if its size exceeds TOOL_O
 Then parse the parameters into a structured dictionary:
 ```python
 {
+    "timestamp": "1.01.2026 10:36",
     "toolname": "run_cmd",
     "shell": "bash",
     "command": f"Summary of tool parameter: {command_summary}. Reference: Full tool parameter stored at /home/oleksandr/123tool_param_command.txt",
@@ -325,6 +326,7 @@ Then parse the parameters into a structured dictionary:
 
 ```python
 {
+  "timestamp": "1.01.2026 10:36",
   "toolname": "run_cmd",
   "shell": "bash",
   "command": f"\"cat list_of_emails_by_worker.txt\"",
@@ -352,6 +354,7 @@ Collection must match the tool name:
 collection = client.collections.get(toolname)
 collection.data.insert(
     {
+        "timestamp": "1.01.2026 10:36",
         "tool_name": toolname,
         "shell": shell,
         "command": command,
@@ -482,9 +485,6 @@ The agent fills struсtured output fields such as: `what worked`, `what to avoid
 
 ### Tool-Level Memory Vector Store
 
-#### !!! Multi-Vector Search For Each Parameter [Better Be Implemented Like Here And It Is Much Better Than Single-Vector Search Theoretically](https://chatgpt.com/share/69aabb31-2438-8003-8a86-e8cc84fb795d)
-#### !!!
-
 The Tool-Level Memory Vector Store maintains a separate collection for each ReAct tool.
 These collections must be created statically in advance for all tools registered in the ToolSelector (except tools like?: recall_tool_level, recall_episodic_memory, recall_semantic_memory, recall_procedural_memory and other memory related tools)
 Each dictionary is stored in the collection whose name matches the value stored under the "toolname" key as an example above.
@@ -516,6 +516,7 @@ client.collections.create(
     ],
     
     properties=[
+        Property(name="timestamp", data_type=DataType.TEXT),
         Property(name="tool_name", data_type=DataType.TEXT),
         Property(name="shell", data_type=DataType.TEXT),
         Property(name="command", data_type=DataType.TEXT),
@@ -537,12 +538,11 @@ Here is how I see saving of memory thoughts:
 ```python
 # Saving should be like this
 memory = {
+    "timestamp": "1.01.2026",
     "tool_name": "run_cmd",
     "shell": "bash",
     "command": "cat list_of_emails_by_worker.txt",
-    
     "tool_call": 'run_cmd(shell="bash", command="cat list_of_emails_by_worker.txt", timeout=30)',
-    
     "tool_output": """
 ivan.petrenko@gmail.com
 anna.kovalchuk@yahoo.com
@@ -550,9 +550,7 @@ oleg.shevchenko@ukr.net
 maria.bondar@outlook.com
 dmytro.tkachenko@gmail.com
 """,
-    
     "what_worked": "I have access to list_of_emails_by_worker.txt.",
-    
     "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert."
 }
 
@@ -762,7 +760,7 @@ def recall_tool_level(
 
 Example usage:
 ```python
-tool_call = 'run_cmd({"shell":"bash","command":"cat list_of_emails_by_worker.txt"})'
+tool_call = 'run_cmd({"timestamp": "1.02.2026", "shell":"bash", "command":"cat list_of_emails_by_worker.txt"})'
 
 toolname, params = extract_toolname_and_parameters(tool_call)
 
@@ -901,76 +899,281 @@ what_to_avoid
 
 This enables future retrieval using **multi-vector parameter similarity search**.
 
-### How To Forget???[To_Do]
+### How To Forget?
 
-After each post-thinking stage агент повинен робити забування.
-Створюєтсья список колекцій, які були обновлені від Post-think і по кожній з колекцій проходиться ллмка з промптом зроби rewriting, merging.
-Механізм забування в Tool-Level Memory:
-Кожен раз, коли відбувається коміт тули, 
+#### Classical Forgetting?[To_Do]
 
+#### Tool-Level Memory Rewriting
 
-Але Тут Вмішується Локальний Механізм Забування Tool-Level Memory.
-(Звісно, Якщо Кількість Елементів не Захмарна!!! Інакше Шо Лі Доведеться Відмовитись Від цього Механізму???)
-Цей Механізм скаладається з двох етапів:
-1. Merging Memories
-2. Rewriting Contradictatory Memories
+After each Post-Think stage, the system performs a Tool-Level Memory Rewriting process. 
+The goal of this process is to improve memory quality by removing redundancy, consolidating similar observations, and resolving contradictions that may arise as the agent gains more experience.
 
-Обидва методи базуються на ЛЛМці.
+The system first identifies all Tool-Level Memory collections that were updated during the Post-Think stage.
+For each affected collection, an LLM-based rewriting pipeline is executed.
 
-Prompt for Rewriting Contradictatory Memories
+The rewriting pipeline consists of two sequential stages:
+- Memory Merging
+- Contradiction Resolution
+
+Both stages are implemented using LLM reasoning and operate on batches of recently updated memories.
+
+**Execution Model**
+
+The rewriting process is currently implemented as a two-step LLM pipeline:
+1. Memory Merging LLM pass
+2. Contradiction Resolution LLM pass
+
+This separation improves reasoning quality because:
+- the first pass focuses purely on deduplication
+- the second pass focuses on semantic conflict analysis
+
+I see implementation like this:
 ```python
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+client = OpenAI()
+
+set_of_memories = """
+memory_id: 1
+timestamp: 06.03.2026 14:10 (ReAct id: 1)
+tool_call: run_cmd(path: "/home/oleksandr", cmd: "cat config.yaml")
+tool_output: "Permission denied"
+what_to_avoid: Trying to read config.yaml without sudo access.
+what_worked: —
+
+memory_id: 2
+timestamp: 06.03.2026 15:00 (ReAct id: 1)
+tool_call: run_cmd(path: "/home/oleksandr", cmd: "ls")
+tool_output: "input.txt, intermediate.txt"
+what_to_avoid: Checking result files while the processing script is still running.
+what_worked: —
+
+memory_id: 3
+timestamp: 06.03.2026 15:05 (ReAct id: 1)
+tool_call: run_cmd(path: "/home/oleksandr", cmd: "ls")
+tool_output: "input.txt, intermediate.txt"
+what_to_avoid: Attempting to verify final results before the program has finished execution.
+what_worked: —
+
+memory_id: 4
+timestamp: 06.03.2026 15:09 (ReAct id: 1)
+tool_call: run_cmd(path: "/home/oleksandr", cmd: "ls")
+tool_output: "input.txt, intermediate.txt, output.txt, config.yaml"
+what_to_avoid: —
+what_worked: Checking the directory after the background process finished reveals the generated output file.
+
+memory_id: 5
+timestamp: 06.03.2026 15:11 (ReAct id: 1)
+tool_call: run_cmd(path: "/home/oleksandr", cmd: "cat config.yaml")
+tool_output: "database_url: postgres://localhost..."
+what_to_avoid: —
+what_worked: Reading config.yaml directly using cat successfully returned configuration data after execution of background script.
 """
-Given the following thoughts, please remove the
-counterfactual thoughts or contradictory thoughts:
-Example 1.
-Input:
-run_cmd collection:
-ls was made in Root directory.
-Root directory has input.txt, intermediate.txt.(КАК ОН ДОЛЖЕН ПОНЯТЬ КОМУ ВЕРИТЬ А КОМУ НЕТ, ЕСЛИ МИ НЕБУДЕМ ПИСАТЬ ДАТУ, ВРЕМЯ,-- НУЖНО МЕНЯТЬ КОНЦЕПЦИЮ ПОСТРОЕНИЯ СПОГАДІВ, ПЕЙПЕР ЕТО НЕ ПРОДУМАЛ!!!)
-ls was made in Root directory.
-Root directory has input.txt, intermeadiate.txt, output.txt
+
+prompt_merge = f"""
+You are given a group of memories describing tool usage events.
+
+Your task is to merge memories that describe the SAME situation or observation.
+
+A memory has the following structure:
+- memory_id
+- timestamp
+- tool_call
+- tool_output
+- what_to_avoid
+- what_worked
+
+MERGING RULES
+
+1. Merge memories if they describe the same tool call and the same situation
+   but are written slightly differently.
+
+2. When merging:
+   - Keep the memory with the MOST RECENT timestamp as the base memory.
+   - Transfer useful information from older memories into the base memory.
+
+3. If multiple memories contain similar "what_to_avoid" advice,
+   merge them into a single clearer sentence.
+
+4. If multiple memories contain similar "what_worked" advice,
+   merge them into one concise explanation.
+
+5. Do NOT merge memories if they clearly describe different situations,
+   different tool calls, or different environments.
+
+6. The final merged memory must keep the structure:
+memory_id
+timestamp
+tool_call
+tool_output
+what_to_avoid
+what_worked
+
+7. If several memories describe the same event progression,
+   prefer the most informative tool_output (usually the latest one).
+
+Example
+
+Input memories:
+
+memory_id: 2
+tool_call: run_cmd(path="/home/oleksandr", cmd="ls")
+tool_output: "input.txt, intermediate.txt"
+what_to_avoid: Checking result files while the processing script is still running.
+
+memory_id: 3
+tool_call: run_cmd(path="/home/oleksandr", cmd="ls")
+tool_output: "input.txt, intermediate.txt"
+what_to_avoid: Attempting to verify final results before the program has finished execution.
+
+memory_id: 4
+tool_call: run_cmd(path="/home/oleksandr", cmd="ls")
+tool_output: "input.txt, intermediate.txt, output.txt, config.yaml"
+what_worked: Checking the directory after the background process finished reveals the generated output file.
+
 Output:
-ls was made in Root directory.
-ls was made in Root directory.
-Root directory has input.txt, intermeadiate.txt, output.txt
-Example 2.
+
+memory_id: 4
+tool_call: run_cmd(path="/home/oleksandr", cmd="ls")
+tool_output: "input.txt, intermediate.txt, output.txt, config.yaml"
+what_to_avoid: Checking result files while the processing script is still running.
+what_worked: Checking the directory after the background process finished reveals the generated output file.
+
+Now merge the following memories:
+
 Input:
-???
-Output:
-???
-[A group of thoughts]
+{set_of_memories}
 """
+
+# ---- First LLM call ----
+response1 = client.responses.create(
+    model="gpt-5-nano",
+    input=prompt_merge
+)
+
+set_of_memories = response1.output_text
+print("\nFirst response:\n", set_of_memories)
+
+prompt_resolve_conflicts = f"""
+You are given several memories describing tool executions and observations.
+
+Some memories may contradict each other because:
+- the environment changed over time
+- earlier observations were incomplete
+- conditions differed between executions
+
+Your task is to detect and resolve contradictions between memories.
+
+IMPORTANT:
+You are NOT required to produce only one memory.
+You may return multiple memories.
+
+GENERAL RULE
+
+Only merge memories if they describe the SAME tool_call and contain
+contradictory observations about the result or conclusions.
+
+If memories describe different situations or different tool calls,
+keep them as separate memories.
+
+Each memory has the following structure:
+
+memory_id
+timestamp
+tool_call
+tool_output
+what_to_avoid
+what_worked
+
+CONFLICT RESOLUTION RULES
+
+1. Detect groups of memories that refer to the SAME tool_call.
+2. If there is NO contradiction between them, keep them unchanged.
+3. If there IS a contradiction:
+   a) Prefer the memory with the MOST RECENT timestamp
+      as the base memory, because it reflects the most
+      up-to-date state of the environment.
+   b) Earlier memories should NOT be discarded if they contain
+      useful lessons.
+   c) Convert earlier conclusions into contextual advice inside:
+      - "what_to_avoid"
+      - "what_worked"
+4. If an earlier failure later becomes a success,
+   reinterpret the earlier failure as a contextual limitation.
+Example:
+- failure before a process finished
+- success after the process finished
+
+5. When merging advice:
+   - move incorrect or outdated conclusions into a contextualized warning inside "what_to_avoid"
+   - keep successful strategies in "what_worked"
+
+6. Always preserve the memory structure:
+
+memory_id
+timestamp
+tool_call
+tool_output
+what_to_avoid
+what_worked
+
+7. The output may contain:
+   - the same number of memories
+   - fewer memories if some were merged
+
+8. Do NOT remove useful information.
+   Only resolve contradictions.
+
+Example
+
+Input memories:
+
+memory_id: 1
+timestamp: 06.03.2026 14:10
+tool_call: run_cmd(path="/home/oleksandr", cmd="cat config.yaml")
+tool_output: "Permission denied"
+what_to_avoid: Trying to read config.yaml without sudo access.
+
+memory_id: 5
+timestamp: 06.03.2026 15:11
+tool_call: run_cmd(path="/home/oleksandr", cmd="cat config.yaml")
+tool_output: "database_url: postgres://localhost..."
+what_worked: Reading config.yaml directly using cat successfully returned configuration data after execution of background script.
+
+Output:
+
+memory_id: 5
+timestamp: 06.03.2026 15:11
+tool_call: run_cmd(path="/home/oleksandr", cmd="cat config.yaml")
+tool_output: "database_url: postgres://localhost..."
+what_to_avoid: Trying to read config.yaml before or during execution of the background script.
+what_worked: Reading config.yaml directly using cat successfully returned configuration data after execution of the background script.
+
+Now resolve contradictions in the following memories:
+
+Input:
+{set_of_memories}
+"""
+
+# ---- Second LLM call ----
+response2 = client.responses.create(
+    model="gpt-5-nano",
+    input=prompt_resolve_conflicts
+)
+
+result2 = response2.output_text
+print("\nSecond response:\n", result2)
 ```
 
-Prompt for Merging Thoughts
-```python
-"""
-Given the following thoughts, please merge the similar thoughts with the same entity:
-Example 1.
-Input:
-ls was made in Root directory.
-ls was made in Root directory.
-Root directory has input.txt, intermeadiate.txt, output.txt
-Output:
-ls was made in Root directory.
-Root directory has input.txt, intermeadiate.txt, output.txt
-Example 2.
-Input:
-ls was made in Root directory.
-ls was made in /home/oleksandr/Downloads directory. (ТРЕБА ДАТУВАННЯ)
-Root directory has input.txt, intermeadiate.txt, output.txt
-Output: (а чи треба робити такий мердж? а чи не зіб'є він)
-ls was made in Root directory and then /home/oleksandr/Downloads directory. 
-Root directory has input.txt, intermeadiate.txt, output.txt
-Input:
-[A group of thoughts]
-"""
-```
+**Scalability Considerations**
 
+The described rewriting approach assumes that the number of memories processed in a single batch is moderate.
+
+(Звісно, цей підхід працює якщо кількість елементів не захмарна!!! Інакше Шо Лі Доведеться Відмовитись Від цього Механізму???)
 Що краще спочатку робити Merging, Rewriting? Чи дати це в одному промпті?
-
-Навіть якщо Post-processing створить такий самий або майже такий самий спогад, що вже лежить у Tool-level Memory. У наступному етапі Recall він матиме зробити Merging + Rewriting Contradictatory Memories, що вирішує проблему. Може робити після кожного Post-think stage Merging + Rewriting Contradictory. Або ми будемо зберігати, що ми в основному брали з векторної бази даних і кому повертали, щоб робити аналіз після РеАкта, а не під час. Або якось робити паралельно 
-
+Або ми (можемо) будемо зберігати, що ми в основному брали з векторної бази даних і кому повертали, щоб робити аналіз після РеАкта, а не під час. Або якось робити паралельно форгеттінг.
 Датування (Володимир казав, що є 3 варіанти забування міт 25.02, як він бачить працюючих)
 
 ### Examples
@@ -1604,8 +1807,6 @@ instead, share memory by communicating.”
 Concept Of Memory Controller!!!
 
 MMR (Maximum Marginal Relevance) — for retrieving very similar and contradictory information
-
-Як Меморі Контроллер має розуміти, що треба зберігати, а що ні? -- Так, справді можуть бути релевантні думки, які можуть там суперечити, тому 
 
 [Вирівнювання онтологій(термінологій)](https://arxiv.org/abs/2508.08500) між різними підсистемами пам'яті може бути справді траблом, але це вже так чисто ідея для майбутнього я думаю.
 
