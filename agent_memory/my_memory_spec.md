@@ -34,7 +34,7 @@ Memory Controller is a stateless microservice responsible for managing the lifec
 
 Stores structured reflections about individual tool executions.
 Captures inductive thoughts extracted from each (tool_call, tool_output) pair, representing relations such as (subject, relation, object).
-Organized per tool (separate collection per tool name) and used to improve future tool selection, parameterization, and execution reliability through recall, merging, and contradiction resolution mechanisms.
+Organized per tool (separate collection per tool name) and used to improve future tool selection, parameterization, and execution reliability through recall, merging, and contradiction resolution mechanisms. (10% - PRD? Forgetting? other questions..)
 
 [**Episodic Memory**](#episodic-memory)
 
@@ -463,7 +463,7 @@ sequenceDiagram
 
     ReAct->>ReAct: filling a structured output schema with number of pairs of tool call and tool output fields<br/>per each pair of tool-call & tool-output
 
-    Note right of ReAct: some python code will make out of structured output with number of pairs of tool call and tool output<br/>small JSONs having only tool_call, tool-outputs, what_worked, what_to_avoid<br/>that was chosen as if it did smth valuable.
+    Note right of ReAct: some python code will make out of structured output with number of pairs of tool call and tool output<br/>small JSONs having only memory_id, timestamp, toolname, (parametername1, parametername2, ...), tool-outputs, what_worked, what_to_avoid<br/>that was chosen as if it did smth valuable.
     Note right of ReAct: HTTP POST /memory/store_tool_level
 
     ReAct->>MC: sends final JSONs to Tool-Level Memory
@@ -700,7 +700,7 @@ def recall_tool_level(
     tool_parameters: str,
     top_k: int = 5
 ) -> list:
-  """Recall relevant memories from Tool-level memory for a specific tool using multi-vector parameter search..
+  """Recall relevant memories from Tool-level memory for a specific tool using multi-vector parameter search.
 
   Each parameter is embedded separately inside the Memory Controller and searched against its corresponding named vector index. The Memory Controller aggregates similarity scores across parameters and returns the most relevant memories.
 
@@ -1353,25 +1353,107 @@ Episodic memory is a historical collection of prior experiences, or episodes. It
 
 ### How To Update/Save?
 
-For our agents, this includes past conversations from all ReAct workers, 2-4 keywords (context tags) that would help identify similar future conversations, one-sentence summaries of what was done in the immediately preceding conversation, and structured fields such as what_worked and what_to_avoid. The what_worked field captures the most effective approaches and strategies used as well as information that can be leveraged in subsequent iterations. The what_to_avoid field records critical pitfalls, ineffective approaches, and factors that may lead the agent down incorrect paths or into dead ends.
+After the ReAct agent completes its task, the system automatically triggers a post-execution reflection stage over the entire trajectory of the ReAct. During this stage, the agent analyzes its own reasoning process, actions(tool-calls) and produces a structured reflection that captures useful insights for future interactions.
+The agent must fill a structured output schema, defined as follows:
+```python
+from typing import Optional, List, Tuple, Type
+from pydantic import BaseModel, Field, create_model
 
-It has to be saved in a JSON (or Python dictionary) into vector database collection named `episodic_memory`.
-The creation of the JSON (or Python dictionary) is performed by the ReAct agent at the end of the its execution, not necessarily after a successful outcome.
+class Reflection(BaseModel):
+    what_worked: Optional[str] = Field(
+        None,
+        description=(
+            "Most effective approaches or strategies used in this conversation"
+        ),
+    )
+
+    what_to_avoid: Optional[str] = Field(
+        None,
+        description=(
+            "Most important pitfalls, ineffective approaches to avoid or factors that may lead the agent down incorrect paths or into dead ends."
+        ),
+    )
+```
+The reflection is generated using the following prompt template:
+```python
+reflection_prompt_template = """
+You are analyzing your own trajectory of solving a task to create memories that will help guide future interactions. Your task is to extract key elements that would be most helpful when encountering similar situations/tasks in the future.
+
+Review the conversation and create a memory reflection following these rules:
+
+1. For any field where you don't have enough information or the field isn't relevant, contains nothing useful, or only includes generic advice, leave that field empty.
+2. Be extremely concise - each string should be one clear, actionable sentence
+3. Focus only on information that would be useful for handling similar future conversations
+4. Context_tags should be specific enough to match similar situations but general enough to be reusable
+
+**Output Format:**
+You must answer using the Structured Output format required by the system. In that format:
+{{
+    "context_tags": [              // 2-4 keywords that would help identify similar future conversations
+        string,                    // Use field-specific terms like "deep_learning", "methodology_question", "results_interpretation"
+        ...
+    ],
+    "conversation_summary": string, // One sentence describing what the conversation accomplished
+    "what_worked": string,         // Most effective approach or strategy used in this conversation
+    "what_to_avoid": string        // Most important pitfall or ineffective approach to avoid
+}}
+
+Examples:
+- Good context_tags: ["static_website_fundraising", "donation_feature_integration", "charity_website_ux"]
+- Bad context_tags: ["website", "coding_task", "project"]
+
+- Good conversation_summary: "Added a donation feature to an existing static website for an animal shelter to enable fundraising and highlight the urgent need for support."
+- Bad conversation_summary: "Worked on a website task."
+
+- Good what_worked: "Embedding a clear donation call-to-action into the existing page layout enabled quick fundraising integration without modifying the overall site structure."
+- Bad what_worked: "Successfully completed the task."
+
+- Good what_to_avoid: "Diving into mathematical formulas before establishing user's familiarity with linear algebra fundamentals""Implementing unnecessary backend payment logic when a simple external donation link is sufficient for a static fundraising website."
+- Bad what_to_avoid: "Made the solution too complicated."
+
+Example of Structured Output format by ReAct:
+  "context_tags": [ "static_website_fundraising",        "donation_feature_integration", "charity_website_ux",        "existing_site_modification" ], 
+  "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+  "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
+  "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+"""
+```
+
+Example of what I want to see as a result of structured output by ReAct:
+```python
+{
+    "context_tags": [
+        "static_website_fundraising",
+        "donation_feature_integration",
+        "charity_website_ux",
+        "existing_site_modification"
+    ],
+    "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+    "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
+    "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+}
+```
+Such dict needs to be sent to Memory Controller over API endpoint named /memory/store_episodic. Then Memory Controller understands that this memory thought that needs to be stored in collection "episodic_memory" in Vector Store. This Vector Store is the same for Tool-Level Memory and Episodic Memory. It is just that Tool-Level Memory has 100+ collections named after names of tools and 1 collection of Episodic Memory. 
+
+Memory Controller needs to add memory_id and timestamp to the memory thought before saving to Vector Store.
+
+How To Store in Vector Store?
 
 ### How To Retrieve
 
-Then, a vector (semantic) search is performed when a new ReAct worker is invoked by the PlanExecutor to retrieve the JSON (or Python dictionary) with the highest semantic similarity to the user prompt. The retrieved entry is then injected into the system prompt with the phrasing: “Here is what you recall about your task: {json_best_match}”. 
+Then, a vector (semantic) search is performed when a new ReAct worker is invoked by the PlanExecutor to retrieve the Python dictionary with the highest semantic similarity to the user prompt. The retrieved entry is then injected into the system prompt with the phrasing: “Here is what you recall about your task: {dict_best_match}”. 
 
 [In_Progress]Or we can retrieve top-k results(or results above some threshold) and then ask llm in order to make the best out of them (combine or summarize?). Also, this step with llm can say which is from time-to-time is only заважає, але має високий similarity (і треба далі думати що треба робити -- піднімати threshold? top-k? видалити з пам'яті -- forgetting?). 
 
 Also, because Episodic Memory is categorized as Explicit and Implicit at the same time it has a tool recall_episodic.
 [In_Progress]
 ```python
+
 def recall_episodic(
     query: str,
     alpha: int
 ) -> dict:
-  """Recall relevant memories from episodic memory for explicit query.
+  """Recall relevant memories from Episodic memory for explicit query.
 
 Recommended scenarios:
 - When the agent needs to retrieve factual or conceptual knowledge...
@@ -1816,3 +1898,32 @@ MMR (Maximum Marginal Relevance) — for retrieving very similar and contradicto
 [Вирівнювання онтологій(термінологій)](https://arxiv.org/abs/2508.08500) між різними підсистемами пам'яті може бути справді траблом, але це вже так чисто ідея для майбутнього я думаю.
 
 PRD and separation of concerns concepts of writing a spec
+
+може не тільки string параметри ембедати в Tool-Level Memory, якщо, наприклад, int, то BM25 - чи просто grep.
+
+Ідея Володимира щодо почитати за adaptive ranking / relevance feedback
+
+10. Маленький insight
+Ти інтуїтивно прийшов до тієї ж архітектури що використовують у:
+AutoGPT memory; MemoryBank; Generative Agents paper; LangChain long-term memory;
+Це означає що ти мислиш дуже правильно для agent architectures.
+
+τ = base_tau * (1 + usage_count) (usage_count - це feedback score * importance?)
+3. Обчислення bias
+Краще рахувати ratio, а не просто штраф. Наприклад:
+feedback_score = (success_count - reject_count) / (success_count + reject_count + 1)
+діапазон: [-1 ; +1]
+Потім: adjustment??? = feedback_score * 0.1, тобто максимум ±10%.
+Приклад memory:
+success = 8; reject = 2;
+feedback_score = (8 - 2) / 11 = 0.54
+adjustment = 0.054
+final_similarity = 0.57 * (1 + 0.054) = 0.6008
+
+Тому хороша схема:
+τ = base_tau * importance
+recency = exp(-t / τ)
+memory_score = similarity * recency * success_rate
+
+importance - це просто питати в ReAct, а потім PlanExecutor має можливість відкоригувати важливість? РеАкт ставить від 0 до 10, потім ПланЕкзекьютор може додати, відняти скільки забажає, тільки, щоб не було більше 10 і менше 0 відповідно до планів і тд. 
+Коли це робити? - В кінці РеАкта створюється епізодична пам'ять. І там же PlanExecutor теж ставить. Яким чином? Чи можна буде зробити structured output для PlanExecutor, коли закінчить роботу ReAct.
