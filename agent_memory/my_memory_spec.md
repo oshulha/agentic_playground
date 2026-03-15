@@ -1,6 +1,6 @@
 # My Memory Conceptual Architecture v1
 
-Memory subsystem is the information storage and retrieval part of our AI Agent. It consists of a single vector store that contains several collections. It directly interacts with the Brains subsystem (PlanExecutor and ReAct) and operates at multiple levels, such as storing memories from the PlanExecutor as well as memories from each ReAct worker invoked by the PlanExecutor. At the moment, our Memory subsystem is composed of four underlying memory components: working, episodic, semantic, and procedural memory.
+[OUTDATED]Memory subsystem is the information storage and retrieval part of our AI Agent. It consists of a [lie]single vector store that contains several collections. It directly interacts with the Brains subsystem (PlanExecutor and ReAct) and operates at multiple levels, such as storing memories from the [not_sure]PlanExecutor as well as memories from each ReAct worker invoked by the PlanExecutor. At the moment, our Memory subsystem is composed of four underlying memory components: working, tool-level, episodic, semantic, and procedural memory.
 
 **Memory Architecture Diagram:**
 ![Memory Architecture Diagram](memory_schema.png)
@@ -27,6 +27,12 @@ Temporary, active workspace of the agent. Maintains current interaction state, c
 `Progress: [██░░░░░░░░] 20%`; `Status: In Progress` 
 
 Memory Controller is a stateless microservice responsible for managing the lifecycle of agent memories. It exposes an HTTP API and serves as the abstraction layer between the cognitive system (ReAct/Brains) and persistent memory storage systems.
+
+[**Vector Store**](#vector-store)
+
+`Progress: [█████░░░░░] 50%`; `Status: In Progress` 
+
+Vector Store is a paragraph, which tells about vector store and its responsibilities for different memory subsystems (Tool-Level Memory, Episodic Memory).
 
 [**Tool-Level Memory**](#tool-level-memory)
 
@@ -195,6 +201,144 @@ Tool-level memory recall
 Tool-level structured post-execution memory saving
 Multi-vector embedding generation and vector indexing
 
+### Episodic Memory Responsibilities
+
+#### store_episodic
+
+Memory Controller listens for the HTTP endpoint:
+```code
+POST /memory/store_episodic
+```
+When this endpoint is invoked, the Memory Controller understands that the agent wants to persist an episodic memory thought generated after the completion of a task.
+
+The request payload must look like this:
+```python
+payload = {
+    "context_tag1": "donation_feature_integration",
+    "context_tag2": "charity_website_ux",
+    "context_tag3": "existing_site_modification",
+    "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+    "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.",
+    "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+}
+```
+
+Preconditions:
+- The Episodic Memory Vector Store collection must already exist.
+- The schema must define four Named Vectors corresponding to the following semantic fields: context_tag1, context_tag2, context_tag3, trajectory_summary.
+More details can be found in `Episodic Memory Responsibilities` paragraph under `Vector Store` paragraph
+
+Upon receiving the request, Memory Controller:
+1. Inject System Fields
+Before storing the memory, the system enriches it with internal metadata fields: memory_id, timestamp.
+memory_id is generated automatically by the Memory Controller.  
+timestamp records the exact time when the memory is stored.
+
+Example:
+```python
+{
+  "memory_id": 5,
+  "timestamp": "1.01.2026 10:36",
+  "context_tag1": "donation_feature_integration",
+  "context_tag2": "charity_website_ux",
+  "context_tag3": "existing_site_modification",
+  "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+  "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.",
+  "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+}
+```
+
+2. Extract Tool Name and Parameters  
+From each tool_call, extract:
+```python
+toolname, tool_parameters = extract_toolname_and_parameters(tool_call)
+```
+
+If len(tool_parameter) > PARAM_THRESHOLD:
+- Summarize tool call using summarize_tool_parameter()
+- Use summary as embedding input
+- Store summary + file reference in corresponding field
+Else:
+- Store raw tool parameter in corresponding field
+- Use raw tool parameter as embedding input
+
+Tool output can be summarized by the Accept Mechanism if its size exceeds TOOL_OUTPUT_THRESHOLD and the agent decides to create a summary.
+
+Then parse the parameters into a structured dictionary:
+```python
+{
+    "memory_id": 1,
+    "timestamp": "1.01.2026 10:36",
+    "toolname": "run_cmd",
+    "shell": "bash",
+    "command": f"Summary of tool parameter: {command_summary}. Reference: Full tool parameter stored at /home/oleksandr/123tool_param_command.txt",
+    "tool_output": f"Summary of tool output: {tool_output_summary}. 
+    Reference: Full tool output stored at /home/oleksandr/123tool_output.txt",
+    "what_worked": "I have access to list_of_emails_by_worker.txt.",
+    "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call."
+}
+```
+
+```python
+{
+  "memory_id": 1,
+  "timestamp": "1.01.2026 10:36",
+  "toolname": "run_cmd",
+  "shell": "bash",
+  "command": f"\"cat list_of_emails_by_worker.txt\"",
+  "tool_output": "ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net maria.bondar@outlook.com dmytro.tkachenko@gmail.com iryna.melnyk@yahoo.com vlad.kozlov@ukr.net sofia.hrytsenko@gmail.com maksym.danilenko@outlook.com kateryna.polishchuk@yahoo.com",
+  "what_worked": "I have access to list_of_emails_by_worker.txt.",
+  "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call." 
+}
+```
+
+Each parameter is stored as its own property in the vector store schema.
+Unlike the previous single-vector architecture, no combined tool signature embedding is created.
+Instead: each parameter, which type is string, becomes a separate embedding source; each such parameter is mapped to its own named vector.
+
+Example embedding generation:
+```python
+shell_embedding = embedding_model.encode(shell)
+command_embedding = embedding_model.encode(command)
+```
+These embeddings are automatically indexed by the vector database according to the schema.
+
+
+3. Insert Into Correct Collection
+Collection must match the tool name:
+```python
+collection = client.collections.get(toolname)
+collection.data.insert(
+    {
+        "memory_id": 1,
+        "timestamp": "1.01.2026 10:36",
+        "tool_name": toolname,
+        "shell": shell,
+        "command": command,
+        "tool_call": tool_call,
+        "tool_output": tool_output,
+        "what_worked": what_worked,
+        "what_to_avoid": what_to_avoid
+    }
+)
+```
+Each tool has its own collection.
+The vector database automatically generates named vectors for each parameter field based on the collection schema.
+
+API Response Format
+Memory Controller must return an HTTP JSON response:
+Success:
+```python
+{"success": True}
+```
+Failure:
+```python
+{
+  "success": False,
+  "error": "Detailed error message from memory transformation or vector store."
+}
+```
+
 ### Tool-Level Memory Responsibilities
 
 #### recall_tool_level
@@ -211,8 +355,8 @@ payload = {
   "top_k": top_k # how many elements to retrieve if there is more than k elements
 }
 ```
-Preconditions (More details can be found in `Tool-Level Memory Vector Store` paragpaph under `Tool-Level Memory` paragraph):
-- The Tool-Level Memory Vector Store must already exist.
+Preconditions (More details can be found in `Tool-Level Memory Responsibilities` paragpaph under `Vector Store` paragraph):
+- The Vector Store(Tool-Level Memory) must already exist.
 - Each tool must have its own collection.
 - Each collection must contain named vectors corresponding to tool parameters.
 
@@ -281,10 +425,10 @@ payload = {
 Each element in structured_output must correspond by index to the same element in tool_calls_and_outputs.
 
 Preconditions:
-- The Tool-Level Memory Vector Store must already exist.
+- The Vector Store(Tool-Level Memory) must already exist.
 - Each tool must have its own collection.
 - The collection schema must define separate vector fields for relevant tool parameters.
-- More details can be found in `Tool-Level Memory Vector Store` paragpaph under `Tool-Level Memory` paragraph
+- More details can be found in `Tool-Level Memory Responsibilities` paragpaph under `Vector Store` paragraph
 
 Upon receiving the request, Memory Controller:
 1. Transform Structured Output Into Final Dictionaries
@@ -385,6 +529,138 @@ Failure:
 }
 ```
 
+## Vector Store
+
+Vector Store is responsible for two Memory Subsystems: Tool-Level Memory, Episodic Memory.
+
+### Episodic Memory Responsibilities
+
+### Tool-Level Memory Responsibilities
+
+For The Vector Store(Tool-Level Memory) maintains a separate collection for each ReAct tool.
+These collections must be created statically in advance for all tools registered in the ToolSelector (except tools like?: recall_tool_level, recall_episodic_memory, recall_semantic_memory, recall_procedural_memory and other memory related tools)
+Each dictionary is stored in the collection whose name matches the value stored under the "toolname" key as an example above.
+Each collection schema must define:
+- structured properties for tool parameters
+- named vectors corresponding to those parameters
+
+I decided to use Weaviate as the vector database.
+
+Example schema:
+```python
+import weaviate
+from weaviate.classes.config import Configure, Property, DataType
+
+client = weaviate.connect_to_local()
+
+client.collections.create(
+    name="run_cmd",
+    
+    vectorizer_config=[
+        Configure.NamedVectors.text2vec_transformers(
+            name="shell_vector",
+            source_properties=["shell"]
+        ),
+        Configure.NamedVectors.text2vec_transformers(
+            name="command_vector",
+            source_properties=["command"]
+        )
+    ],
+    
+    properties=[
+        Property(name="memory_id", data_type=DataType.TEXT),
+        Property(name="timestamp", data_type=DataType.TEXT),
+        Property(name="tool_name", data_type=DataType.TEXT),
+        Property(name="shell", data_type=DataType.TEXT),
+        Property(name="command", data_type=DataType.TEXT),
+        Property(name="tool_call", data_type=DataType.TEXT),
+        Property(name="tool_output", data_type=DataType.TEXT),
+        Property(name="what_worked", data_type=DataType.TEXT),
+        Property(name="what_to_avoid", data_type=DataType.TEXT),
+    ]
+)
+```
+Each string parameter is vectorized independently. During retrieval the system performs independent vector searches for each parameter vector and merges the results using weighted similarity scoring.
+The results are then merged using weighted similarity scoring to produce the final ranking.
+This architecture allows the system to retrieve memories based on fine-grained parameter similarity, improving recall accuracy compared to traditional single-vector approaches.
+
+Parameter embeddings can be generated using: text-embedding-3-small, text-embedding-3-large.
+For short tool parameters, text-embedding-3-small is typically sufficient. Larger models can be used when higher semantic precision is required.
+
+Here is how I see saving of memory thoughts:
+```python
+# Saving should be like this
+memory = {
+    "memory_id": 5,
+    "timestamp": "1.01.2026",
+    "tool_name": "run_cmd",
+    "shell": "bash",
+    "command": "cat list_of_emails_by_worker.txt",
+    "tool_call": 'run_cmd(shell="bash", command="cat list_of_emails_by_worker.txt", timeout=30)',
+    "tool_output": """
+ivan.petrenko@gmail.com
+anna.kovalchuk@yahoo.com
+oleg.shevchenko@ukr.net
+maria.bondar@outlook.com
+dmytro.tkachenko@gmail.com
+""",
+    "what_worked": "I have access to list_of_emails_by_worker.txt.",
+    "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert."
+}
+
+collection = client.collections.get("run_cmd")
+
+collection.data.insert(memory)
+```
+
+Here is how I see searching(recalling) memory thoughts:
+```python
+# Search (Recall) should be like this
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("all-MiniLM-L6-v2") #it would be much better to use OpenAI model like text-embedding-3-small or even better text-embedding-3-large for accuracy
+
+query_shell = model.encode("bash")
+query_command = model.encode("cat list_of_emails_by_worker.txt")
+#query_timeout = model.encode(int(30)) -- because we save only string values
+
+shell_results = collection.query.near_vector(
+    near_vector=query_shell,
+    target_vector="shell_vector",
+    limit=5
+)
+# could be embedded summarization of some tool params if param is bigger than PARAM_THRESHOLD
+command_results = collection.query.near_vector(
+    near_vector=query_command,
+    target_vector="command_vector",
+    limit=5
+)
+
+scores = {}
+
+def add_scores(results, weight):
+    for obj in results.objects:
+        id = obj.uuid
+        sim = 1 - obj.metadata.distance
+        
+        if id not in scores:
+            scores[id] = 0
+            
+        scores[id] += weight * sim
+
+add_scores(shell_results, 0.4)
+add_scores(command_results, 0.6)
+
+best = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+best_id = best[0][0]
+
+memory = collection.query.fetch_object_by_id(best_id)
+
+print(memory.properties["what_worked"])
+print(memory.properties["what_to_avoid"])
+```
+
 ## Tool-Level Memory
 
 Tool-Level Memory Architecture Diagram:
@@ -467,7 +743,7 @@ sequenceDiagram
     Note right of ReAct: HTTP POST /memory/store_tool_level
 
     ReAct->>MC: sends final JSONs to Tool-Level Memory
-    MC->>VS: sends final JSONs to Tool-Level Memory Vector Store
+    MC->>VS: sends final JSONs to Vector Store(Tool-Level Memory)
     VS->>MC: {success: True}
     MC->>ReAct: {success: True}
 ```
@@ -486,140 +762,14 @@ The system retrieves relevant past memories associated with the same toolname, t
 After ReAct completes its task, a structured post-processing step is triggered. Code extracts all tool-call and tool-output pairs generated during execution. Proposes a structured output to the agent.
 The agent fills struсtured output fields such as: `what worked`, `what to avoid` - for each tool-call and tool-output pair.
 
-### Tool-Level Memory Vector Store
-
-The Tool-Level Memory Vector Store maintains a separate collection for each ReAct tool.
-These collections must be created statically in advance for all tools registered in the ToolSelector (except tools like?: recall_tool_level, recall_episodic_memory, recall_semantic_memory, recall_procedural_memory and other memory related tools)
-Each dictionary is stored in the collection whose name matches the value stored under the "toolname" key as an example above.
-Each collection schema must define:
-- structured properties for tool parameters
-- named vectors corresponding to those parameters
-
-I decided to use Weaviate as the vector database.
-
-Example schema:
-```python
-import weaviate
-from weaviate.classes.config import Configure, Property, DataType
-
-client = weaviate.connect_to_local()
-
-client.collections.create(
-    name="run_cmd",
-    
-    vectorizer_config=[
-        Configure.NamedVectors.text2vec_transformers(
-            name="shell_vector",
-            source_properties=["shell"]
-        ),
-        Configure.NamedVectors.text2vec_transformers(
-            name="command_vector",
-            source_properties=["command"]
-        )
-    ],
-    
-    properties=[
-        Property(name="memory_id", data_type=DataType.TEXT),
-        Property(name="timestamp", data_type=DataType.TEXT),
-        Property(name="tool_name", data_type=DataType.TEXT),
-        Property(name="shell", data_type=DataType.TEXT),
-        Property(name="command", data_type=DataType.TEXT),
-        Property(name="tool_call", data_type=DataType.TEXT),
-        Property(name="tool_output", data_type=DataType.TEXT),
-        Property(name="what_worked", data_type=DataType.TEXT),
-        Property(name="what_to_avoid", data_type=DataType.TEXT),
-    ]
-)
-```
-Each string parameter is vectorized independently. During retrieval the system executes multiple vector searches, one per parameter vector.
-The results are then merged using weighted similarity scoring to produce the final ranking.
-This architecture allows the system to retrieve memories based on fine-grained parameter similarity, improving recall accuracy compared to traditional single-vector approaches.
-
-Parameter embeddings can be generated using: text-embedding-3-small, text-embedding-3-large.
-For short tool parameters, text-embedding-3-small is typically sufficient. Larger models can be used when higher semantic precision is required.
-
-Here is how I see saving of memory thoughts:
-```python
-# Saving should be like this
-memory = {
-    "memory_id": 5,
-    "timestamp": "1.01.2026",
-    "tool_name": "run_cmd",
-    "shell": "bash",
-    "command": "cat list_of_emails_by_worker.txt",
-    "tool_call": 'run_cmd(shell="bash", command="cat list_of_emails_by_worker.txt", timeout=30)',
-    "tool_output": """
-ivan.petrenko@gmail.com
-anna.kovalchuk@yahoo.com
-oleg.shevchenko@ukr.net
-maria.bondar@outlook.com
-dmytro.tkachenko@gmail.com
-""",
-    "what_worked": "I have access to list_of_emails_by_worker.txt.",
-    "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert."
-}
-
-collection = client.collections.get("run_cmd")
-
-collection.data.insert(memory)
-```
-
-Here is how I see searching(recalling) memory thoughts:
-```python
-# Search (Recall) should be like this
-from sentence_transformers import SentenceTransformer
-
-model = SentenceTransformer("all-MiniLM-L6-v2") #it would be much better to use OpenAI model like text-embedding-3-small
-
-query_shell = model.encode("bash")
-query_command = model.encode("cat list_of_emails_by_worker.txt")
-#query_timeout = model.encode(int(30)) -- because we save only string values
-
-shell_results = collection.query.near_vector(
-    near_vector=query_shell,
-    target_vector="shell_vector",
-    limit=5
-)
-
-command_results = collection.query.near_vector(
-    near_vector=query_command,
-    target_vector="command_vector",
-    limit=5
-)
-
-scores = {}
-
-def add_scores(results, weight):
-    for obj in results.objects:
-        id = obj.uuid
-        sim = 1 - obj.metadata.distance
-        
-        if id not in scores:
-            scores[id] = 0
-            
-        scores[id] += weight * sim
-
-add_scores(shell_results, 0.4)
-add_scores(command_results, 0.6)
-
-best = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-
-best_id = best[0][0]
-
-memory = collection.query.fetch_object_by_id(best_id)
-
-print(memory.properties["what_worked"])
-print(memory.properties["what_to_avoid"])
-```
-
 ### How To Retrieve (Recall Mechanism)
 
-When the agent generates a tool call, that tool call is passed to the Commit Mechanism. The Commit Mechanism invokes the `recall_tool_level` function in the Memory Controller. `recall_tool_level` returns a list of relevant memories retrieved from the Tool-Level Memory Vector Store. After all, relevant memories will be inserted in Commit Mechanism message. Those retrieved memories are then inserted into the Commit Mechanism message, allowing the agent to reflect on past tool usage before executing the new tool call.
+When the agent generates a tool call, that tool call is passed to the Commit Mechanism. The Commit Mechanism invokes the `recall_tool_level` function in the Memory Controller. `recall_tool_level` returns a list of relevant memories retrieved from the Vector Store(Tool-Level Memory). After all, relevant memories will be inserted in Commit Mechanism message. Those retrieved memories are then inserted into the Commit Mechanism message, allowing the agent to reflect on past tool usage before executing the new tool call.
 
 Since Tool-Level Memory is considered both **explicit** and **implicit**, the `recall_tool_level` function is also exposed to ReAct as a tool. This allows the agent to explicitly query its own Tool-Level Memory when necessary.
 Unlike the previous architecture that relied on a **single combined embedding**, the current system performs **multi-vector retrieval across individual tool parameters**.
 
-Each parameter is embedded independently and searched against its corresponding vector index in the Tool-Level Memory Vector Store. Similarity scores from multiple parameter searches are then aggregated using a weighted scoring function.
+Each parameter is embedded independently and searched against its corresponding vector index in the Vector Store(Tool-Level Memory). Similarity scores from multiple parameter searches are then aggregated using a weighted scoring function.
 
 Here is how approximately I see implementation of `recall_tool_level()` ,`summarize_tool_parameter()` and `extract_toolname_and_parameters()`:
 ```python
@@ -1389,18 +1539,24 @@ Review the conversation and create a memory reflection following these rules:
 **Output Format:**
 You must answer using the Structured Output format required by the system. In that format:
 {{
-    "context_tags": [              // 2-4 keywords that would help identify similar future conversations
-        string,                    // Use field-specific terms like "deep_learning", "methodology_question", "results_interpretation"
-        ...
-    ],
-    "conversation_summary": string, // One sentence describing what the conversation accomplished
+
+    "context_tag1": string,
+    "context_tag2": string,
+    "context_tag3": string, // Use field-specific terms like  "deep_learning", "methodology_question", "results_interpretation"...,
+    "trajectory_summary": string, // One sentence describing what the ReAct trajectory accomplished
     "what_worked": string,         // Most effective approach or strategy used in this conversation
     "what_to_avoid": string        // Most important pitfall or ineffective approach to avoid
 }}
 
 Examples:
-- Good context_tags: ["static_website_fundraising", "donation_feature_integration", "charity_website_ux"]
-- Bad context_tags: ["website", "coding_task", "project"]
+- Good context_tags: 
+  "context_tag1": "donation_feature_integration",
+  "context_tag2": "charity_website_ux",
+  "context_tag3": "existing_site_modification".
+- Bad context_tags: 
+  "context_tag1": "website", 
+  "context_tag2": "coding_task", 
+  "context_tag3": "project".
 
 - Good conversation_summary: "Added a donation feature to an existing static website for an animal shelter to enable fundraising and highlight the urgent need for support."
 - Bad conversation_summary: "Worked on a website task."
@@ -1412,7 +1568,9 @@ Examples:
 - Bad what_to_avoid: "Made the solution too complicated."
 
 Example of Structured Output format by ReAct:
-  "context_tags": [ "static_website_fundraising",        "donation_feature_integration", "charity_website_ux",        "existing_site_modification" ], 
+  "context_tag1": "donation_feature_integration",
+  "context_tag2": "charity_website_ux",
+  "context_tag3": "existing_site_modification",
   "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
   "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
   "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
@@ -1422,22 +1580,171 @@ Example of Structured Output format by ReAct:
 Example of what I want to see as a result of structured output by ReAct:
 ```python
 {
-    "context_tags": [
-        "static_website_fundraising",
-        "donation_feature_integration",
-        "charity_website_ux",
-        "existing_site_modification"
-    ],
+    "context_tag1": "donation_feature_integration",
+    "context_tag2": "charity_website_ux",
+    "context_tag3": "existing_site_modification",
     "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
     "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
     "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
 }
 ```
-Such dict needs to be sent to Memory Controller over API endpoint named /memory/store_episodic. Then Memory Controller understands that this memory thought that needs to be stored in collection "episodic_memory" in Vector Store. This Vector Store is the same for Tool-Level Memory and Episodic Memory. It is just that Tool-Level Memory has 100+ collections named after names of tools and 1 collection of Episodic Memory. 
+### Memory Controller + Vector Store
 
-Memory Controller needs to add memory_id and timestamp to the memory thought before saving to Vector Store.
+When an episodic memory thought is generated by ReAct, the system sends the resulting dictionary to the Memory Controller through the API endpoint /memory/store_episodic. The Memory Controller is responsible for processing this request and storing the memory in the Vector Store. The Vector Store is shared between Tool-Level Memory and Episodic Memory. However, the organization of collections differs between the two memory types. Tool-Level Memory contains more than 100 collections, each named after a specific tool registered in the system (e.g., `run_cmd`, `python`, `slack_send_message`, etc.). Episodic Memory, in contrast, uses a single dedicated collection named `episodic_memory`.
 
-How To Store in Vector Store?
+Before inserting the memory into the Vector Store, the Memory Controller automatically enriches the memory object by adding two system fields: memory_id and timestamp.
+
+Based on the structured output format produced by the ReAct agent, episodic memory thoughts contain several semantic fields describing the context and outcome of the agent's reasoning trajectory. To support efficient retrieval, the system generates vector embeddings for four specific fields: context_tag1, context_tag2, context_tag3, trajectory_summary. These embeddings allow the system to perform semantic searches across past agent experiences.
+
+The full memory object itself is stored as metadata, while the four semantic fields are independently vectorized. As a result, each episodic memory entry has four separate vector representations.
+
+Since the system uses Weaviate as the vector database, this architecture is implemented using Named Vectors. Each of the four semantic fields corresponds to its own named vector within the `episodic_memory` collection.
+
+Example schema:
+python import weaviate from weaviate.classes.config import Configure, Property, DataType client = weaviate.connect_to_local() client.collections.create( name="episodic_memory", vectorizer_config=[ Configure.NamedVectors.text2vec_transformers( name="context_tag1_vector", source_properties=["context_tag1"] ), Configure.NamedVectors.text2vec_transformers( name="context_tag2_vector", source_properties=["context_tag2"] ), Configure.NamedVectors.text2vec_transformers( name="context_tag3_vector", source_properties=["context_tag3"] ), Configure.NamedVectors.text2vec_transformers( name="trajectory_summary_vector", source_properties=["trajectory_summary"] ) ], properties=[ Property(name="memory_id", data_type=DataType.TEXT), Property(name="timestamp", data_type=DataType.TEXT), Property(name="context_tag1", data_type=DataType.TEXT), Property(name="context_tag2", data_type=DataType.TEXT), Property(name="context_tag3", data_type=DataType.TEXT), Property(name="trajectory_summary", data_type=DataType.TEXT), Property(name="what_worked", data_type=DataType.TEXT), Property(name="what_to_avoid", data_type=DataType.TEXT) ] )
+Each of the four semantic fields is embedded independently. During retrieval, the system performs separate vector similarity searches for each of the named vectors (context_tag1_vector, context_tag2_vector, context_tag3_vector, trajectory_summary_vector). The retrieved results are then combined using weighted similarity scoring to determine the most relevant episodic memories.
+Embeddings for episodic memory fields can be generated using models such as text-embedding-3-small or text-embedding-3-large.
+
+### Memory Controller + Vector Store + (How To Retrieve? + How To Update?)
+
+When an episodic memory thought is generated by ReAct, the system sends the resulting dictionary to the Memory Controller through the API endpoint /memory/store_episodic. The Memory Controller is responsible for processing this request and storing the memory in the Vector Store. The Vector Store is shared between Tool-Level Memory and Episodic Memory. However, the organization of collections differs between the two memory types. Tool-Level Memory contains more than 100 collections, each named after a specific tool registered in the system (e.g., `run_cmd`, `python`, `slack_send_message`, etc.). Episodic Memory, in contrast, uses a single dedicated collection named `episodic_memory`.
+
+Before inserting the memory into the Vector Store, the Memory Controller automatically enriches the memory object by adding two system fields: memory_id and timestamp.
+
+Based on the structured output format produced by the ReAct agent, episodic memory thoughts contain several semantic fields describing the context and outcome of the agent's reasoning trajectory. To support efficient retrieval, the system generates vector embeddings for four specific fields: context_tag1, context_tag2, context_tag3, trajectory_summary. These embeddings allow the system to perform semantic searches across past agent experiences.
+
+The full memory object itself is stored as metadata, while the four semantic fields are independently vectorized. As a result, each episodic memory entry has four separate vector representations.
+
+Since the system uses Weaviate as the vector database, this architecture is implemented using Named Vectors. Each of the four semantic fields corresponds to its own named vector within the `episodic_memory` collection.
+
+Example schema:
+```python
+import weaviate
+from weaviate.classes.config import Configure, Property, DataType
+
+client = weaviate.connect_to_local()
+
+client.collections.create(
+    name="episodic_memory",
+
+    vectorizer_config=[
+        Configure.NamedVectors.text2vec_transformers(
+            name="context_tag1_vector",
+            source_properties=["context_tag1"]
+        ),
+        Configure.NamedVectors.text2vec_transformers(
+            name="context_tag2_vector",
+            source_properties=["context_tag2"]
+        ),
+        Configure.NamedVectors.text2vec_transformers(
+            name="context_tag3_vector",
+            source_properties=["context_tag3"]
+        ),
+        Configure.NamedVectors.text2vec_transformers(
+            name="trajectory_summary_vector",
+            source_properties=["trajectory_summary"]
+        )
+    ],
+
+    properties=[
+        Property(name="memory_id", data_type=DataType.TEXT),
+        Property(name="timestamp", data_type=DataType.TEXT),
+
+        Property(name="context_tag1", data_type=DataType.TEXT),
+        Property(name="context_tag2", data_type=DataType.TEXT),
+        Property(name="context_tag3", data_type=DataType.TEXT),
+
+        Property(name="trajectory_summary", data_type=DataType.TEXT),
+        Property(name="what_worked", data_type=DataType.TEXT),
+        Property(name="what_to_avoid", data_type=DataType.TEXT)
+    ]
+)
+```
+
+Each of the four semantic fields is embedded independently. During retrieval, the system performs separate vector similarity searches for each of the named vectors (context_tag1_vector, context_tag2_vector, context_tag3_vector, trajectory_summary_vector). The retrieved results are then combined using weighted similarity scoring to determine the most relevant episodic memories.
+Embeddings for episodic memory fields can be generated using models such as text-embedding-3-small or text-embedding-3-large.
+
+Here is how I see saving of memory thoughts:
+```python
+# Saving should be like this
+memory = {
+    "memory_id": 5,
+    "timestamp": "1.01.2026",
+    "context_tag1": "donation_feature_integration",
+    "context_tag2": "charity_website_ux",
+    "context_tag3": "existing_site_modification",
+    "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+    "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
+    "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+}
+
+collection = client.collections.get("run_cmd")
+
+collection.data.insert(memory)
+```
+
+Here is how I see searching(recalling) memory thoughts:
+```python
+# Search (Recall) should be like this
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("all-MiniLM-L6-v2") #it would be much better to use OpenAI model like text-embedding-3-small or even better text-embedding-3-large for accuracy
+
+query_context_tag1 = model.encode("donation_feature_integration")
+query_context_tag2 = model.encode("charity_website_ux")
+query_context_tag3 = model.encode("existing_site_modification")
+query_trajectory_summary = model.encode("Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.")
+
+context_tag1_results = collection.query.near_vector(
+    near_vector=query_context_tag1,
+    target_vector="context_tag1_vector",
+    limit=5
+)
+
+context_tag2_results = collection.query.near_vector(
+    near_vector=query_context_tag2,
+    target_vector="context_tag2_vector",
+    limit=5
+)
+
+context_tag3_results = collection.query.near_vector(
+    near_vector=query_context_tag3,
+    target_vector="context_tag3_vector",
+    limit=5
+)
+# could be embedded summarization of some tool params if param is bigger than PARAM_THRESHOLD
+trajectory_summary_results = collection.query.near_vector(
+    near_vector=query_trajectory_summary,
+    target_vector="trajectory_summary_vector",
+    limit=5
+)
+
+scores = {}
+
+def add_scores(results, weight):
+    for obj in results.objects:
+        id = obj.uuid
+        sim = 1 - obj.metadata.distance
+        
+        if id not in scores:
+            scores[id] = 0
+            
+        scores[id] += weight * sim
+
+add_scores(context_tag1_results, 0.2)
+add_scores(context_tag2_results, 0.2)
+add_scores(context_tag3_results, 0.2)
+add_scores(trajectory_summary_results, 0.4)
+
+best = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+best_id = best[0][0]
+
+memory = collection.query.fetch_object_by_id(best_id)
+
+print(memory.properties["what_worked"])
+print(memory.properties["what_to_avoid"])
+```
 
 ### How To Retrieve
 
@@ -1902,6 +2209,10 @@ PRD and separation of concerns concepts of writing a spec
 може не тільки string параметри ембедати в Tool-Level Memory, якщо, наприклад, int, то BM25 - чи просто grep.
 
 Ідея Володимира щодо почитати за adaptive ranking / relevance feedback
+
+[Retrieval Youtube Idea](https://chatgpt.com/share/69b5278e-f204-8003-a8cb-d84deca36743):
+  пошук кандидатів - ranking (ML модель) -
+  ranking (ML model): Relevance, Freshness, Velocity (швидкість набору переглядів), CTR (click-through rate, скільки людей клікнули), Watch time (Якщо люди: довго дивляться не виходять → відео ранжується вище), Personalization(YouTube враховує твій профіль: чи дивишся ти теніс, чи дивився раніше Elina Svitolina, чи дивився матчі Iga Świątek)
 
 10. Маленький insight
 Ти інтуїтивно прийшов до тієї ж архітектури що використовують у:
