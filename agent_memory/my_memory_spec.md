@@ -203,6 +203,8 @@ Multi-vector embedding generation and vector indexing
 
 ### Episodic Memory Responsibilities
 
+#### recall_episodic
+
 #### store_episodic
 
 Memory Controller listens for the HTTP endpoint:
@@ -248,94 +250,53 @@ Example:
 }
 ```
 
-2. Extract Tool Name and Parameters  
-From each tool_call, extract:
+2. Embedding Generation  
+Each of the four semantic fields is embedded independently, using text-embedding-3-large.
+
 ```python
-toolname, tool_parameters = extract_toolname_and_parameters(tool_call)
+context_tag1_embedding = embedding_model.encode(context_tag1)  
+context_tag2_embedding = embedding_model.encode(context_tag2)  
+context_tag3_embedding = embedding_model.encode(context_tag3)  
+trajectory_summary_embedding = embedding_model.encode(trajectory_summary)
 ```
+These embeddings are automatically indexed by the vector database according to the Named Vector schema.
 
-If len(tool_parameter) > PARAM_THRESHOLD:
-- Summarize tool call using summarize_tool_parameter()
-- Use summary as embedding input
-- Store summary + file reference in corresponding field
-Else:
-- Store raw tool parameter in corresponding field
-- Use raw tool parameter as embedding input
-
-Tool output can be summarized by the Accept Mechanism if its size exceeds TOOL_OUTPUT_THRESHOLD and the agent decides to create a summary.
-
-Then parse the parameters into a structured dictionary:
+3. Insert Into Episodic Memory Collection
 ```python
-{
-    "memory_id": 1,
-    "timestamp": "1.01.2026 10:36",
-    "toolname": "run_cmd",
-    "shell": "bash",
-    "command": f"Summary of tool parameter: {command_summary}. Reference: Full tool parameter stored at /home/oleksandr/123tool_param_command.txt",
-    "tool_output": f"Summary of tool output: {tool_output_summary}. 
-    Reference: Full tool output stored at /home/oleksandr/123tool_output.txt",
-    "what_worked": "I have access to list_of_emails_by_worker.txt.",
-    "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call."
-}
-```
-
-```python
-{
-  "memory_id": 1,
-  "timestamp": "1.01.2026 10:36",
-  "toolname": "run_cmd",
-  "shell": "bash",
-  "command": f"\"cat list_of_emails_by_worker.txt\"",
-  "tool_output": "ivan.petrenko@gmail.com anna.kovalchuk@yahoo.com oleg.shevchenko@ukr.net maria.bondar@outlook.com dmytro.tkachenko@gmail.com iryna.melnyk@yahoo.com vlad.kozlov@ukr.net sofia.hrytsenko@gmail.com maksym.danilenko@outlook.com kateryna.polishchuk@yahoo.com",
-  "what_worked": "I have access to list_of_emails_by_worker.txt.",
-  "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call." 
-}
-```
-
-Each parameter is stored as its own property in the vector store schema.
-Unlike the previous single-vector architecture, no combined tool signature embedding is created.
-Instead: each parameter, which type is string, becomes a separate embedding source; each such parameter is mapped to its own named vector.
-
-Example embedding generation:
-```python
-shell_embedding = embedding_model.encode(shell)
-command_embedding = embedding_model.encode(command)
-```
-These embeddings are automatically indexed by the vector database according to the schema.
-
-
-3. Insert Into Correct Collection
-Collection must match the tool name:
-```python
-collection = client.collections.get(toolname)
+collection = client.collections.get("episodic_memory")
 collection.data.insert(
     {
-        "memory_id": 1,
-        "timestamp": "1.01.2026 10:36",
-        "tool_name": toolname,
-        "shell": shell,
-        "command": command,
-        "tool_call": tool_call,
-        "tool_output": tool_output,
+        "memory_id": memory_id,
+        "timestamp": timestamp,
+        "context_tag1": context_tag1,
+        "context_tag2": context_tag2,
+        "context_tag3": context_tag3,
+        "trajectory_summary": trajectory_summary,
         "what_worked": what_worked,
         "what_to_avoid": what_to_avoid
     }
 )
 ```
-Each tool has its own collection.
-The vector database automatically generates named vectors for each parameter field based on the collection schema.
+The vector database automatically generates the four Named Vectors:
+context_tag1_vector, context_tag2_vector, context_tag3_vector, trajectory_summary_vector.
+Each episodic memory entry therefore contains four independent vector representations corresponding to its semantic fields.
 
 API Response Format
-Memory Controller must return an HTTP JSON response:
+
+Memory Controller must return an HTTP JSON response.
+
 Success:
 ```python
-{"success": True}
+{
+  "success": True
+}
 ```
+
 Failure:
 ```python
 {
   "success": False,
-  "error": "Detailed error message from memory transformation or vector store."
+  "error": "Detailed error message from episodic memory validation or vector store insertion."
 }
 ```
 
