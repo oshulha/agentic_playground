@@ -779,7 +779,7 @@ print(memory.properties["what_to_avoid"])
 
 ## Tool-Level Memory
 
-Tool-Level Memory Architecture Diagram:
+Tool-Level Memory Sequence(Architecture) Diagram:
 
 ```mermaid
 %%{init: {'themeVariables': { 
@@ -1609,11 +1609,8 @@ Delete access: Not allowed
 
 ## Episodic Memory
 
-[To_Do]Change Vector Search With Graph Rag Ideas?
-
-Вот, а отдельный подшаг в этом всем алгоритме может быть, что: "Я сейчас пойду в свою эту базу рефлексий(ЕПІЗОДИЧНА ПАМ'ЯТЬ?????) и найду по схожим задачам не было ли у меня рефлексий?
-
-А траекторию можно каждую анализировать и какой-то рефлекшн на ней делать. Вопрос, конечно, как потом вспоминать эту зарефлекшенную траекторию, типа когда задача будет действительно типа похожа. Условно я бы, возможно, это как-то собирал в Memory Controller-е в Memory контекст, а потом его еще обрезал LLM-кой, которая, ну примерно как Tool Selector, да? Смотрит на разные куски воспоминаний, смотрит на вот эти вот рефлексии, которые мы там как-то, не знаю, может быть через векторный поиск подоставали или каким-то другим образом. И выбрасывает те, которые ну очевидно логически не подходят сюда. А может быть наоборот — это типа работает как Tool Selector в плане, что она смотрит на все рефлексии в целом и пытается подсказать типа какая может быть полезна. Но тут, наверное, будет непрактично, потому что просто количество этих рефлексий очень быстро там перевалит за сотню, и ты не можешь заставить LLM-ку качественно подумать про 100 одновременно разных типа подходов и дать свой ответ. Поэтому, короче, нужно здесь думать про скейл. Какой-то такой скейл на Tool-level memory сработает, но там задержки будут плохие, поэтому LLM-кой не стоит очищать. Вот, а на рефлекшн траекториях я бы думал в сторону, наверное, какого-то более глупого селектора, более как бы широкого, а затем очищения того, что лишнее попало нам сюда вот таким вот прунингом, где LLM-ка выбирает, что из этого типа будет бесполезным в конкретном случае. Семантически похоже, звучит похоже задача та, для которой у нас есть рефлекшн и текущая, но на самом деле совет там вредный или как минимум не полезный. Это все мысли на ходу, я не думаю, что это прям критическая фича. То есть наш агент сможет и без этого перформить, без рефлекшна. А перформить без семантической памяти он не сможет. Поэтому условно семантическая память мне кажется более приоритетной. 
+Episodic Memory Sequence(Architecture) Diagram:
+(Sequence Diagram)
 
 Episodic memory is a historical collection of prior experiences, or episodes. It includes what happened, how it happened, and the lessons or insights learned from those experiences, even if they were never clearly stated.
 
@@ -1708,13 +1705,127 @@ Then this structured output is sent to the Memory Controller through the /memory
 
 ### How To Retrieve
 
-When a new ReAct worker is invoked by the PlanExecutor, the `recall_episodic` function is invoked 
+When a new ReAct worker is invoked by the PlanExecutor, the `recall_episodic` function is called with `query` parameter equal to user input, which calls Memory Controller over `/memory/recall_episodic`. `recall_episodic` returns a list of relevant memories retrieved from the Vector Store(Episodic Memory collection). After all, relevant memories will be inserted in System Prompt of this ReAct worker. 
+
+Since Episodic Memory is considered both explicit and implicit, the `recall_episodic` function is also exposed to ReAct as a tool. This allows ReAct to explicitly query its own Episodic Memory when necessary. Unlike the previous architecture that relied on a **single combined embedding**, the current system performs **multi-vector retrieval across 3 context tags and trajectory summary**.
+
+3 context tags and trajectory summary is embedded independently and searched against its corresponding vector index in the Vector Store(Episodic Memory). Similarity scores from multiple searches are then aggregated using a weighted scoring function.
+
+Here is how approximately I see implementation of `recall_episodic()`:
+```python
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+import requests
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
+
+# Recall Tool-Level Memory Mechanism
+MEMORY_CONTROLLER_URL = os.getenv("MEMORY_CONTROLLER_URL")
+def recall_episodic(
+    query: str,
+    top_k: int = 5
+) -> list:
+  """Recall relevant memories from Episodic memory according to query using multi-vector search across 3 context tags and trajectory summary.
+
+  3 context tags and trajectory summary is embedded separately inside the Memory Controller and searched against its corresponding named vector index. The Memory Controller aggregates similarity scores across 3 context tags and trajectory summary and returns the most relevant memories.
+
+  This function is a wrapper over the Memory Controller API (e.g., POST /memory/recall_tool_level). It retrieves previously stored tool-call experiences related to the given tool.
+
+  Purpose:
+    The goal of recall is to provide the agent with past 
+    experiences (successes, failures, security alerts, rate limits, etc.) related to similar tool calls, so that the agent can adapt 
+    its reasoning before continuing execution.
+
+  Args:
+    toolname (str):
+        The name of the tool whose memory collection should be searched.
+
+    tool_parameters (str):
+        It should be a tool parameters from tool call.
+
+    top-k (int, optional):
+        How many elements to retrieve if there is more than k elements. (default = 5).
+
+    Returns:
+        List:
+            API response containing a list_of_relevant_memories.
+    Example of tool usage:
+      recall_tool_level(toolname="run_cmd", tool_parameters="cat list_of_emails_by_worker.txt")
+"""
+    list_of_param_names, list_params = extract_params(tool_parameters)
+    ind = 0
+    for param_name in list_of_param_names:
+      ind += 1
+      param = list_params[ind]
+      if len(tool_parameter) > PARAM_THRESHOLD:
+        query = summarize_tool_parameter(param_name, param)
+      else:
+        query = tool_parameter
+
+    url = f"{MEMORY_CONTROLLER_URL}/memory/recall_tool_level"
+
+    payload = {
+        "collection": toolname,
+        "tool_parameters": tool_parameters,
+        "top_k": top_k
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        response.raise_for_status()
+
+        data = response.json()
+
+        # Expected format:
+        # {
+        #     "memories": [...]
+        # }
+
+        return data.get("memories", [])
+
+    except requests.exceptions.RequestException as e:
+        print(f"[Tool-Level Recall Error] {e}")
+        return []
+```
+
+Example usage:
+```python
+tool_call = 'run_cmd({"shell":"bash", "command":"cat list_of_emails_by_worker.txt"})'
+
+toolname, params = extract_toolname_and_parameters(tool_call)
+
+memories = recall_tool_level(
+    toolname=toolname,
+    tool_parameters=params
+)
+```
+
 Then, a vector (semantic) search is performed when a new ReAct worker is invoked by the PlanExecutor to retrieve the Python dictionary with the highest semantic similarity to the user prompt. The retrieved entry is then injected into the system prompt with the phrasing: “Here is what you recall about your task: {dict_best_match}”. 
 
 [In_Progress]Or we can retrieve top-k results(or results above some threshold) and then ask llm in order to make the best out of them (combine or summarize?). Also, this step with llm can say which is from time-to-time is only заважає, але має високий similarity (і треба далі думати що треба робити -- піднімати threshold? top-k? видалити з пам'яті -- forgetting?). 
 
 Also, because Episodic Memory is categorized as Explicit and Implicit at the same time it has a tool recall_episodic.
 [In_Progress]
+Here is the string that needs to be added to the System Prompt. It can be appended at the end of the System Prompt or placed before the last section (for example, before the Output Format section), depending on where it fits best.
+```python
+relevant_episodic_memories = f"""You recall similar past interactions with the user. They are sorted by decreasing relevance:
+First:
+    What has worked well: {what_worked1}
+    What to avoid: {what_to_avoid1}
+Second:
+    What has worked well: {what_worked2}
+    What to avoid: {what_to_avoid2}
+Third:
+    What has worked well: {what_worked3}
+    What to avoid: {what_to_avoid3}
+Use these memories as context for your response to the user."""
+```
+
 ```python
 
 def recall_episodic(
@@ -2165,6 +2276,11 @@ MMR (Maximum Marginal Relevance) — for retrieving very similar and contradicto
 
 [Вирівнювання онтологій(термінологій)](https://arxiv.org/abs/2508.08500) між різними підсистемами пам'яті може бути справді траблом, але це вже так чисто ідея для майбутнього я думаю.
 
+Episodic Memory (Thoughts, Meeting):
+  Вот, а отдельный подшаг в этом всем алгоритме может быть, что: "Я сейчас пойду в свою эту базу рефлексий(ЕПІЗОДИЧНА ПАМ'ЯТЬ?????) и найду по схожим задачам не было ли у меня рефлексий?
+
+  А траекторию можно каждую анализировать и какой-то рефлекшн на ней делать. Вопрос, конечно, как потом вспоминать эту зарефлекшенную траекторию, типа когда задача будет действительно типа похожа. Условно я бы, возможно, это как-то собирал в Memory Controller-е в Memory контекст, а потом его еще обрезал LLM-кой, которая, ну примерно как Tool Selector, да? Смотрит на разные куски воспоминаний, смотрит на вот эти вот рефлексии, которые мы там как-то, не знаю, может быть через векторный поиск подоставали или каким-то другим образом. И выбрасывает те, которые ну очевидно логически не подходят сюда. А может быть наоборот — это типа работает как Tool Selector в плане, что она смотрит на все рефлексии в целом и пытается подсказать типа какая может быть полезна. Но тут, наверное, будет непрактично, потому что просто количество этих рефлексий очень быстро там перевалит за сотню, и ты не можешь заставить LLM-ку качественно подумать про 100 одновременно разных типа подходов и дать свой ответ. Поэтому, короче, нужно здесь думать про скейл. Какой-то такой скейл на Tool-level memory сработает, но там задержки будут плохие, поэтому LLM-кой не стоит очищать. Вот, а на рефлекшн траекториях я бы думал в сторону, наверное, какого-то более глупого селектора, более как бы широкого, а затем очищения того, что лишнее попало нам сюда вот таким вот прунингом, где LLM-ка выбирает, что из этого типа будет бесполезным в конкретном случае. Семантически похоже, звучит похоже задача та, для которой у нас есть рефлекшн и текущая, но на самом деле совет там вредный или как минимум не полезный. Это все мысли на ходу, я не думаю, что это прям критическая фича. То есть наш агент сможет и без этого перформить, без рефлекшна. А перформить без семантической памяти он не сможет. Поэтому условно семантическая память мне кажется более приоритетной. 
+
 PRD and separation of concerns concepts of writing a spec
 
 може не тільки string параметри ембедати в Tool-Level Memory, якщо, наприклад, int, то BM25 - чи просто grep.
@@ -2174,6 +2290,8 @@ PRD and separation of concerns concepts of writing a spec
 [Retrieval Youtube Idea](https://chatgpt.com/share/69b5278e-f204-8003-a8cb-d84deca36743):
   пошук кандидатів - ranking (ML модель) -
   ranking (ML model): Relevance, Freshness, Velocity (швидкість набору переглядів), CTR (click-through rate, скільки людей клікнули), Watch time (Якщо люди: довго дивляться не виходять → відео ранжується вище), Personalization(YouTube враховує твій профіль: чи дивишся ти теніс, чи дивився раніше Elina Svitolina, чи дивився матчі Iga Świątek)
+
+- Gemini Embedding 2
 
 10. Маленький insight
 Ти інтуїтивно прийшов до тієї ж архітектури що використовують у:
