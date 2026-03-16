@@ -1,0 +1,44 @@
+@startuml
+title Episodic Memory: Recall & Store Flow
+
+actor ReAct
+participant "Memory Controller" as MC
+database "Vector Store" as VS
+
+activate ReAct
+
+ReAct -> ReAct: System Prompt
+ReAct -> ReAct: User Prompt
+
+ReAct -> MC: recall_episodic(user_input)
+note right of ReAct
+HTTP POST /memory/recall_episodic
+end note
+
+MC -> VS: Episodic Memory: \nSome tricky search using context_tags and trajectory_summary.\nVector search/BM25?
+VS -> MC: top-10 relevant reflections (what_worked, what_to_avoid) 
+
+MC -> MC: LLM: selecting top-3 most relevant out of 10
+
+MC -> VS: top-3 gets reward, least 7 gets penalty 
+
+MC -> ReAct: You are recalling such memories: {relevant_memories}.\nUse these memories as approach and context for completing the task, given by user
+
+ReAct -> ReAct: tool-call: python(sum(2, 2))
+ReAct -> ReAct: tool-output: Sum is 4.
+ReAct -> ReAct: tool-call: run_cmd("{"command": "ls", "path":"/home/oleksandr"}")
+ReAct -> ReAct: tool-output: file.txt, file2.txt
+ReAct --> ReAct: ..........more tool-call & tool-output pairs......
+
+ReAct -> MC: POST structured output schema with fields:\ncontext_tags, trajectory_summary, what_worked, what_to_avoid.
+
+MC -> MC: Inject system fields:\nmemory_id (auto-generated), timestamp\n(Generate embeddings)
+
+MC -> VS: Insert full memory object\n(4 Named Vectors + metadata)
+
+VS -> MC: {success: True}
+
+MC -> ReAct: {success: True}
+
+deactivate ReAct
+@enduml
