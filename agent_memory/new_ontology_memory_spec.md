@@ -17,15 +17,39 @@ Short description: _TODO
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**recall_episodic**]()
-    <br/>Progress: [██████████] 99%; Status: Done  
-    Short description: _TODO
-
   - [**recall_tool_level**]()
     <br/>Progress: [██████████] 99%; Status: Done  
     Short description: _TODO
 
+  - [**recall_episodic**]()
+    <br/>Progress: [██████████] 99%; Status: Done  
+    Short description: _TODO
+
+  - [**recall_semantic**]()
+    <br/>Progress: [██████████] 99%; Status: Done  
+    Short description: _TODO
+
+  - [**recall_procedural**]()
+    <br/>Progress: [██████████] 99%; Status: Done  
+    Short description: _TODO
+
+  - [**recall_user_level**]()
+    <br/>Progress: [██████████] 99%; Status: Done  
+    Short description: _TODO
+
+  - [**recall_priming**]()
+    <br/>Progress: [██████████] 99%; Status: Done  
+    Short description: _TODO
+
 - [**Functions**](#functions)
+  <br/>Progress: [██████████] 99%; Status: Done  
+  Short description: _TODO
+
+  - [**update_tool_level**]()
+  <br/>Progress: [██████████] 99%; Status: Done  
+  Short description: _TODO
+
+  - [**forget_tool_level**]()
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
@@ -37,11 +61,35 @@ Short description: _TODO
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**update_tool_level**]()
+  - [**update_semantic**]()
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**forget_tool_level**]()
+  - [**forget_semantic**]()
+  <br/>Progress: [██████████] 99%; Status: Done  
+  Short description: _TODO
+
+  - [**update_procedural**]()
+  <br/>Progress: [██████████] 99%; Status: Done  
+  Short description: _TODO
+
+  - [**forget_procedural**]()
+  <br/>Progress: [██████████] 99%; Status: Done  
+  Short description: _TODO
+
+  - [**update_user_level**]()
+  <br/>Progress: [██████████] 99%; Status: Done  
+  Short description: _TODO
+
+  - [**forget_user_level**]()
+  <br/>Progress: [██████████] 99%; Status: Done  
+  Short description: _TODO
+
+  - [**update_priming**]()
+  <br/>Progress: [██████████] 99%; Status: Done  
+  Short description: _TODO
+
+  - [**forget_priming**]()
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
