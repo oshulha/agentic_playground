@@ -278,6 +278,7 @@ Short description: _TODO
 ---
 
 [**Other**]()
+<br/>This section won't be in final spec. This is just ideas, resources, valuable info that can used in writing paragraphs above.
 
 - [**What Agent Needs to Remember and What Not**](#what-agent-needs-to-remember-and-what-is-not)
 <br/>Progress: [██░░░░░░░░] 10%; Status: To Do   
@@ -322,8 +323,6 @@ Mechanisms for resolving conflicting memories and determining which information 
 <br/>Experimental directions such as MMR, improved memory controller logic, and hybrid retrieval systems.
 
 ---
-
-
 
 # Brains(ReAct) Python harness
 
