@@ -7,6 +7,8 @@ Memory subsystem is the information storage and retrieval part of our AI Agent. 
 
 # Table Of Contents
 
+[**Overall Sequence Diagram**]()
+
 [**Brains(ReAct) Python harness**](#brainsreact-python-harness)
 <br/>Progress: [██████████] 99%; Status: Done  
 Short description: _TODO
@@ -46,7 +48,7 @@ Short description: _TODO
 - [**Mechanisms**](#mechanisms)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
-  
+
   - [**Commit Mechanism**]()
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
@@ -56,134 +58,220 @@ Short description: _TODO
   Short description: _TODO
 
 [**Memory Controller (code-only microservice)**](#memory-controller-code-only-microservice)
+<br/>Progress: [██░░░░░░░░] 20%; Status: In Progress  
+Memory Controller is a stateless microservice responsible for managing the lifecycle of agent memories. It exposes an HTTP API and serves as the abstraction layer between the cognitive system (ReAct/Brains) and persistent memory storage systems.
+
 - [**Explicit & Implicit Memory**](#explicit-memory-conscious--implicit-memory-subconscious)
+<br/>Progress: [██████████] 99%; Status: Done  
+Division of the memory subsystem into two major categories: Explicit and Implicit. Explains how they differ, which memory types belong to each category, and discusses their trade-offs in latency, architectural separation, and update mechanisms.
 
-`Progress: [██████████] 99%`; `Status: Done`
-
-Division of the memory subsystem into two major categories: Explicit and Implicit.  
-Explains how they differ, which memory types belong to each category, and discusses their trade-offs in latency, architectural separation, and update mechanisms.
-
-[**Working Memory**](#working-memory)
-
-`Progress: [██████████] 99%`; `Status: Done By OpenAI`
-
+- [**Working Memory**](#working-memory)
+<br/>Progress: [██████████] 99%; Status: Done By OpenAI   
 **This paragraph is provided for context only;** it does not contain any implementation ideas at the moment. 
 Temporary, active workspace of the agent. Maintains current interaction state, conversation history, and short-term reasoning context.
 
-
-[**Memory Controller**](#memory-controller)
-
-`Progress: [██░░░░░░░░] 20%`; `Status: In Progress` 
-
-Memory Controller is a stateless microservice responsible for managing the lifecycle of agent memories. It exposes an HTTP API and serves as the abstraction layer between the cognitive system (ReAct/Brains) and persistent memory storage systems.
-
-[**Vector Store**](#vector-store)
-
-`Progress: [█████░░░░░] 90?%`; `Status: In Progress` 
-
-Vector Store is a paragraph, which tells about vector store and its responsibilities for different memory subsystems (Tool-Level Memory, Episodic Memory).
-
-[**Tool-Level Memory**](#tool-level-memory)
-
-`Progress: [█████████░] 90%`; `Status: Done` 
-
+- [**Tool-Level Memory**](#tool-level-memory)
+<br/>Progress: [█████████░] 90%; Status: Done   
 Stores structured reflections about individual tool executions.
-Captures inductive thoughts extracted from each (tool_call, tool_output) pair, representing relations such as (subject, relation, object).
-Organized per tool (separate collection per tool name) and used to improve future tool selection, parameterization, and execution reliability through recall, merging, and contradiction resolution mechanisms. (10% - PRD? Forgetting? other questions..)
+(10% - PRD? Forgetting? other questions..)
 
-[**Episodic Memory**](#episodic-memory)
+  - [**Sequence Diagram**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
 
-`Progress: [███░░░░░░░] 30%`; `Status: In Progress`
+  - [**/recall_tool_level**]()
+  <br/>Progress: [█████████░] 90%; Status: Done   
+  Short description: _TODO
 
-Stores past experiences and task executions.  
-Includes structured reflections such as `what_worked`, `what_to_avoid`, summaries, and context tags.
+  - [**/update_tool_level**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
 
-[**Semantic Memory**](#semantic-memory)
+  - [**/forget_tool_level**]()
+  <br/>Progress: [█████████░] 90%; Status: Done   
+  Short description: _TODO
 
-`Progress: [███░░░░░░░] 30%`; `Status: In Progress`
+- [**Episodic Memory**](#episodic-memory)
+<br/>Progress: [███░░░░░░░] 30%; Status: In Progress   
+Stores past experiences and task executions. Includes structured reflections such as `what_worked`, `what_to_avoid`, summaries, and context tags.
 
-Represents structured factual knowledge and concepts.  
-Implemented through RAG-style retrieval from vector databases or knowledge sources.
+  - [**Sequence Diagram**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
 
-[**Procedural Memory**](#procedural-memory)
+  - [**/recall_episodic**]()
+  <br/>Progress: [█████████░] 90%; Status: Done   
+  Short description: _TODO
 
-`Progress: [██░░░░░░░░] 20%`; `Status: Done(v1)`
+  - [**/update_episodic**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
 
-Encodes behavioral rules and execution strategies.  
-Derived from episodic reflections and stored as concise operational instructions.
+  - [**/forget_episodic**]()
+  <br/>Progress: [█████████░] 90%; Status: Done   
+  Short description: _TODO
 
-[**Autobiographical / User-Personalized Memory**](#autobiographical-memory----user-personalized-memory)
+- [**Semantic Memory**](#semantic-memory)
+<br/>Progress: [███░░░░░░░] 30%; Status: In Progress   
+Represents structured factual knowledge and concepts. Implemented through RAG-style retrieval from vector databases or knowledge sources.
 
-`Progress: [█░░░░░░░░░] 10%`; `Status: To Do`
+  - [**Sequence Diagram**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
 
+  - [**/recall_semantic**]()
+  <br/>Progress: [█████████░] 90%; Status: Done   
+  Short description: _TODO
+
+  - [**/update_semantic**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
+
+  - [**/forget_semantic**]()
+  <br/>Progress: [█████████░] 90%; Status: Done   
+  Short description: _TODO
+
+- [**Procedural Memory**](#procedural-memory)
+<br/>Progress: [██░░░░░░░░] 20%; Status: Done(v1)   
+Encodes behavioral rules and execution strategies. Derived from episodic reflections and stored as concise operational instructions.
+
+  - [**Sequence Diagram**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
+
+  - [**/recall_procedural**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO
+
+  - [**/update_procedural**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
+
+  - [**/forget_procedural**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO
+
+- [**Autobiographical / User-Personalized Memory**](#autobiographical-memory----user-personalized-memory)
+<br/>Progress: [█░░░░░░░░░] 10%; Status: To Do   
 Specialized form of episodic memory focused on user-specific patterns, preferences, and long-term identity modeling.
 
-[**What Agent Needs to Remember and What Not**](#what-agent-needs-to-remember-and-what-is-not)
+  - [**Sequence Diagram**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
 
-`Progress: [██░░░░░░░░] 10%`; `Status: To Do`
+  - [**/recall_user_level**]()
+  <br/>Progress: [█████████░] 90%; Status: Done   
+  Short description: _TODO
 
-Defines criteria for deciding which information is memory-worthy.  
-Includes discussion about relevance to task, user intent, and long-term utility.
+  - [**/update_user_level**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
 
-[**Forgetting**](#forgeting)
+  - [**/forget_user_level**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO
 
-`Progress: [█░░░░░░░░░] 10%`; `Status: In Progress`
-
-Selective forgetting strategies based on time decay, usage frequency, contradiction handling, and summarization-based replacement.
-
-[**Replacing (Contradiction Resolution)**](#replacing)
-
-`Progress: [██░░░░░░░░] 20%`; `Status: To Do`
-
-Mechanisms for resolving conflicting memories and determining which information should be treated as authoritative.
-
-[**Retrieving Methods (Variants)**](#retrieving-methods-how-to-retrieve----variants-to-retrieve)
-
-Overview of different retrieval strategies beyond standard vector search.
-
-[RLM](#rlm)
-
-Recursive Language Model-based retrieval strategy with deeper reasoning loops.
-
-[Single-vector Search Improvement](#single-vector-search-improvement)
-
-Improvements over naive embedding search, including agentic query refinement.
-
-[DRIFT Search and GraphRAG (Fav)](#drift-search-and-graphrag-fav)
-
-Graph-enhanced retrieval strategies inspired by hierarchical and community-based reasoning.
-
-[File System](#file-system)
-
-File-based memory storage approach aligned with LLM pretraining priors.
-
-[LSH](#lsh)
-
-Two-stage approximate retrieval: LSH grouping followed by similarity search.
-
-[Multi-vector Search](#multi-vector-search)
-
-Token-level or multi-representation matching approach with higher precision but higher latency.
-
-[**Priming & Classical Conditioning & Non-Associative Memory**](#priming--classical-conditioning--non-associative-memory)
-
-`Progress: [█░░░░░░░░░] 10%`; `Status: To Do`
-
+- [**Priming & Classical Conditioning & Non-Associative Memory**](#priming--classical-conditioning--non-associative-memory)
+<br/>Progress: [█░░░░░░░░░] 10%; Status: To Do   
 Exploration of cognitive-inspired mechanisms and whether they are practically needed in agent systems.
 
-[**Benchmarks for Memory**](#benchmarks-for-memory)
+  - [**Sequence Diagram**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
 
-`Progress: [█░░░░░░░░░] 10%`; `Status: To Do`
+  - [**/recall_priming**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO
 
-Evaluation strategies to measure effectiveness of different memory types.
+  - [**/update_priming**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
 
-[**Questions To Answer Still**](#questions-to-answer-still)
+  - [**/forget_priming**]()
+  <br/>Progress: [█████████░] 90%; Status: Done   
+  Short description: _TODO
 
-Open architectural questions regarding shared memory between PlanExecutor and ReAct workers.
+[**Initialisation of DBs**]()
+<br/>Progress: [██░░░░░░░░] 20%; Status: In Progress   
+Short description: _TODO
 
-[**Ideas**](#ideas)
+- [**Vector Store**](#vector-store)
+<br/>Progress: [█████░░░░░] 90?%; Status: In Progress   
+Vector Store is a paragraph, which tells about vector store and its responsibilities for different memory subsystems (Tool-Level Memory, Episodic Memory).
 
-Experimental directions such as MMR, improved memory controller logic, and hybrid retrieval systems.
+  - [**Tool-level Memory config**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO   
+
+  - [**Episodic Memory config**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO
+
+  - [**?Procedural Memory config**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO
+
+  - [**?Autobiographical / User-Personalized Memory config**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO
+
+  - [**?Priming & Classical Conditioning & Non-Associative Memory config**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO
+
+- [**Graph Store**](#vector-store)
+<br/>Progress: [█████░░░░░] 90?%; Status: In Progress   
+Short description: _TODO
+
+  - [**Semantic Memory config**]()
+  <br/>Progress: [█████████░] 90%; Status: Done  
+  Short description: _TODO  
+
+---
+
+[**Other**]()
+
+- [**What Agent Needs to Remember and What Not**](#what-agent-needs-to-remember-and-what-is-not)
+<br/>Progress: [██░░░░░░░░] 10%; Status: To Do   
+Defines criteria for deciding which information is memory-worthy. Includes discussion about relevance to task, user intent, and long-term utility.
+
+- [**Forgetting**](#forgeting)
+<br/>Progress: [██░░░░░░░░] 10%; Status: In Progress   
+Selective forgetting strategies based on time decay, usage frequency, contradiction handling, and summarization-based replacement.
+
+- [**Replacing (Contradiction Resolution)**](#replacing)
+<br/>Progress: [██░░░░░░░░] 20%; Status: To Do   
+Mechanisms for resolving conflicting memories and determining which information should be treated as authoritative.
+
+- [**Retrieving Methods (Variants)**](#retrieving-methods-how-to-retrieve----variants-to-retrieve)
+<br/>Overview of different retrieval strategies beyond standard vector search.
+
+  - [RLM](#rlm)
+  <br/>Recursive Language Model-based retrieval strategy with deeper reasoning loops.
+
+  - [Single-vector Search Improvement](#single-vector-search-improvement)
+  <br/>Improvements over naive embedding search, including agentic query refinement.
+
+  - [DRIFT Search and GraphRAG (Fav)](#drift-search-and-graphrag-fav)
+  <br/>Graph-enhanced retrieval strategies inspired by hierarchical and community-based reasoning.
+
+  - [File System](#file-system)
+  <br/>File-based memory storage approach aligned with LLM pretraining priors.
+
+  - [LSH](#lsh)
+  <br/>Two-stage approximate retrieval: LSH grouping followed by similarity search.
+
+  - [Multi-vector Search](#multi-vector-search)
+  <br/>Token-level or multi-representation matching approach with higher precision but higher latency.
+
+- [**Benchmarks for Memory**](#benchmarks-for-memory)
+<br/>Evaluation strategies to measure effectiveness of different memory types.
+
+- [**Questions To Answer Still**](#questions-to-answer-still)
+<br/>Open architectural questions regarding shared memory between PlanExecutor and ReAct workers.
+
+- [**Ideas**](#ideas)
+<br/>Experimental directions such as MMR, improved memory controller logic, and hybrid retrieval systems.
 
 ---
 
