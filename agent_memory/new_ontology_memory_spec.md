@@ -40,11 +40,11 @@ Stores structured reflections about individual tool executions.
   Short description: _TODO   
 
   - [**/forget_tool_level**](#forget_tool_level)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [░░░░░░░░░░] 1%; Status: None   
   Short description: _TODO
 
   - [**/rewrite_tool_level**](#rewrite_tool_level)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [████████░░] 80%; Status: Done   
   Short description: _TODO
 
 - [**Episodic Memory**](#episodic-memory)
@@ -52,107 +52,107 @@ Stores structured reflections about individual tool executions.
 Stores past experiences and task executions. Includes structured reflections such as `what_worked`, `what_to_avoid`, summaries, and context tags.
 
   - [**Sequence Diagram**](#sequence-diagram-1)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [████████░░] 80%; Status: Done (small changes will be needed)  
   Short description: _TODO   
 
   - [**/recall_episodic**](#recall_episodic)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [█████░░░░░] 50%; Status: In Progress   
   Short description: _TODO
 
   - [**/update_episodic**](#update_episodic)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [█████░░░░░] 50%; Status: In Progress  
   Short description: _TODO   
 
   - [**/forget_episodic**](#forget_episodic)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None   
   Short description: _TODO
 
 - [**Semantic Memory**](#semantic-memory)
-<br/>Progress: [███░░░░░░░] 30%; Status: In Progress   
+<br/>Progress: [█░░░░░░░░░] 15%; Status: In Progress   
 Represents structured factual knowledge and concepts. Implemented through RAG-style retrieval from vector databases or knowledge sources.
 
   - [**Sequence Diagram**](#sequence-diagram-2)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO   
 
   - [**/recall_semantic**](#recall_semantic)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None   
   Short description: _TODO
 
   - [**/update_semantic**](#update_semantic)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO   
 
   - [**/forget_semantic**](#forget_semantic)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None   
   Short description: _TODO
 
 - [**Procedural Memory**](#procedural-memory)
-<br/>Progress: [██░░░░░░░░] 20%; Status: Done(v1)   
+<br/>Progress: [█░░░░░░░░░] 10%; Status: Done(v1)   
 Encodes behavioral rules and execution strategies. Derived from episodic reflections and stored as concise operational instructions.
 
   - [**Sequence Diagram**](#sequence-diagram-3)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO   
 
   - [**/recall_procedural**](#recall_procedural)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**/update_procedural**](#update_procedural)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO   
 
   - [**/forget_procedural**](#forget_procedural)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
 - [**Autobiographical / User-Personalized Memory**](#autobiographical-memory----user-personalized-memory)
-<br/>Progress: [█░░░░░░░░░] 10%; Status: To Do   
+<br/>Progress: [█░░░░░░░░░] 5%; Status: To Do   
 Specialized form of episodic memory focused on user-specific patterns, preferences, and long-term identity modeling.
 
   - [**Sequence Diagram**](#sequence-diagram-4)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO   
 
   - [**/recall_user_level**](#recall_user_level)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None   
   Short description: _TODO
 
   - [**/update_user_level**](#update_user_level)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO   
 
   - [**/forget_user_level**](#forget_user_level)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
 - [**Priming & Classical Conditioning & Non-Associative Memory**](#priming--classical-conditioning--non-associative-memory)
-<br/>Progress: [█░░░░░░░░░] 10%; Status: To Do   
+<br/>Progress: [█░░░░░░░░░] 5%; Status: To Do   
 Exploration of cognitive-inspired mechanisms and whether they are practically needed in agent systems.
 
   - [**Sequence Diagram**](#sequence-diagram-5)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO   
 
   - [**/recall_priming**](#recall_priming)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**/update_priming**](#update_priming)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO   
 
   - [**/forget_priming**](#forget_priming)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None   
   Short description: _TODO
 
 [**Brains(ReAct) Python harness**](#brainsreact-python-harness)
-<br/>Progress: [██████████] 99%; Status: Done  
+<br/>Progress: [█░░░░░░░░] 10-15%; Status: Done  
 Short description: _TODO
 
 - [**Tools**](#tools)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [██░░░░░░░░] 20%; Status: Done  
   Short description: _TODO
 
   - [**recall_tool_level**](#recall_tool_level-1)
@@ -160,27 +160,27 @@ Short description: _TODO
     Short description: _TODO
 
   - [**recall_episodic**](#recall_episodic-1)
-    <br/>Progress: [██████████] 99%; Status: Done  
+    <br/>Progress: [███░░░░░░░] 30%; Status: Started  
     Short description: _TODO
 
   - [**recall_semantic**](#recall_semantic-1)
-    <br/>Progress: [██████████] 99%; Status: Done  
+    <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
     Short description: _TODO
 
   - [**recall_procedural**](#recall_procedural-1)
-    <br/>Progress: [██████████] 99%; Status: Done  
+    <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
     Short description: _TODO
 
   - [**recall_user_level**](#recall_user_level-1)
-    <br/>Progress: [██████████] 99%; Status: Done  
+    <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
     Short description: _TODO
 
   - [**recall_priming**](#recall_priming-1)
-    <br/>Progress: [██████████] 99%; Status: Done  
+    <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
     Short description: _TODO
 
 - [**Functions**](#functions)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [██░░░░░░░░] 20%; Status: Done  
   Short description: _TODO
 
   - [**update_tool_level**](#update_tool_level-1)
@@ -188,7 +188,7 @@ Short description: _TODO
   Short description: _TODO
 
   - [**forget_tool_level**](#forget_tool_level-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**update_episodic**](#update_episodic-1)
@@ -196,39 +196,39 @@ Short description: _TODO
   Short description: _TODO
 
   - [**forget_episodic**](#forget_episodic-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [█░░░░░░░░░] 10%; Status: None  
   Short description: _TODO
 
   - [**update_semantic**](#update_semantic-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**forget_semantic**](#forget_semantic-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**update_procedural**](#update_procedural-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**forget_procedural**](#forget_procedural-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**update_user_level**](#update_user_level-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**forget_user_level**](#forget_user_level-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**update_priming**](#update_priming-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**forget_priming**](#forget_priming-1)
-  <br/>Progress: [██████████] 99%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
 - [**Mechanisms**](#mechanisms)
@@ -248,7 +248,7 @@ Short description: _TODO
 Short description: _TODO
 
 - [**Vector Store**](#vector-store)
-<br/>Progress: [█████░░░░░] 90?%; Status: In Progress   
+<br/>Progress: [███░░░░░░░] 30?%; Status: In Progress   
 Vector Store is a paragraph, which tells about vector store and its responsibilities for different memory subsystems (Tool-Level Memory, Episodic Memory).
 
   - [**Tool-level Memory config**](#tool-level-memory-config)
@@ -256,27 +256,27 @@ Vector Store is a paragraph, which tells about vector store and its responsibili
   Short description: _TODO   
 
   - [**Episodic Memory config**](#episodic-memory-config)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [███░░░░░░░] 30%; Status: Done  
   Short description: _TODO
 
   - [**?Procedural Memory config**](#procedural-memory-config)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**?Autobiographical / User-Personalized Memory config**](#autobiographical--user-personalized-memory-config)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
   - [**?Priming & Classical Conditioning & Non-Associative Memory config**](#priming--classical-conditioning--non-associative-memory-config)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO
 
 - [**Graph Store**](#vector-store)
-<br/>Progress: [█████░░░░░] 90?%; Status: In Progress   
+<br/>Progress: [░░░░░░░░░░] 0%; Status: None   
 Short description: _TODO
 
   - [**Semantic Memory config**](#semantic-memory-config)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
   Short description: _TODO  
 
 ---
@@ -285,11 +285,11 @@ Short description: _TODO
 <br/>This section won't be in final spec. This is just ideas, resources, valuable info that can used in writing paragraphs above.
 
 - [**What Agent Needs to Remember and What Not**](#what-agent-needs-to-remember-and-what-is-not)
-<br/>Progress: [██░░░░░░░░] 10%; Status: To Do   
+<br/>Progress: [█░░░░░░░░░] 10%; Status: To Do   
 Defines criteria for deciding which information is memory-worthy. Includes discussion about relevance to task, user intent, and long-term utility.
 
 - [**Forgetting**](#forgeting)
-<br/>Progress: [██░░░░░░░░] 10%; Status: In Progress   
+<br/>Progress: [█░░░░░░░░░] 10%; Status: In Progress   
 Selective forgetting strategies based on time decay, usage frequency, contradiction handling, and summarization-based replacement.
 
 - [**Replacing (Contradiction Resolution)**](#replacing)
