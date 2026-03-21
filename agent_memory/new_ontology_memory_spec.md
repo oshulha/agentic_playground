@@ -742,7 +742,287 @@ Failure:
 
 ### /rewrite_tool_level
 
+After each Post-Think stage, the system performs a Tool-Level Memory Rewriting process. 
+The goal of this process is to improve memory quality by removing redundancy, consolidating similar observations, and resolving contradictions that may arise as the agent gains more experience.
 
+The system first identifies all Tool-Level Memory collections that were updated during the Post-Think stage.
+For each affected collection, an LLM-based rewriting pipeline is executed.
+
+The rewriting pipeline consists of two sequential stages:
+- Memory Merging
+- Contradiction Resolution
+
+Both stages are implemented using LLM reasoning and operate on batches of recently updated memories.
+
+**Execution Model**
+
+The rewriting process is currently implemented as a two-step LLM pipeline:
+1. Memory Merging LLM pass
+2. Contradiction Resolution LLM pass
+
+This separation improves reasoning quality because:
+- the first pass focuses purely on deduplication
+- the second pass focuses on semantic conflict analysis
+
+I see implementation like this:
+```python
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+client = OpenAI()
+
+set_of_memories = [
+{
+"memory_id": 1,
+"timestamp": "06.03.2026 14:10",
+"react_id": 1,
+"tool_call": "run_cmd(path: /"/home/oleksandr/", cmd: /"cat config.yaml/")",
+"tool_output": "Permission denied",
+"what_to_avoid": "Trying to read config.yaml without sudo access.",
+"what_worked": "—"
+},
+{
+"memory_id": 2,
+"timestamp": "06.03.2026 15:00"
+"react_id": 1,
+"tool_call": "run_cmd(path: /"/home/oleksandr/", cmd: /"ls/")"
+"tool_output": "input.txt, intermediate.txt"
+"what_to_avoid": "Checking result files while the processing script is still running."
+"what_worked": "—"
+},
+{
+"memory_id": 3,
+"timestamp": "06.03.2026 15:05"
+"react_id": 1,
+"tool_call": "run_cmd(path: /"/home/oleksandr/", cmd: /"ls/")",
+"tool_output": "input.txt, intermediate.txt",
+"what_to_avoid": "Attempting to verify final results before the program has finished execution.",
+"what_worked": "—"
+}
+{
+"memory_id": 4,
+"timestamp": "06.03.2026 15:09",
+"react_id": 1,
+"tool_call": run_cmd(path: "/home/oleksandr", cmd: "ls")
+"tool_output": "input.txt, intermediate.txt, output.txt, config.yaml"
+"what_to_avoid": "—",
+"what_worked": "Checking the directory after the background process finished reveals the generated output file."
+}, 
+{
+"memory_id": 5,
+"timestamp": "06.03.2026 15:11",
+"react_id": 1,
+"tool_call": "run_cmd(path: /"/home/oleksandr/", cmd: /"cat config.yaml/")"
+"tool_output": "database_url: postgres://localhost...",
+"what_to_avoid": "—",
+"what_worked": "Reading config.yaml directly using cat successfully returned configuration data after execution of background script."
+}
+]
+
+prompt_merge = f"""
+You are given a group of memories describing tool usage events.
+
+Your task is to merge memories that describe the SAME situation or observation.
+
+A memory has the following structure:
+- memory_id
+- timestamp
+- tool_call
+- tool_output
+- what_to_avoid
+- what_worked
+
+MERGING RULES
+
+1. Merge memories if they describe the same tool call and the same situation
+   but are written slightly differently.
+
+2. When merging:
+   - Keep the memory with the MOST RECENT timestamp as the base memory.
+   - Transfer useful information from older memories into the base memory.
+
+3. If multiple memories contain similar "what_to_avoid" advice,
+   merge them into a single clearer sentence.
+
+4. If multiple memories contain similar "what_worked" advice,
+   merge them into one concise explanation.
+
+5. Do NOT merge memories if they clearly describe different situations,
+   different tool calls, or different environments.
+
+6. The final merged memory must keep the structure:
+memory_id
+timestamp
+tool_call
+tool_output
+what_to_avoid
+what_worked
+
+7. If several memories describe the same event progression,
+   prefer the most informative tool_output (usually the latest one).
+
+Example
+
+Input memories:
+
+memory_id: 2
+tool_call: run_cmd(path="/home/oleksandr", cmd="ls")
+tool_output: "input.txt, intermediate.txt"
+what_to_avoid: Checking result files while the processing script is still running.
+
+memory_id: 3
+tool_call: run_cmd(path="/home/oleksandr", cmd="ls")
+tool_output: "input.txt, intermediate.txt"
+what_to_avoid: Attempting to verify final results before the program has finished execution.
+
+memory_id: 4
+tool_call: run_cmd(path="/home/oleksandr", cmd="ls")
+tool_output: "input.txt, intermediate.txt, output.txt, config.yaml"
+what_worked: Checking the directory after the background process finished reveals the generated output file.
+
+Output:
+
+memory_id: 4
+tool_call: run_cmd(path="/home/oleksandr", cmd="ls")
+tool_output: "input.txt, intermediate.txt, output.txt, config.yaml"
+what_to_avoid: Checking result files while the processing script is still running.
+what_worked: Checking the directory after the background process finished reveals the generated output file.
+
+Now merge the following memories:
+
+Input:
+{set_of_memories}
+"""
+
+# ---- First LLM call ----
+response1 = client.responses.create(
+    model="gpt-5-nano",
+    input=prompt_merge
+)
+
+set_of_memories = response1.output_text
+print("\nFirst response:\n", set_of_memories)
+
+prompt_resolve_conflicts = f"""
+You are given several memories describing tool executions and observations.
+
+Some memories may contradict each other because:
+- the environment changed over time
+- earlier observations were incomplete
+- conditions differed between executions
+
+Your task is to detect and resolve contradictions between memories.
+
+IMPORTANT:
+You are NOT required to produce only one memory.
+You may return multiple memories.
+
+GENERAL RULE
+
+Only merge memories if they describe the SAME tool_call and contain
+contradictory observations about the result or conclusions.
+
+If memories describe different situations or different tool calls,
+keep them as separate memories.
+
+Each memory has the following structure:
+
+memory_id
+timestamp
+tool_call
+tool_output
+what_to_avoid
+what_worked
+
+CONFLICT RESOLUTION RULES
+
+1. Detect groups of memories that refer to the SAME tool_call.
+2. If there is NO contradiction between them, keep them unchanged.
+3. If there IS a contradiction:
+   a) Prefer the memory with the MOST RECENT timestamp
+      as the base memory, because it reflects the most
+      up-to-date state of the environment.
+   b) Earlier memories should NOT be discarded if they contain
+      useful lessons.
+   c) Convert earlier conclusions into contextual advice inside:
+      - "what_to_avoid"
+      - "what_worked"
+4. If an earlier failure later becomes a success,
+   reinterpret the earlier failure as a contextual limitation.
+Example:
+- failure before a process finished
+- success after the process finished
+
+5. When merging advice:
+   - move incorrect or outdated conclusions into a contextualized warning inside "what_to_avoid"
+   - keep successful strategies in "what_worked"
+
+6. Always preserve the memory structure:
+
+memory_id
+timestamp
+tool_call
+tool_output
+what_to_avoid
+what_worked
+
+7. The output may contain:
+   - the same number of memories
+   - fewer memories if some were merged
+
+8. Do NOT remove useful information.
+   Only resolve contradictions.
+
+Example
+
+Input memories:
+
+memory_id: 1
+timestamp: 06.03.2026 14:10
+tool_call: run_cmd(path="/home/oleksandr", cmd="cat config.yaml")
+tool_output: "Permission denied"
+what_to_avoid: Trying to read config.yaml without sudo access.
+
+memory_id: 5
+timestamp: 06.03.2026 15:11
+tool_call: run_cmd(path="/home/oleksandr", cmd="cat config.yaml")
+tool_output: "database_url: postgres://localhost..."
+what_worked: Reading config.yaml directly using cat successfully returned configuration data after execution of background script.
+
+Output:
+
+memory_id: 5
+timestamp: 06.03.2026 15:11
+tool_call: run_cmd(path="/home/oleksandr", cmd="cat config.yaml")
+tool_output: "database_url: postgres://localhost..."
+what_to_avoid: Trying to read config.yaml before or during execution of the background script.
+what_worked: Reading config.yaml directly using cat successfully returned configuration data after execution of the background script.
+
+Now resolve contradictions in the following memories:
+
+Input:
+{set_of_memories}
+"""
+
+# ---- Second LLM call ----
+response2 = client.responses.create(
+    model="gpt-5-nano",
+    input=prompt_resolve_conflicts
+)
+
+result2 = response2.output_text
+print("\nSecond response:\n", result2)
+```
+
+**Scalability Considerations**
+
+The described rewriting approach assumes that the number of memories processed in a single batch is moderate.
+
+(Звісно, цей підхід працює якщо кількість елементів не захмарна!!! Інакше Шо Лі Доведеться Відмовитись Від цього Механізму???)
+Що краще спочатку робити Merging, Rewriting? Чи дати це в одному промпті?
+Або ми (можемо) будемо зберігати, що ми в основному брали з векторної бази даних і кому повертали, щоб робити аналіз після РеАкта, а не під час. Або якось робити паралельно форгеттінг.
+Датування (Володимир казав, що є 3 варіанти забування міт 25.02, як він бачить працюючих)
 
 ## Episodic Memory
 
@@ -1346,7 +1626,219 @@ memories = recall_tool_level(
 )
 ```
 
-### recall_episodic - [] - (Types Of Memory - Episodic Memory - How To Retrieve)
+### recall_episodic
+
+When a new ReAct worker is invoked by the PlanExecutor, the `recall_episodic` function is called with `query` parameter equal to user input, which calls Memory Controller over `/memory/recall_episodic`. `recall_episodic` returns a list of relevant memories retrieved from the Vector Store(Episodic Memory collection). After all, relevant memories will be inserted in System Prompt of this ReAct worker. 
+
+Since Episodic Memory is considered both explicit and implicit, the `recall_episodic` function is also exposed to ReAct as a tool. This allows ReAct to explicitly query its own Episodic Memory when necessary. Unlike the previous architecture that relied on a **single combined embedding**, the current system performs **multi-vector retrieval across 3 context tags and trajectory summary**.
+
+3 context tags and trajectory summary is embedded independently and searched against its corresponding vector index in the Vector Store(Episodic Memory). Similarity scores from multiple searches are then aggregated using a weighted scoring function.
+
+Here is how approximately I see implementation of `recall_episodic()`:
+```python
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+import requests
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
+
+# Recall Tool-Level Memory Mechanism
+MEMORY_CONTROLLER_URL = os.getenv("MEMORY_CONTROLLER_URL")
+def recall_episodic(
+    query: str,
+    top_k: int = 5
+) -> list:
+  """Recall relevant memories from Episodic memory according to query using multi-vector search across 3 context tags and trajectory summary.
+
+  3 context tags and trajectory summary is embedded separately inside the Memory Controller and searched against its corresponding named vector index. The Memory Controller aggregates similarity scores across 3 context tags and trajectory summary and returns the most relevant memories.
+
+  This function is a wrapper over the Memory Controller API (e.g., POST /memory/recall_tool_level). It retrieves previously stored tool-call experiences related to the given tool.
+
+  Purpose:
+    The goal of recall is to provide the agent with past 
+    experiences (successes, failures, security alerts, rate limits, etc.) related to similar tool calls, so that the agent can adapt 
+    its reasoning before continuing execution.
+
+  Args:
+    toolname (str):
+        The name of the tool whose memory collection should be searched.
+
+    tool_parameters (str):
+        It should be a tool parameters from tool call.
+
+    top-k (int, optional):
+        How many elements to retrieve if there is more than k elements. (default = 5).
+
+    Returns:
+        List:
+            API response containing a list_of_relevant_memories.
+    Example of tool usage:
+      recall_tool_level(toolname="run_cmd", tool_parameters="cat list_of_emails_by_worker.txt")
+"""
+    list_of_param_names, list_params = extract_params(tool_parameters)
+    ind = 0
+    for param_name in list_of_param_names:
+      ind += 1
+      param = list_params[ind]
+      if len(tool_parameter) > PARAM_THRESHOLD:
+        query = summarize_tool_parameter(param_name, param)
+      else:
+        query = tool_parameter
+
+    url = f"{MEMORY_CONTROLLER_URL}/memory/recall_tool_level"
+
+    payload = {
+        "collection": toolname,
+        "tool_parameters": tool_parameters,
+        "top_k": top_k
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        response.raise_for_status()
+
+        data = response.json()
+
+        # Expected format:
+        # {
+        #     "memories": [...]
+        # }
+
+        return data.get("memories", [])
+
+    except requests.exceptions.RequestException as e:
+        print(f"[Tool-Level Recall Error] {e}")
+        return []
+```
+
+Example usage:
+```python
+tool_call = 'run_cmd({"shell":"bash", "command":"cat list_of_emails_by_worker.txt"})'
+
+toolname, params = extract_toolname_and_parameters(tool_call)
+
+memories = recall_tool_level(
+    toolname=toolname,
+    tool_parameters=params
+)
+```
+
+Then, a vector (semantic) search is performed when a new ReAct worker is invoked by the PlanExecutor to retrieve the Python dictionary with the highest semantic similarity to the user prompt. The retrieved entry is then injected into the system prompt with the phrasing: “Here is what you recall about your task: {dict_best_match}”. 
+
+[In_Progress]Or we can retrieve top-k results(or results above some threshold) and then ask llm in order to make the best out of them (combine or summarize?). Also, this step with llm can say which is from time-to-time is only заважає, але має високий similarity (і треба далі думати що треба робити -- піднімати threshold? top-k? видалити з пам'яті -- forgetting?). 
+
+Also, because Episodic Memory is categorized as Explicit and Implicit at the same time it has a tool recall_episodic.
+[In_Progress]
+Here is the string that needs to be added to the System Prompt. It can be appended at the end of the System Prompt or placed before the last section (for example, before the Output Format section), depending on where it fits best.
+```python
+relevant_episodic_memories = f"""You recall similar past interactions with the user. They are sorted by decreasing relevance:
+First:
+    What has worked well: {what_worked1}
+    What to avoid: {what_to_avoid1}
+Second:
+    What has worked well: {what_worked2}
+    What to avoid: {what_to_avoid2}
+Third:
+    What has worked well: {what_worked3}
+    What to avoid: {what_to_avoid3}
+Use these memories as context for your response to the user."""
+```
+
+```python
+
+def recall_episodic(
+    query: str,
+    alpha: int
+) -> dict:
+  """Recall relevant memories from Episodic memory for explicit query.
+
+Recommended scenarios:
+- When the agent needs to retrieve factual or conceptual knowledge...
+
+Best practices:
+- Use this tool to ...
+
+  Args:
+    query: The search query.
+    alpha: (Optional) Defaults to 0.7. This means the search result is influenced by 70% vector similarity and 30% BM25 ranking.
+  """
+```
+
+### How To Forget???[To_Do]
+
+---
+[To_Do][This approach can be improved by reading `Reflexion` paper, in particular by considering Evaluator/Critic role. 
+
+[To_Do]Also, episodic memory can be trigerred on some words like "always do like this", "good workflow to make this" and save it what user want to mention. That's examples I saw in [Introducing /remember](https://www.youtube.com/watch?v=6XXH5XecVp4&pp=ygUZL3JlbWVtYmVyIGxhbmdjaGFpbiB2aWRlbw%3D%3D) video from langchain. Their agent saves such replics to agents.md. I hope their Deep Agent is open-source.]
+
+### Examples
+**Example**
+HUMAN: Hello!
+
+AI Agent: Hello! How can I assist you today?
+
+HUMAN: What's my name
+
+AI Agent: I'm sorry, but I don't have access to personal information, so I don't know your name.
+
+HUMAN: Oh my name is Adam!
+
+AI Agent: Nice to meet you, Adam! How can I help you today?
+
+HUMAN: What's my name?
+
+AI Agent: Your name is Adam.
+
+Stage of Reflection After Conversation...
+Result of Reflection:
+{
+'context_tags': ['personal_information', 'name_recollection'], 
+'conversation_summary': "Recalled the user's name after being informed in the conversation.", 
+'what_worked': "Storing and recalling the user's name effectively within the session.", 
+'what_to_avoid': 'N/A'
+}
+
+"Every single page has keywords section." -- Didn't find proofs in Internet. Internet saying: "Back in the early days of SEO, many pages had this in their HTML: <meta name="keywords" content="ai, cybersecurity, programming">?"
+
+**Example Of Using A Tool `recall_episodic`:**
+Conversation 1:
+
+HUMAN:
+Hi! Here is my lab: {content_of_lab}.
+Can you check and correct whether the lab:
+uses Times New Roman, 14 pt
+has a title page
+has page numbers on all pages
+includes a conclusion
+includes captions for all figures
+
+AI Agent:
+Sure. Here is the lab with all formatting and structural issues corrected:
+{content_of_corrected_lab}
+
+Conversation 2:
+
+HUMAN: Hi! Your task is to create a Word template for a laboratory report based on my previous lab works that we completed together.
+
+AI Agent: 
+<reasoning>I need to know the formatting and structural requirements used in the user's previous labs.
+This information is not general knowledge, but comes from a past interaction.
+I should recall relevant episodic memory.</reasoning> 
+recall_episodic("lab formatting requirements, fonts, structure") ## keywords like in Google or not according to implementation of the tool and memory?
+recall_episodic returned: User previously said: "Can you check and correct whether the lab: ##is it has to be word for word or summary by llm according to implementation?
+uses Times New Roman, 14 pt
+has a title page
+has page numbers on all pages
+includes a conclusion
+includes captions for all figures"
+python({"code": "from docx import Document\nfrom docx.shared import Pt\nfrom docx.enum.text import WD_ALIGN_PARAGRAPH\ndoc = Document()\nstyle = doc.styles['Normal']\nstyle.font.name = 'Times New Roman'\nstyle.font.size = Pt(14)..."})
+AI Agent: Here is the template according to our previous lab that we worked together: {template.docx}.
+
 ### recall_semantic
 ### recall_procedural
 ### recall_user_level
@@ -1489,9 +1981,103 @@ payload = {
 }
 ```
 
-### forget_tool_level - [] - (Types Of Memory - Tool-level Memory - How To Forget)
-### update_episodic - [] - (Types Of Memory - Episodic Memory - How To Update)
-### forget_episodic - [] - (Types Of Memory - Episodic Memory - How To Forget)
+### forget_tool_level
+
+-
+
+### update_episodic
+
+After the ReAct agent completes its task, the system automatically triggers a post-execution reflection stage over the entire trajectory of the ReAct. During this stage, the agent analyzes its own reasoning process, actions(tool-calls) and produces a structured reflection that captures useful insights for future interactions.
+The agent must fill a structured output schema, defined as follows:
+```python
+from typing import Optional, List, Tuple, Type
+from pydantic import BaseModel, Field, create_model
+
+class Reflection(BaseModel):
+    what_worked: Optional[str] = Field(
+        None,
+        description=(
+            "Most effective approaches or strategies used in this conversation"
+        ),
+    )
+
+    what_to_avoid: Optional[str] = Field(
+        None,
+        description=(
+            "Most important pitfalls, ineffective approaches to avoid or factors that may lead the agent down incorrect paths or into dead ends."
+        ),
+    )
+```
+The reflection is generated using the following prompt template:
+```python
+reflection_prompt_template = """
+You are analyzing your own trajectory of solving a task to create memories that will help guide future interactions. Your task is to extract key elements that would be most helpful when encountering similar situations/tasks in the future.
+
+Review the conversation and create a memory reflection following these rules:
+
+1. For any field where you don't have enough information or the field isn't relevant, contains nothing useful, or only includes generic advice, leave that field empty.
+2. Be extremely concise - each string should be one clear, actionable sentence
+3. Focus only on information that would be useful for handling similar future conversations
+4. Context_tags should be specific enough to match similar situations but general enough to be reusable
+
+**Output Format:**
+You must answer using the Structured Output format required by the system. In that format:
+{{
+    "context_tag1": string,
+    "context_tag2": string,
+    "context_tag3": string, // Use field-specific terms like  "deep_learning", "methodology_question", "results_interpretation"...,
+    "trajectory_summary": string, // One sentence describing what the ReAct trajectory accomplished
+    "what_worked": string,         // Most effective approach or strategy used in this conversation
+    "what_to_avoid": string        // Most important pitfall or ineffective approach to avoid
+}}
+
+Examples:
+- Good context_tags: 
+  "context_tag1": "donation_feature_integration",
+  "context_tag2": "charity_website_ux",
+  "context_tag3": "existing_site_modification".
+- Bad context_tags: 
+  "context_tag1": "website", 
+  "context_tag2": "coding_task", 
+  "context_tag3": "project".
+
+- Good conversation_summary: "Added a donation feature to an existing static website for an animal shelter to enable fundraising and highlight the urgent need for support."
+- Bad conversation_summary: "Worked on a website task."
+
+- Good what_worked: "Embedding a clear donation call-to-action into the existing page layout enabled quick fundraising integration without modifying the overall site structure."
+- Bad what_worked: "Successfully completed the task."
+
+- Good what_to_avoid: "Diving into mathematical formulas before establishing user's familiarity with linear algebra fundamentals""Implementing unnecessary backend payment logic when a simple external donation link is sufficient for a static fundraising website."
+- Bad what_to_avoid: "Made the solution too complicated."
+
+Example of Structured Output format by ReAct:
+  "context_tag1": "donation_feature_integration",
+  "context_tag2": "charity_website_ux",
+  "context_tag3": "existing_site_modification",
+  "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+  "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
+  "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+"""
+```
+
+Example of what I want to see as a result of structured output by ReAct:
+```python
+{
+    "context_tag1": "donation_feature_integration",
+    "context_tag2": "charity_website_ux",
+    "context_tag3": "existing_site_modification",
+    "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+    "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
+    "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+}
+```
+
+Then this structured output is sent to the Memory Controller through the /memory/store_episodic API endpoint.
+
+### forget_episodic 
+
+-
+
 ### update_semantic
 ### forget_semantic
 ### update_procedural
