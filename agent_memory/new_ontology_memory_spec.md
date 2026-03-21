@@ -155,27 +155,27 @@ Short description: _TODO
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**recall_tool_level**]()
+  - [**recall_tool_level**](#recall_tool_level-1)
     <br/>Progress: [██████████] 99%; Status: Done  
     Short description: _TODO
 
-  - [**recall_episodic**]()
+  - [**recall_episodic**](#recall_episodic-1)
     <br/>Progress: [██████████] 99%; Status: Done  
     Short description: _TODO
 
-  - [**recall_semantic**]()
+  - [**recall_semantic**](#recall_semantic-1)
     <br/>Progress: [██████████] 99%; Status: Done  
     Short description: _TODO
 
-  - [**recall_procedural**]()
+  - [**recall_procedural**](#recall_procedural-1)
     <br/>Progress: [██████████] 99%; Status: Done  
     Short description: _TODO
 
-  - [**recall_user_level**]()
+  - [**recall_user_level**](#recall_user_level-1)
     <br/>Progress: [██████████] 99%; Status: Done  
     Short description: _TODO
 
-  - [**recall_priming**]()
+  - [**recall_priming**](#recall_priming-1)
     <br/>Progress: [██████████] 99%; Status: Done  
     Short description: _TODO
 
@@ -183,51 +183,51 @@ Short description: _TODO
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**update_tool_level**]()
+  - [**update_tool_level**](#update_tool_level-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**forget_tool_level**]()
+  - [**forget_tool_level**](#forget_tool_level-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**update_episodic**]()
+  - [**update_episodic**](#update_episodic-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**forget_episodic**]()
+  - [**forget_episodic**](#forget_episodic-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**update_semantic**]()
+  - [**update_semantic**](#update_semantic-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**forget_semantic**]()
+  - [**forget_semantic**](#forget_semantic-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**update_procedural**]()
+  - [**update_procedural**](#update_procedural-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**forget_procedural**]()
+  - [**forget_procedural**](#forget_procedural-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**update_user_level**]()
+  - [**update_user_level**](#update_user_level-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**forget_user_level**]()
+  - [**forget_user_level**](#forget_user_level-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**update_priming**]()
+  - [**update_priming**](#update_priming-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**forget_priming**]()
+  - [**forget_priming**](#forget_priming-1)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
@@ -235,15 +235,15 @@ Short description: _TODO
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**Commit Mechanism**]()
+  - [**Commit Mechanism**](#commit-mechanism)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-  - [**Accept Mechanism**]()
+  - [**Accept Mechanism**](#accept-mechanism)
   <br/>Progress: [██████████] 99%; Status: Done  
   Short description: _TODO
 
-[**Initialization of DBs**]()
+[**Initialization of DBs**](#initialization-of-dbs)
 <br/>Progress: [██░░░░░░░░] 20%; Status: In Progress   
 Short description: _TODO
 
@@ -251,23 +251,23 @@ Short description: _TODO
 <br/>Progress: [█████░░░░░] 90?%; Status: In Progress   
 Vector Store is a paragraph, which tells about vector store and its responsibilities for different memory subsystems (Tool-Level Memory, Episodic Memory).
 
-  - [**Tool-level Memory config**]()
+  - [**Tool-level Memory config**](#tool-level-memory-config)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**Episodic Memory config**]()
+  - [**Episodic Memory config**](#episodic-memory-config)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO
 
-  - [**?Procedural Memory config**]()
+  - [**?Procedural Memory config**](#procedural-memory-config)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO
 
-  - [**?Autobiographical / User-Personalized Memory config**]()
+  - [**?Autobiographical / User-Personalized Memory config**](#autobiographical--user-personalized-memory-config)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO
 
-  - [**?Priming & Classical Conditioning & Non-Associative Memory config**]()
+  - [**?Priming & Classical Conditioning & Non-Associative Memory config**](#priming--classical-conditioning--non-associative-memory-config)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO
 
@@ -275,13 +275,13 @@ Vector Store is a paragraph, which tells about vector store and its responsibili
 <br/>Progress: [█████░░░░░] 90?%; Status: In Progress   
 Short description: _TODO
 
-  - [**Semantic Memory config**]()
+  - [**Semantic Memory config**](#semantic-memory-config)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO  
 
 ---
 
-[**Other**]()
+[**Other**](#other)
 <br/>This section won't be in final spec. This is just ideas, resources, valuable info that can used in writing paragraphs above.
 
 - [**What Agent Needs to Remember and What Not**](#what-agent-needs-to-remember-and-what-is-not)
@@ -1427,7 +1427,7 @@ At the first invocation of a ReAct agent, the procedural memory is initialized a
 For example, in the LangChain [Introducing /remember](https://www.youtube.com/watch?v=6XXH5XecVp4&pp=ygUZL3JlbWVtYmVyIGxhbmdjaGFpbiB2aWRlbw%3D%3D)
 video, the system incrementally updates an agents.md file and may eventually promote accumulated knowledge into an explicit “skill.” But looks like not very reliable idea at the moment.]
 
-### /forget_procedural - [x] - (Actors - Memory Controller - Procedural Memory Responsibilities - forget_procedural)
+### /forget_procedural
 
 ## Autobiographical / User-Personalized Memory
 
@@ -1439,9 +1439,9 @@ memory, autobiographical memory places particular emphasis on the self and its e
 life narrative
 
 ### Sequence Diagram
-### /recall_user_level - [x] - (Actors - Memory Controller - Autobiographical / User-Personalized Memory Responsibilities - recall_user_level)
-### /update_user_level - [x] - (Actors - Memory Controller - Autobiographical / User-Personalized Memory Responsibilities - update_user_level)
-### /forget_user_level - [x] - (Actors - Memory Controller - Autobiographical / User-Personalized Memory Responsibilities - forget_user_level)
+### /recall_user_level
+### /update_user_level
+### /forget_user_level
 
 ## Priming & Classical Conditioning & Non-Associative Memory
 
@@ -1456,9 +1456,9 @@ life narrative
 * Non-Associative Memory: Adaptive modifications in behavior following repeated exposure to a single stimulus. Habituation (reduced response to a repeated, harmless stimulus) and sensitization (increased response after exposure to a noxious or intense stimulus) are representative examples [244, 245].
 
 ### Sequence Diagram
-### /recall_priming - [] - (Actors - Memory Controller - Autobiographical / User-Personalized Memory Responsibilities - recall_user_level)
-### /update_priming - [] - (Actors - Memory Controller - Autobiographical / User-Personalized Memory Responsibilities - update_user_level)
-### /forget_priming - [] - (Actors - Memory Controller - Autobiographical / User-Personalized Memory Responsibilities - forget_user_level)
+### /recall_priming
+### /update_priming
+### /forget_priming
 
 # Brains(ReAct) Python harness
 
@@ -2087,7 +2087,7 @@ Then this structured output is sent to the Memory Controller through the /memory
 ### update_priming
 ### forget_priming
 
-## Mechanisms(?)
+## Mechanisms
 ### Commit Mechanism
 
 **Purpose**
