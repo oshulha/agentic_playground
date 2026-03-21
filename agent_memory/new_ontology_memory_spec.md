@@ -7,7 +7,7 @@ Memory subsystem is the information storage and retrieval part of our AI Agent. 
 
 # Table Of Contents
 
-[**Overall Sequence Diagram**]()
+[**Overall Sequence Diagram**](#overall-sequence-diagram)
 
 [**Memory Controller (code-only microservice)**](#memory-controller-code-only-microservice)
 <br/>Progress: [██░░░░░░░░] 20%; Status: In Progress  
@@ -27,19 +27,23 @@ Temporary, active workspace of the agent. Maintains current interaction state, c
 Stores structured reflections about individual tool executions.
 (10% - PRD? Forgetting? other questions..)
 
-  - [**Sequence Diagram**]()
+  - [**Sequence Diagram**](#sequence-diagram)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/recall_tool_level**]()
+  - [**/recall_tool_level**](#recall_tool_level)
   <br/>Progress: [█████████░] 90%; Status: Done   
   Short description: _TODO
 
-  - [**/update_tool_level**]()
+  - [**/update_tool_level**](#update_tool_level)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/forget_tool_level**]()
+  - [**/forget_tool_level**](#forget_tool_level)
+  <br/>Progress: [█████████░] 90%; Status: Done   
+  Short description: _TODO
+
+  - [**/rewrite_tool_level**](#rewrite_tool_level)
   <br/>Progress: [█████████░] 90%; Status: Done   
   Short description: _TODO
 
@@ -47,19 +51,19 @@ Stores structured reflections about individual tool executions.
 <br/>Progress: [███░░░░░░░] 30%; Status: In Progress   
 Stores past experiences and task executions. Includes structured reflections such as `what_worked`, `what_to_avoid`, summaries, and context tags.
 
-  - [**Sequence Diagram**]()
+  - [**Sequence Diagram**](#sequence-diagram-1)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/recall_episodic**]()
+  - [**/recall_episodic**](#recall_episodic)
   <br/>Progress: [█████████░] 90%; Status: Done   
   Short description: _TODO
 
-  - [**/update_episodic**]()
+  - [**/update_episodic**](#update_episodic)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/forget_episodic**]()
+  - [**/forget_episodic**](#forget_episodic)
   <br/>Progress: [█████████░] 90%; Status: Done   
   Short description: _TODO
 
@@ -67,19 +71,19 @@ Stores past experiences and task executions. Includes structured reflections suc
 <br/>Progress: [███░░░░░░░] 30%; Status: In Progress   
 Represents structured factual knowledge and concepts. Implemented through RAG-style retrieval from vector databases or knowledge sources.
 
-  - [**Sequence Diagram**]()
+  - [**Sequence Diagram**](#sequence-diagram-2)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/recall_semantic**]()
+  - [**/recall_semantic**](#recall_semantic)
   <br/>Progress: [█████████░] 90%; Status: Done   
   Short description: _TODO
 
-  - [**/update_semantic**]()
+  - [**/update_semantic**](#update_semantic)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/forget_semantic**]()
+  - [**/forget_semantic**](#forget_semantic)
   <br/>Progress: [█████████░] 90%; Status: Done   
   Short description: _TODO
 
@@ -87,19 +91,19 @@ Represents structured factual knowledge and concepts. Implemented through RAG-st
 <br/>Progress: [██░░░░░░░░] 20%; Status: Done(v1)   
 Encodes behavioral rules and execution strategies. Derived from episodic reflections and stored as concise operational instructions.
 
-  - [**Sequence Diagram**]()
+  - [**Sequence Diagram**](#sequence-diagram-3)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/recall_procedural**]()
+  - [**/recall_procedural**](#recall_procedural)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO
 
-  - [**/update_procedural**]()
+  - [**/update_procedural**](#update_procedural)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/forget_procedural**]()
+  - [**/forget_procedural**](#forget_procedural)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO
 
@@ -107,19 +111,19 @@ Encodes behavioral rules and execution strategies. Derived from episodic reflect
 <br/>Progress: [█░░░░░░░░░] 10%; Status: To Do   
 Specialized form of episodic memory focused on user-specific patterns, preferences, and long-term identity modeling.
 
-  - [**Sequence Diagram**]()
+  - [**Sequence Diagram**](#sequence-diagram-4)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/recall_user_level**]()
+  - [**/recall_user_level**](#recall_user_level)
   <br/>Progress: [█████████░] 90%; Status: Done   
   Short description: _TODO
 
-  - [**/update_user_level**]()
+  - [**/update_user_level**](#update_user_level)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/forget_user_level**]()
+  - [**/forget_user_level**](#forget_user_level)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO
 
@@ -127,19 +131,19 @@ Specialized form of episodic memory focused on user-specific patterns, preferenc
 <br/>Progress: [█░░░░░░░░░] 10%; Status: To Do   
 Exploration of cognitive-inspired mechanisms and whether they are practically needed in agent systems.
 
-  - [**Sequence Diagram**]()
+  - [**Sequence Diagram**](#sequence-diagram-5)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/recall_priming**]()
+  - [**/recall_priming**](#recall_priming)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO
 
-  - [**/update_priming**]()
+  - [**/update_priming**](#update_priming)
   <br/>Progress: [█████████░] 90%; Status: Done  
   Short description: _TODO   
 
-  - [**/forget_priming**]()
+  - [**/forget_priming**](#forget_priming)
   <br/>Progress: [█████████░] 90%; Status: Done   
   Short description: _TODO
 
@@ -735,6 +739,10 @@ Failure:
 
 ### /forget_tool_level
 -
+
+### /rewrite_tool_level
+
+
 
 ## Episodic Memory
 
@@ -1454,7 +1462,32 @@ What to avoid examples:
 """
 ``` 
 
-Then list of tool calls, tool outputs and list of what_worked, what_to_avoid are sent 
+Then, a list of tool calls and their outputs, along with a list of what_worked and what_to_avoid, is sent to the /memory/update_tool_level endpoint. The two lists must correspond to each other by index.
+
+I see payload like this:
+```python
+payload = {
+  "structured_output": [
+    {
+      "what_worked": "I have access to list_of_emails_by_worker.txt.",
+      "what_to_avoid": "Reading list_of_emails_by_worker.txt with cat triggered a security alert. Received notification after this tool-call."
+    },
+    {
+      "what_to_avoid": "Do not try to delete file without sudo access."
+    }
+  ],
+  "tool_calls_and_outputs": [
+    {
+      "tool_call": "run_cmd(\"cat list_of_emails_by_worker.txt\")",
+      "tool_output": "ivan.petrenko@gmail.com ..."
+    },
+    {
+      "tool_call": "run_cmd(\"rm -rf list_of_emails_by_worker.txt\")",
+      "tool_output": "You don't have enough permissions. You need sudo for this operation."
+    }
+  ]
+}
+```
 
 ### forget_tool_level - [] - (Types Of Memory - Tool-level Memory - How To Forget)
 ### update_episodic - [] - (Types Of Memory - Episodic Memory - How To Update)
@@ -1467,14 +1500,6 @@ Then list of tool calls, tool outputs and list of what_worked, what_to_avoid are
 ### forget_user_level
 ### update_priming
 ### forget_priming
-
-## Start of ReAct 
-### Episodic Memory - []
-### Tool-level Memory - []
-
-## End of ReAct
-### Episodic Memory - []
-### Tool-level Memory - []
 
 ## Mechanisms(?)
 ### Commit Mechanism
