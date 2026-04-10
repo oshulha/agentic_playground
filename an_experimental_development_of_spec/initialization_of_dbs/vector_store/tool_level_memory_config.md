@@ -12,7 +12,15 @@ I decided to use Weaviate as the vector database.
 Example schema:
 ```python
 import weaviate
-from weaviate.classes.config import Configure, Property, DataType
+from weaviate.classes.config import Property, DataType, Configure
+import time
+from episodic_memory_thoughts import episodic_memories
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
 client = weaviate.connect_to_local()
 
@@ -20,12 +28,14 @@ client.collections.create(
     name="run_cmd",
     
     vectorizer_config=[
-        Configure.NamedVectors.text2vec_transformers(
+        Configure.NamedVectors.text2vec_openai(
             name="shell_vector",
+            model="text-embedding-3-large",
             source_properties=["shell"]
         ),
-        Configure.NamedVectors.text2vec_transformers(
+        Configure.NamedVectors.text2vec_openai(
             name="command_vector",
+            model="text-embedding-3-large",
             source_properties=["command"]
         )
     ],
@@ -43,7 +53,6 @@ client.collections.create(
     ]
 )
 ```
-Each string parameter is vectorized independently. During retrieval the system performs independent vector searches for each parameter vector and merges the results using weighted similarity scoring.
-The results are then merged using weighted similarity scoring to produce the final ranking.
+Each string parameter is vectorized independently. During retrieval the system performs independent vector searches for each parameter vector and merges the results using weighted similarity scoring to produce the final ranking.
 
 Parameter embeddings have to be generated using text-embedding-3-large.

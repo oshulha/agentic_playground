@@ -8,6 +8,7 @@
 sequenceDiagram
     title Tool-Level Memory Flow
 
+    actor User
     actor ReAct
     participant MC as Memory Controller
     participant VS as Vector Store
@@ -15,7 +16,7 @@ sequenceDiagram
     activate ReAct
 
     ReAct->>ReAct: System Prompt
-    ReAct->>ReAct: User Prompt
+    User->>ReAct: User Query
     ReAct->>ReAct: tool-call: python("sum(2, 2)")
     ReAct->>ReAct: Commit Mechanism initiated
 
@@ -81,4 +82,5 @@ sequenceDiagram
     MC->>VS: sends final JSONs to Vector Store(Tool-Level Memory)
     VS->>MC: {success: True}
     MC->>ReAct: {success: True}
+    ReAct->>User: AI Agent Response
 ```

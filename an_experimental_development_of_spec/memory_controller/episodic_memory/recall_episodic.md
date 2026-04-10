@@ -1,5 +1,24 @@
 ### /recall_episodic
 
+Memory Controller listens for the HTTP endpoint:
+```code
+POST /memory/recall_episodic
+```
+When this endpoint is invoked, the Memory Controller understands that the agent wants to retrieve relevant memories from an episodic memory thought generated after the completion of a task.
+
+The request payload must look like this:
+```python
+payload = {
+    "user_query": "Add a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+    "who": "Visitors and potential donors of the animal shelter website",
+    "what": "Integration of a donation feature into an existing static website",
+    "when": "During a website update aimed at improving fundraising capability",
+    "where": "On the existing static website of a frontline animal shelter",
+    "why": "To enable fundraising and clearly communicate the urgency of supporting the shelter",
+    "how": "By embedding a prominent call-to-action that redirects users to an external donation service without modifying backend logic"
+}
+```
+
 During recall, the system embeds the query context and performs independent vector searches for each semantic field. The results are merged using weighted similarity scoring.
 
 Example retrieval procedure:
@@ -9,17 +28,10 @@ from openai import OpenAI
 
 client = OpenAI()
 
-def embed(text):
-    response = client.embeddings.create(
-        model="text-embedding-3-large",
-        input=text
-    )
-    return response.data[0].embedding
-
 collection = client.collections.get("episodic_memory")
 
 user_query_memories = collection.query.hybrid(
-    query=query,
+    query=payload["user_query"],
     alpha=0.7,
     limit=5,
     target_vector="user_query_vector",
@@ -27,7 +39,7 @@ user_query_memories = collection.query.hybrid(
 )
 
 who_memories = collection.query.hybrid(
-    query=query,
+    query=payload["who"],
     alpha=0.7,
     limit=5,
     target_vector="who_vector",
@@ -35,7 +47,7 @@ who_memories = collection.query.hybrid(
 )
 
 what_memories = collection.query.hybrid(
-    query=query,
+    query=payload["what"],
     alpha=0.7,
     limit=5,
     target_vector="what_vector",
@@ -43,7 +55,7 @@ what_memories = collection.query.hybrid(
 )
 
 when_memories = collection.query.hybrid(
-    query=query,
+    query=payload["when"],
     alpha=0.7,
     limit=5,
     target_vector="when_vector",
@@ -51,7 +63,7 @@ when_memories = collection.query.hybrid(
 )
 
 where_memories = collection.query.hybrid(
-    query=query,
+    query=payload["where"],
     alpha=0.7,
     limit=5,
     target_vector="where_vector",
@@ -59,7 +71,7 @@ where_memories = collection.query.hybrid(
 )
 
 why_memories = collection.query.hybrid(
-    query=query,
+    query=payload["why"],
     alpha=0.7,
     limit=5,
     target_vector="why_vector",
@@ -67,7 +79,7 @@ why_memories = collection.query.hybrid(
 )
 
 how_memories = collection.query.hybrid(
-    query=query,
+    query=payload["how"],
     alpha=0.7,
     limit=5,
     target_vector="how_vector",
@@ -93,22 +105,6 @@ add_scores(when_memories, 0.125)
 add_scores(where_memories, 0.125)
 add_scores(why_memories, 0.125)
 add_scores(how_memories, 0.125)
-
-# Temporal weightening (based on number of days)
-decay_hours = 720  # 30 days
-
-for id in list(scores.keys()):
-  memory = collection.query.fetch_object_by_id(id)
-  
-  timestamp_str = memory.properties['timestamp']
-  timestamp = datetime.fromisoformat(timestamp_str)
-
-  hours_old = (datetime.now() - timestamp).total_seconds() / 3600
-  
-  weight = 0.5 ** (hours_old / decay_hours)
-  final_weight = max(0.25, weight) # 60 days ago: hours_old = 1440 weight = 0.5 ** (1440/720) = 0.5^2 = 0.25
-
-  scores[id] *= final_weight
 
 top_k = 10
 best = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
@@ -196,3 +192,5 @@ print(result)
 ```
 
 Then Memory Controller sends top-3 memories to ReAct. Then these top-3 memories are inserted into ReAct's system prompt.
+
+Also, you need to save payload for update_episodic endpoint.

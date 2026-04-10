@@ -61,3 +61,52 @@ Example of what I want to see as a result of structured output by ReAct:
 ```
 
 Then this structured output is sent to the Memory Controller through the /memory/update_episodic API endpoint.
+
+```python
+import os
+
+MEMORY_CONTROLLER_URL = os.getenv("MEMORY_CONTROLLER_URL")
+
+def update_episodic() -> dict:
+  """This function updates Episodic memory.
+  This function is a wrapper over the Memory Controller API (e.g., POST /memory/update_episodic). 
+
+  Args:
+    query (str):
+        User query or input provided to the ReAct agent
+
+    Returns:
+        Bool:
+            API response containing a boolean answer, which means if updating was successful or not.
+    Example of tool usage:
+      update_episodic()
+"""
+    url = f"{MEMORY_CONTROLLER_URL}/memory/update_episodic"
+
+    payload = {
+        "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
+        "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        response.raise_for_status()
+
+        data = response.json()
+
+        # Expected format:
+        # {
+        #     "success": bool
+        # }
+
+        return data.get("success", False)
+
+    except requests.exceptions.RequestException as e:
+        print(f"[Episodic Memory Update Error] {e}")
+        return []
+```
+
+Example usage:
+```python
+status = update_episodic()
+```

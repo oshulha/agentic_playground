@@ -36,12 +36,11 @@ def recall_episodic(
 
   Fields user_query, what, who, when, where, why, how is embedded separately inside the Memory Controller and searched against its corresponding named vector index. The Memory Controller aggregates similarity scores across Fields user_query, what, who, when, where, why, how and returns the most relevant memories.
 
-  This function is a wrapper over the Memory Controller API (e.g., POST /memory/recall_tool_level). It retrieves previously stored tool-call experiences related to the given tool.
+  This function is a wrapper over the Memory Controller API (e.g., POST /memory/recall_episodic).
 
   Purpose:
     The goal of recall is to provide the agent with past 
-    experiences (successes, failures, security alerts, rate limits, etc.) related to similar tool calls, so that the agent can adapt 
-    its reasoning before continuing execution.
+    experiences (reflections, successes, failures, security alerts, rate limits, etc.), so that the agent can adapt.
 
   Args:
     query (str):
@@ -51,7 +50,7 @@ def recall_episodic(
         List:
             API response containing a list_of_relevant_memories.
     Example of tool usage:
-      recall_tool_level(user_query="How to optimize Vector DB? Identify top-3 insights/solutions and then send it to the Ihor")
+      recall_episodic(user_query="How to optimize Vector DB? Identify top-3 insights/solutions and then send it to the Ihor")
 """
     structured_5w1h_system_prompt = f"""
     You are an AI system that converts a user query into a structured episodic memory representation.

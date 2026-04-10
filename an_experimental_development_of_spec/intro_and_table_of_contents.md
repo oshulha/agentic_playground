@@ -14,7 +14,7 @@ Memory subsystem is the information storage and retrieval part of our AI Agent. 
 Memory Controller is a stateless microservice responsible for managing the lifecycle of agent memories. It exposes an HTTP API and serves as the abstraction layer between the cognitive system (ReAct/Brains) and persistent memory storage systems.
 
 - [**Explicit & Implicit Memory**](#explicit-memory-conscious--implicit-memory-subconscious)
-<br/>Progress: [██████████] 99%; Status: Done  
+<br/>Progress: [█████░░░░░] 50%; Status: Done  
 Division of the memory subsystem into two major categories: Explicit and Implicit. Explains how they differ, which memory types belong to each category, and discusses their trade-offs in latency, architectural separation, and update mechanisms.
 
 - [**Working Memory**](#working-memory)
@@ -28,13 +28,13 @@ Stores structured reflections about individual tool executions.
 (10% - PRD? Forgetting? other questions..)
 
   - [**Sequence Diagram**](#sequence-diagram)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**/recall_tool_level**](#recall_tool_level)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [██████████] 99%; Status: Done   
 
   - [**/update_tool_level**](#update_tool_level)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**/forget_tool_level**](#forget_tool_level)
   <br/>Progress: [░░░░░░░░░░] 1%; Status: None   
@@ -43,17 +43,17 @@ Stores structured reflections about individual tool executions.
   <br/>Progress: [████████░░] 80%; Status: Done   
 
 - [**Episodic Memory**](#episodic-memory)
-<br/>Progress: [███░░░░░░░] 30%; Status: In Progress   
+<br/>Progress: [████████░░] 80%; Status: In Progress   
 Stores past experiences and task executions. Includes structured reflections such as `what_worked`, `what_to_avoid`, summaries, and context tags.
 
   - [**Sequence Diagram**](#sequence-diagram-1)
-  <br/>Progress: [████████░░] 80%; Status: Done (small changes will be needed)  
+  <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**/recall_episodic**](#recall_episodic)
-  <br/>Progress: [█████░░░░░] 50%; Status: In Progress   
+  <br/>Progress: [██████████] 99%; Status: Done   
 
   - [**/update_episodic**](#update_episodic)
-  <br/>Progress: [█████░░░░░] 50%; Status: In Progress  
+  <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**/forget_episodic**](#forget_episodic)
   <br/>Progress: [░░░░░░░░░░] 0%; Status: None   
@@ -127,14 +127,14 @@ Exploration of cognitive-inspired mechanisms and whether they are practically ne
 Section describing the Python harness built around the implemented ReAct agent (Brains microservice) and the extensions to be added.
 
 - [**Tools**](#tools)
-  <br/>Progress: [██░░░░░░░░] 20%; Status: Done  
+  <br/>Progress: [███░░░░░░░] 30%; Status: Started  
   Tools are functions that call corresponding Memory Controller endpoints, primarily to retrieve useful information from storage, and can be invoked by the agent as needed.
 
   - [**recall_tool_level**](#recall_tool_level-1)
     <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**recall_episodic**](#recall_episodic-1)
-    <br/>Progress: [███░░░░░░░] 30%; Status: Started  
+    <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**recall_semantic**](#recall_semantic-1)
     <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
@@ -149,7 +149,7 @@ Section describing the Python harness built around the implemented ReAct agent (
     <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
 
 - [**Functions**](#functions)
-  <br/>Progress: [██░░░░░░░░] 20%; Status: Done  
+  <br/>Progress: [██░░░░░░░░] 20%; Status: Started  
   Functions are standard Python wrappers that guide the ReAct agent’s behavior (e.g., enforcing structured output) and then call the corresponding Memory Controller endpoints.
 
   - [**update_tool_level**](#update_tool_level-1)
@@ -205,15 +205,15 @@ Section describing the Python harness built around the implemented ReAct agent (
 Initialization and configuration of all database systems (Vector and Graph Stores) that support different memory subsystems.
 
 - [**Vector Store**](#vector-store)
-<br/>Progress: [███░░░░░░░] 30?%; Status: In Progress   
+<br/>Progress: [████░░░░░░] 40%; Status: In Progress   
 Vector Store is a paragraph, which tells about vector store and its responsibilities for different memory subsystems (Tool-Level Memory, Episodic Memory).
 
   - [**Tool-level Memory config**](#tool-level-memory-config)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [██████████] 99%; Status: Done  
   Specific configuration of Vector Store collection(s) for Tool-level Memory   
 
   - [**Episodic Memory config**](#episodic-memory-config)
-  <br/>Progress: [███░░░░░░░] 30%; Status: Done  
+  <br/>Progress: [██████████] 99%; Status: Done  
   Specific configuration of Vector Store collection(s) for Episodic Memory
 
   - [**?Procedural Memory config**](#procedural-memory-config)

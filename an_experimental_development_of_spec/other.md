@@ -215,3 +215,21 @@ memory_score = similarity * recency * success_rate
 
 importance - це просто питати в ReAct, а потім PlanExecutor має можливість відкоригувати важливість? РеАкт ставить від 0 до 10, потім ПланЕкзекьютор може додати, відняти скільки забажає, тільки, щоб не було більше 10 і менше 0 відповідно до планів і тд. 
 Коли це робити? - В кінці РеАкта створюється епізодична пам'ять. І там же PlanExecutor теж ставить. Яким чином? Чи можна буде зробити structured output для PlanExecutor, коли закінчить роботу ReAct.
+
+```python
+# Temporal weightening (based on number of days)
+decay_hours = 720  # 30 days
+
+for id in list(scores.keys()):
+  memory = collection.query.fetch_object_by_id(id)
+  
+  timestamp_str = memory.properties['timestamp']
+  timestamp = datetime.fromisoformat(timestamp_str)
+
+  hours_old = (datetime.now() - timestamp).total_seconds() / 3600
+  
+  weight = 0.5 ** (hours_old / decay_hours)
+  final_weight = max(0.25, weight) # 60 days ago: hours_old = 1440 weight = 0.5 ** (1440/720) = 0.5^2 = 0.25
+
+  scores[id] *= final_weight
+```

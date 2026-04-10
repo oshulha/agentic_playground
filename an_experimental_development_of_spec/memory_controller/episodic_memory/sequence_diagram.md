@@ -3,6 +3,7 @@
 sequenceDiagram
     title Episodic Memory: Recall & Store Flow
 
+    actor User
     actor ReAct
     participant MC as Memory Controller
     participant VS as Vector Store
@@ -10,12 +11,12 @@ sequenceDiagram
     activate ReAct
 
     ReAct->>ReAct: System Prompt
-    ReAct->>ReAct: User Prompt
+    User->>ReAct: User Query
 
-    ReAct->>MC: recall_episodic(user_input)
+    ReAct->>MC: recall_episodic(user_query)
     Note right of ReAct: HTTP POST /memory/recall_episodic
 
-    MC->>VS: Episodic Memory search<br/>using context_tags and trajectory_summary<br/>Vector search / BM25 (still in progress)
+    MC->>VS: Episodic Memory search<br/>using user_query and 5W1H<br/>Hybrid (Vector search / BM25)
     VS-->>MC: top-10 relevant reflections<br/>(what_worked, what_to_avoid)
 
     MC->>MC: LLM selects top-3 most relevant out of 10
@@ -32,15 +33,17 @@ sequenceDiagram
 
     ReAct-->>ReAct: ... more tool-call & tool-output pairs ...
 
-    ReAct->>MC: POST structured output<br/>context_tags, trajectory_summary,<br/>what_worked, what_to_avoid
+    ReAct->>MC: POST structured output<br/>what_worked, what_to_avoid
 
-    MC->>MC: Inject system fields<br/>memory_id, timestamp<br/>Generate embeddings
+    MC->>MC: 1. Combine recall_episodic_payload<br/>and update_episodic_payload<br/><br/>2. Inject system fields<br/>memory_id, timestamp<br/>Generate embeddings
 
-    MC->>VS: Insert full memory object<br/>(4 Named Vectors + metadata)
+    MC->>VS: Insert full memory object
 
     VS-->>MC: {success: True}
 
     MC-->>ReAct: {success: True}
+
+    ReAct-->>User: AI Agent Response
 
     deactivate ReAct
 ```
