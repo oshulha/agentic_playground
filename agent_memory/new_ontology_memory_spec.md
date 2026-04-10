@@ -484,6 +484,9 @@ from openai import OpenAI
 
 client = OpenAI()
 
+# for example, toolname = "run_cmd"
+toolname = "run_cmd"
+
 def embed(text):
     response = client.embeddings.create(
         model="text-embedding-3-large",
@@ -493,19 +496,21 @@ def embed(text):
 
 collection = client.collections.get(toolname)
 
-query_shell = embed("bash")
-query_command = embed("cat list_of_emails_by_worker.txt")
+query_shell = "bash"
+query_command = "cat list_of_emails_by_worker.txt"
 #query_timeout = embed(int(30)) -- because we save only string values
 
-shell_results = collection.query.near_vector(
-    near_vector=query_shell,
+shell_results = collection.query.hybrid(
+    query=query_shell,
     target_vector="shell_vector",
+    alpha=0.7,
     limit=5
 )
 # could be embedded summarization of some tool params if param is bigger than PARAM_THRESHOLD
-command_results = collection.query.near_vector(
-    near_vector=query_command,
+command_results = collection.query.hybrid(
+    query=query_command,
     target_vector="command_vector",
+    alpha=0.7,
     limit=5
 )
 
@@ -1041,41 +1046,73 @@ During recall, the system embeds the query context and performs independent vect
 Example retrieval procedure:
 ```python
 # Search (Recall) should be like this
-from sentence_transformers import SentenceTransformer
+from openai import OpenAI
 
-model = SentenceTransformer("all-MiniLM-L6-v2") # Must use OpenAI model from text-embedding-3-large that would provide higher accuracy
+client = OpenAI()
 
-query_context_tag1 = model.encode("donation_feature_integration")
-query_context_tag2 = model.encode("charity_website_ux")
-query_context_tag3 = model.encode("existing_site_modification")
-query_trajectory_summary = model.encode(
-    "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support."
-)
+def embed(text):
+    response = client.embeddings.create(
+        model="text-embedding-3-large",
+        input=text
+    )
+    return response.data[0].embedding
 
 collection = client.collections.get("episodic_memory")
 
-context_tag1_results = collection.query.near_vector(
-    near_vector=query_context_tag1,
-    target_vector="context_tag1_vector",
-    limit=5
+user_query_memories = collection.query.hybrid(
+    query=query,
+    alpha=0.7,
+    limit=5,
+    target_vector="user_query_vector",
+    return_metadata=["score"]
 )
 
-context_tag2_results = collection.query.near_vector(
-    near_vector=query_context_tag2,
-    target_vector="context_tag2_vector",
-    limit=5
+who_memories = collection.query.hybrid(
+    query=query,
+    alpha=0.7,
+    limit=5,
+    target_vector="who_vector",
+    return_metadata=["score"]
 )
 
-context_tag3_results = collection.query.near_vector(
-    near_vector=query_context_tag3,
-    target_vector="context_tag3_vector",
-    limit=5
+what_memories = collection.query.hybrid(
+    query=query,
+    alpha=0.7,
+    limit=5,
+    target_vector="what_vector",
+    return_metadata=["score"]
 )
 
-trajectory_summary_results = collection.query.near_vector(
-    near_vector=query_trajectory_summary,
-    target_vector="trajectory_summary_vector",
-    limit=5
+when_memories = collection.query.hybrid(
+    query=query,
+    alpha=0.7,
+    limit=5,
+    target_vector="when_vector",
+    return_metadata=["score"]
+)
+
+where_memories = collection.query.hybrid(
+    query=query,
+    alpha=0.7,
+    limit=5,
+    target_vector="where_vector",
+    return_metadata=["score"]
+)
+
+why_memories = collection.query.hybrid(
+    query=query,
+    alpha=0.7,
+    limit=5,
+    target_vector="why_vector",
+    return_metadata=["score"]
+)
+
+how_memories = collection.query.hybrid(
+    query=query,
+    alpha=0.7,
+    limit=5,
+    target_vector="how_vector",
+    return_metadata=["score"]
 )
 
 scores = {}
@@ -1090,22 +1127,116 @@ def add_scores(results, weight):
             
         scores[id] += weight * sim
 
-add_scores(context_tag1_results, 0.2)
-add_scores(context_tag2_results, 0.2)
-add_scores(context_tag3_results, 0.2)
-add_scores(trajectory_summary_results, 0.4)
+add_scores(user_query_memories, 0.25)
+add_scores(who_memories, 0.125)
+add_scores(what_memories, 0.125)
+add_scores(when_memories, 0.125)
+add_scores(where_memories, 0.125)
+add_scores(why_memories, 0.125)
+add_scores(how_memories, 0.125)
 
-best = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+# Temporal weightening (based on number of days)
+decay_hours = 720  # 30 days
 
-best_id = best[0][0]
+for id in list(scores.keys()):
+  memory = collection.query.fetch_object_by_id(id)
+  
+  timestamp_str = memory.properties['timestamp']
+  timestamp = datetime.fromisoformat(timestamp_str)
 
-memory = collection.query.fetch_object_by_id(best_id)
+  hours_old = (datetime.now() - timestamp).total_seconds() / 3600
+  
+  weight = 0.5 ** (hours_old / decay_hours)
+  final_weight = max(0.25, weight) # 60 days ago: hours_old = 1440 weight = 0.5 ** (1440/720) = 0.5^2 = 0.25
 
-print(memory.properties["what_worked"])
-print(memory.properties["what_to_avoid"])
+  scores[id] *= final_weight
+
+top_k = 10
+best = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
+
+top_k_elements = ""
+
+for memory_id, score in best:
+  memory = collection.query.fetch_object_by_id(memory_id)
+
+  top_k_elements += f"memory_id: {memory.properties['memory_id']}\n"
+  top_k_elements += f"timestamp: {memory.properties['timestamp']}\n"
+  top_k_elements += f"user_query: {memory.properties['user_query']}\n"
+  top_k_elements += f"who: {memory.properties['who']}\n"
+  top_k_elements += f"what: {memory.properties['what']}\n"
+  top_k_elements += f"when: {memory.properties['when']}\n"
+  top_k_elements += f"where: {memory.properties['where']}\n"
+  top_k_elements += f"why: {memory.properties['why']}\n"
+  top_k_elements += f"how: {memory.properties['how']}\n"
+  top_k_elements += f"what_worked: {memory.properties['what_worked']}\n"
+  top_k_elements += f"what_to_avoid: {memory.properties['what_to_avoid']}\n\n"
 ```
 
-The system(Memory Controller) returns the 3 memories with the highest combined similarity score.
+The system(Memory Controller) returns the 10 memories with the highest combined similarity score.
+
+After that LLM (gpt-5.4) with structured output is asked to took out 3 most relevant memories out of 10 memories with the highest combined similarity score.
+
+Example of how I see implementation and usage:
+```python
+from pydantic import BaseModel, Field
+
+class MemorySelection(BaseModel):
+    explanation: str = Field(
+        description="Explain why these 3 memories were selected as the most relevant."
+    )
+    top_1_memory_id: int = Field(description="ID of the most relevant memory")
+    top_2_memory_id: int = Field(description="ID of the second most relevant memory")
+    top_3_memory_id: int = Field(description="ID of the third most relevant memory")
+
+def select_top_memories(top_k_elements: str, user_query: str):
+    prompt = f"""
+Here are 10 memories with the highest combined similarity score:
+{top_k_elements}
+
+Your task is to select the 3 most relevant memories according to the user query.
+
+Each memory has:
+- memory_id
+- timestamp
+- user_query
+- who
+- what
+- when
+- where
+- why
+- how
+- what_worked
+- what_to_avoid
+
+IMPORTANT:
+- Only choose from the provided IDs
+- Do NOT invent new IDs
+- Rank them by relevance (1 = best)
+
+User query:
+{user_query}
+
+Return the result in structured format.
+"""
+
+    response = client.responses.parse(
+        model="gpt-5.4",
+        input=prompt,
+        response_format=MemorySelection
+    )
+
+    return response.output_parsed
+
+
+result = select_top_memories(
+    top_k_elements="[{memory_id:1, timestamp:'...', user_query:'...', who: '...', what: '...', when: '...', where: '...', why: '...', what_worked: '...', what_to_avoid: '...'}, {memory_id:2, timestamp:'...'}, ...]",
+    user_query="How to optimize Vector DB? Identify top-3 insights/solutions and then send it to the Ihor"
+)
+
+print(result)
+```
+
+Then Memory Controller sends top-3 memories to ReAct. Then these top-3 memories are inserted into ReAct's system prompt.
 
 ### /update_episodic 
 
@@ -1118,10 +1249,13 @@ When this endpoint is invoked, the Memory Controller understands that the agent 
 The request payload must look like this:
 ```python
 payload = {
-    "context_tag1": "donation_feature_integration",
-    "context_tag2": "charity_website_ux",
-    "context_tag3": "existing_site_modification",
-    "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+    "user_query": "Add a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+    "who": "Visitors and potential donors of the animal shelter website",
+    "what": "Integration of a donation feature into an existing static website",
+    "when": "During a website update aimed at improving fundraising capability",
+    "where": "On the existing static website of a frontline animal shelter",
+    "why": "To enable fundraising and clearly communicate the urgency of supporting the shelter",
+    "how": "By embedding a prominent call-to-action that redirects users to an external donation service without modifying backend logic",
     "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.",
     "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
 }
@@ -1129,7 +1263,7 @@ payload = {
 
 Preconditions:
 - The Episodic Memory Vector Store collection must already exist.
-- The schema must define four Named Vectors corresponding to the following semantic fields: context_tag1, context_tag2, context_tag3, trajectory_summary.
+- The schema must define seven Named Vectors corresponding to the following semantic fields: user_query, who, what, when, where, why, how.
 More details can be found in `Initialization of DBs / Vector Store / Episodic Memory config` paragraph
 
 Upon receiving the request, Memory Controller:
@@ -1143,45 +1277,42 @@ Example:
 {
   "memory_id": 5,
   "timestamp": "1.01.2026 10:36",
-  "context_tag1": "donation_feature_integration",
-  "context_tag2": "charity_website_ux",
-  "context_tag3": "existing_site_modification",
-  "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+  "user_query": "Add a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+  "who": "Visitors and potential donors of the animal shelter website",
+  "what": "Integration of a donation feature into an existing static website",
+  "when": "During a website update aimed at improving fundraising capability",
+  "where": "On the existing static website of a frontline animal shelter",
+  "why": "To enable fundraising and clearly communicate the urgency of supporting the shelter",
+  "how": "By embedding a prominent call-to-action that redirects users to an external donation service without modifying backend logic",
   "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.",
   "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
 }
 ```
 
-2. Embedding Generation  
-Each of the four semantic fields is embedded independently, using text-embedding-3-large.
-
-```python
-context_tag1_embedding = embedding_model.encode(context_tag1)  
-context_tag2_embedding = embedding_model.encode(context_tag2)  
-context_tag3_embedding = embedding_model.encode(context_tag3)  
-trajectory_summary_embedding = embedding_model.encode(trajectory_summary)
-```
+2. Insert Into Episodic Memory Collection
+Each of the seven semantic fields is embedded, using text-embedding-3-large. Seven semantic fields are: "user_query", "who", "what", "when", "where", "why", "how".
 These embeddings are automatically indexed by the vector database according to the Named Vector schema.
-
-3. Insert Into Episodic Memory Collection
 ```python
 collection = client.collections.get("episodic_memory")
 collection.data.insert(
     {
         "memory_id": memory_id,
         "timestamp": timestamp,
-        "context_tag1": context_tag1,
-        "context_tag2": context_tag2,
-        "context_tag3": context_tag3,
-        "trajectory_summary": trajectory_summary,
-        "what_worked": what_worked,
-        "what_to_avoid": what_to_avoid
+        "user_query": payload["user_query"],
+        "who": payload["who"],
+        "what": payload["what"],
+        "when": payload["when"],
+        "where": payload["where"],
+        "why": payload["why"],
+        "how": payload["how"],
+        "what_worked": payload["what_worked"],
+        "what_to_avoid": payload["what_to_avoid"]
     }
 )
 ```
-The vector database automatically generates the four Named Vectors:
-context_tag1_vector, context_tag2_vector, context_tag3_vector, trajectory_summary_vector.
-Each episodic memory entry therefore contains four independent vector representations corresponding to its semantic fields.
+The vector database automatically generates the seven Named Vectors:
+user_query_vector, who_vector, what_vector, when_vector, where_vector, why_vector, how_vector.
+Each episodic memory entry therefore contains seven independent vector representations corresponding to its semantic fields.
 
 API Response Format
 
@@ -1585,11 +1716,9 @@ memories = recall_tool_level(
 
 ### recall_episodic
 
-When a new ReAct worker is invoked by the PlanExecutor, the `recall_episodic` function is called with `query` parameter equal to user input, which calls Memory Controller over `/memory/recall_episodic`. `recall_episodic` returns a list of relevant memories retrieved from the Vector Store(Episodic Memory collection). After all, relevant memories will be inserted in System Prompt of this ReAct worker. 
+When a new ReAct worker is invoked by the PlanExecutor, the `recall_episodic` function is called with `query` parameter equal to user query, which calls Memory Controller over `/memory/recall_episodic`. `recall_episodic` returns a list of relevant memories retrieved from Episodic Memory (the Vector Store(Episodic Memory collection) + LLM selection). After all, relevant memories will be inserted in System Prompt of this ReAct worker.  
 
-Since Episodic Memory is considered both explicit and implicit, the `recall_episodic` function is also exposed to ReAct as a tool. This allows ReAct to explicitly query its own Episodic Memory when necessary. Unlike the previous architecture that relied on a **single combined embedding**, the current system performs **multi-vector retrieval across 3 context tags and trajectory summary**.
-
-3 context tags and trajectory summary is embedded independently and searched against its corresponding vector index in the Vector Store(Episodic Memory). Similarity scores from multiple searches are then aggregated using a weighted scoring function.
+Fields user_query, what, who, when, where, why, how is embedded independently and searched against its corresponding vector index in the Vector Store(Episodic Memory). Similarity scores from multiple searches are then aggregated using a weighted scoring function.
 
 Here is how approximately I see implementation of `recall_episodic()`:
 ```python
@@ -1604,15 +1733,24 @@ client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
 )
 
+from pydantic import BaseModel, Field
+
+class EpisodicContext(BaseModel):
+    who: str = Field(..., description="Actors or stakeholders involved")
+    what: str = Field(..., description="Exact task or action performed")
+    when: str = Field(..., description="Timing, condition, or trigger")
+    where: str = Field(..., description="Platform, system, or environment")
+    why: str = Field(..., description="Goal or motivation")
+    how: str = Field(..., description="Method or implementation approach")
+
 # Recall Tool-Level Memory Mechanism
 MEMORY_CONTROLLER_URL = os.getenv("MEMORY_CONTROLLER_URL")
 def recall_episodic(
-    query: str,
-    top_k: int = 5
+    query: str
 ) -> list:
-  """Recall relevant memories from Episodic memory according to query using multi-vector search across 3 context tags and trajectory summary.
+  """Recall relevant memories from Episodic memory according to query using multi-vector search across fields user_query, what, who, when, where, why, how.
 
-  3 context tags and trajectory summary is embedded separately inside the Memory Controller and searched against its corresponding named vector index. The Memory Controller aggregates similarity scores across 3 context tags and trajectory summary and returns the most relevant memories.
+  Fields user_query, what, who, when, where, why, how is embedded separately inside the Memory Controller and searched against its corresponding named vector index. The Memory Controller aggregates similarity scores across Fields user_query, what, who, when, where, why, how and returns the most relevant memories.
 
   This function is a wrapper over the Memory Controller API (e.g., POST /memory/recall_tool_level). It retrieves previously stored tool-call experiences related to the given tool.
 
@@ -1622,37 +1760,77 @@ def recall_episodic(
     its reasoning before continuing execution.
 
   Args:
-    toolname (str):
-        The name of the tool whose memory collection should be searched.
-
-    tool_parameters (str):
-        It should be a tool parameters from tool call.
-
-    top-k (int, optional):
-        How many elements to retrieve if there is more than k elements. (default = 5).
+    query (str):
+        User query or input provided to the ReAct agent
 
     Returns:
         List:
             API response containing a list_of_relevant_memories.
     Example of tool usage:
-      recall_tool_level(toolname="run_cmd", tool_parameters="cat list_of_emails_by_worker.txt")
+      recall_tool_level(user_query="How to optimize Vector DB? Identify top-3 insights/solutions and then send it to the Ihor")
 """
-    list_of_param_names, list_params = extract_params(tool_parameters)
-    ind = 0
-    for param_name in list_of_param_names:
-      ind += 1
-      param = list_params[ind]
-      if len(tool_parameter) > PARAM_THRESHOLD:
-        query = summarize_tool_parameter(param_name, param)
-      else:
-        query = tool_parameter
+    structured_5w1h_system_prompt = f"""
+    You are an AI system that converts a user query into a structured episodic memory representation.
 
-    url = f"{MEMORY_CONTROLLER_URL}/memory/recall_tool_level"
+    Your goal is to extract maximum informative (highly informative) context using the 5W1H framework.
+
+    STRICT RULES:
+    - Output MUST be valid JSON only (no explanations, no extra text)
+    - Use ONLY English language (no Ukrainian or any other language)
+    - Be concise but maximum informative (high signal, no fluff)
+    - Do NOT mention "AI agent", "system", or refer to yourself
+    - Write as a neutral factual memory (not narration)
+    - Avoid generic phrases like "someone", "something", "various"
+    - Be specific whenever possible
+
+    FIELDS REQUIREMENTS:
+    - "who": concrete actors, users, or stakeholders involved
+    - "what": exact action/task performed
+    - "when": the context, situation, or triggering condition (do not include date/time, as timestamps are stored separately in the format DD.MM.YYYY HH:MM)
+    - "where": environment, platform, or context (e.g., static website, backend system)
+    - "why": underlying goal, motivation, or problem being solved
+    - "how": concrete method, approach, or implementation strategy
+
+    INPUT:
+    user_query: {query}
+
+    OUTPUT FORMAT:
+    {
+      "who": "...",
+      "what": "...",
+      "when": "...",
+      "where": "...",
+      "why": "...",
+      "how": "..."
+    }
+    """
+    response = client.responses.parse(
+        model="gpt-5.4",
+        input=[
+            {
+                "role": "system",
+                "content": structured_5w1h_system_prompt
+            },
+            {
+                "role": "user",
+                "content": f"Your goal is to extract maximum informative context using the 5W1H framework according to this user_query: {user_query}"
+            }
+        ],
+        response_format=EpisodicContext
+    )
+
+    context_dict = model_dump(response.output_parsed)
+
+    url = f"{MEMORY_CONTROLLER_URL}/memory/recall_episodic"
 
     payload = {
-        "collection": toolname,
-        "tool_parameters": tool_parameters,
-        "top_k": top_k
+        "user_query": query,
+        "who": context_dict["who"],
+        "what": context_dict["what"],
+        "when": context_dict["when"],
+        "where": context_dict["where"],
+        "why": context_dict["why"],
+        "how": context_dict["how"]
     }
 
     try:
@@ -1669,132 +1847,35 @@ def recall_episodic(
         return data.get("memories", [])
 
     except requests.exceptions.RequestException as e:
-        print(f"[Tool-Level Recall Error] {e}")
+        print(f"[Episodic Memory Recall Error] {e}")
         return []
 ```
 
 Example usage:
 ```python
-tool_call = 'run_cmd({"shell":"bash", "command":"cat list_of_emails_by_worker.txt"})'
+user_query = "How to optimize Vector DB? Identify top-3 insights/solutions and then send it to the Ihor"
 
-toolname, params = extract_toolname_and_parameters(tool_call)
-
-memories = recall_tool_level(
-    toolname=toolname,
-    tool_parameters=params
+memories = recall_episodic(
+    query=user_query
 )
 ```
-
-Then, a vector (semantic) search is performed when a new ReAct worker is invoked by the PlanExecutor to retrieve the Python dictionary with the highest semantic similarity to the user prompt. The retrieved entry is then injected into the system prompt with the phrasing: “Here is what you recall about your task: {dict_best_match}”. 
-
-[In_Progress]Or we can retrieve top-k results(or results above some threshold) and then ask llm in order to make the best out of them (combine or summarize?). Also, this step with llm can say which is from time-to-time is only заважає, але має високий similarity (і треба далі думати що треба робити -- піднімати threshold? top-k? видалити з пам'яті -- forgetting?). 
-
-Also, because Episodic Memory is categorized as Explicit and Implicit at the same time it has a tool recall_episodic.
-[In_Progress]
-Here is the string that needs to be added to the System Prompt. It can be appended at the end of the System Prompt or placed before the last section (for example, before the Output Format section), depending on where it fits best.
+Memories needs to be added to the System Prompt. It can be appended at the end of the System Prompt or placed before the last section (for example, before the Output Format section), depending on where it fits best.
 ```python
 relevant_episodic_memories = f"""You recall similar past interactions with the user. They are sorted by decreasing relevance:
 First:
-    What has worked well: {what_worked1}
-    What to avoid: {what_to_avoid1}
+    What has worked well: {memories[0]["what_worked"]}
+    What to avoid: {memories[0]["what_to_avoid"]}
 Second:
-    What has worked well: {what_worked2}
-    What to avoid: {what_to_avoid2}
+    What has worked well: {memories[1]["what_worked"]}
+    What to avoid: {memories[1]["what_to_avoid"]}
 Third:
-    What has worked well: {what_worked3}
-    What to avoid: {what_to_avoid3}
+    What has worked well: {memories[2]["what_worked"]}
+    What to avoid: {memories[2]["what_to_avoid"]}
 Use these memories as context for your response to the user."""
 ```
 
-```python
-
-def recall_episodic(
-    query: str,
-    alpha: int
-) -> dict:
-  """Recall relevant memories from Episodic memory for explicit query.
-
-Recommended scenarios:
-- When the agent needs to retrieve factual or conceptual knowledge...
-
-Best practices:
-- Use this tool to ...
-
-  Args:
-    query: The search query.
-    alpha: (Optional) Defaults to 0.7. This means the search result is influenced by 70% vector similarity and 30% BM25 ranking.
-  """
-```
-
-### How To Forget???[To_Do]
-
----
-[To_Do][This approach can be improved by reading `Reflexion` paper, in particular by considering Evaluator/Critic role. 
-
 [To_Do]Also, episodic memory can be trigerred on some words like "always do like this", "good workflow to make this" and save it what user want to mention. That's examples I saw in [Introducing /remember](https://www.youtube.com/watch?v=6XXH5XecVp4&pp=ygUZL3JlbWVtYmVyIGxhbmdjaGFpbiB2aWRlbw%3D%3D) video from langchain. Their agent saves such replics to agents.md. I hope their Deep Agent is open-source.]
 
-### Examples
-**Example**
-HUMAN: Hello!
-
-AI Agent: Hello! How can I assist you today?
-
-HUMAN: What's my name
-
-AI Agent: I'm sorry, but I don't have access to personal information, so I don't know your name.
-
-HUMAN: Oh my name is Adam!
-
-AI Agent: Nice to meet you, Adam! How can I help you today?
-
-HUMAN: What's my name?
-
-AI Agent: Your name is Adam.
-
-Stage of Reflection After Conversation...
-Result of Reflection:
-{
-'context_tags': ['personal_information', 'name_recollection'], 
-'conversation_summary': "Recalled the user's name after being informed in the conversation.", 
-'what_worked': "Storing and recalling the user's name effectively within the session.", 
-'what_to_avoid': 'N/A'
-}
-
-"Every single page has keywords section." -- Didn't find proofs in Internet. Internet saying: "Back in the early days of SEO, many pages had this in their HTML: <meta name="keywords" content="ai, cybersecurity, programming">?"
-
-**Example Of Using A Tool `recall_episodic`:**
-Conversation 1:
-
-HUMAN:
-Hi! Here is my lab: {content_of_lab}.
-Can you check and correct whether the lab:
-uses Times New Roman, 14 pt
-has a title page
-has page numbers on all pages
-includes a conclusion
-includes captions for all figures
-
-AI Agent:
-Sure. Here is the lab with all formatting and structural issues corrected:
-{content_of_corrected_lab}
-
-Conversation 2:
-
-HUMAN: Hi! Your task is to create a Word template for a laboratory report based on my previous lab works that we completed together.
-
-AI Agent: 
-<reasoning>I need to know the formatting and structural requirements used in the user's previous labs.
-This information is not general knowledge, but comes from a past interaction.
-I should recall relevant episodic memory.</reasoning> 
-recall_episodic("lab formatting requirements, fonts, structure") ## keywords like in Google or not according to implementation of the tool and memory?
-recall_episodic returned: User previously said: "Can you check and correct whether the lab: ##is it has to be word for word or summary by llm according to implementation?
-uses Times New Roman, 14 pt
-has a title page
-has page numbers on all pages
-includes a conclusion
-includes captions for all figures"
-python({"code": "from docx import Document\nfrom docx.shared import Pt\nfrom docx.enum.text import WD_ALIGN_PARAGRAPH\ndoc = Document()\nstyle = doc.styles['Normal']\nstyle.font.name = 'Times New Roman'\nstyle.font.size = Pt(14)..."})
-AI Agent: Here is the template according to our previous lab that we worked together: {template.docx}.
 
 ### recall_semantic
 ### recall_procedural
@@ -1975,43 +2056,22 @@ Review the conversation and create a memory reflection following these rules:
 1. For any field where you don't have enough information or the field isn't relevant, contains nothing useful, or only includes generic advice, leave that field empty.
 2. Be extremely concise - each string should be one clear, actionable sentence
 3. Focus only on information that would be useful for handling similar future conversations
-4. Context_tags should be specific enough to match similar situations but general enough to be reusable
 
 **Output Format:**
 You must answer using the Structured Output format required by the system. In that format:
 {{
-    "context_tag1": string,
-    "context_tag2": string,
-    "context_tag3": string, // Use field-specific terms like  "deep_learning", "methodology_question", "results_interpretation"...,
-    "trajectory_summary": string, // One sentence describing what the ReAct trajectory accomplished
     "what_worked": string,         // Most effective approach or strategy used in this conversation
     "what_to_avoid": string        // Most important pitfall or ineffective approach to avoid
 }}
 
 Examples:
-- Good context_tags: 
-  "context_tag1": "donation_feature_integration",
-  "context_tag2": "charity_website_ux",
-  "context_tag3": "existing_site_modification".
-- Bad context_tags: 
-  "context_tag1": "website", 
-  "context_tag2": "coding_task", 
-  "context_tag3": "project".
-
-- Good conversation_summary: "Added a donation feature to an existing static website for an animal shelter to enable fundraising and highlight the urgent need for support."
-- Bad conversation_summary: "Worked on a website task."
-
 - Good what_worked: "Embedding a clear donation call-to-action into the existing page layout enabled quick fundraising integration without modifying the overall site structure."
 - Bad what_worked: "Successfully completed the task."
 
 - Good what_to_avoid: "Diving into mathematical formulas before establishing user's familiarity with linear algebra fundamentals""Implementing unnecessary backend payment logic when a simple external donation link is sufficient for a static fundraising website."
 - Bad what_to_avoid: "Made the solution too complicated."
 
-Example of Structured Output format by ReAct:
-  "context_tag1": "donation_feature_integration",
-  "context_tag2": "charity_website_ux",
-  "context_tag3": "existing_site_modification",
-  "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+Example of Structured Output format:
   "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
   "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
 """
@@ -2020,19 +2080,14 @@ Example of Structured Output format by ReAct:
 Example of what I want to see as a result of structured output by ReAct:
 ```python
 {
-    "context_tag1": "donation_feature_integration",
-    "context_tag2": "charity_website_ux",
-    "context_tag3": "existing_site_modification",
-    "trajectory_summary": "Added a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
     "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
     "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
 }
 ```
 
-Then this structured output is sent to the Memory Controller through the /memory/store_episodic API endpoint.
+Then this structured output is sent to the Memory Controller through the /memory/update_episodic API endpoint.
 
 ### forget_episodic 
-
 -
 
 ### update_semantic
