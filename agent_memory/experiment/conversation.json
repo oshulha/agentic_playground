@@ -1,0 +1,58 @@
+[
+  {
+    "role": "user",
+    "content": "What short description of Initialization of DBs you would propose to me?\n\n[**Initialization of DBs**](#initialization-of-dbs)\n<br/>Progress: [██░░░░░░░░] 20%; Status: In Progress   \nShort description: _TODO\n\n- [**Vector Store**](#vector-store)\n<br/>Progress: [███░░░░░░░] 30?%; Status: In Progress   \nVector Store is a paragraph, which tells about vector store and its responsibilities for different memory subsystems (Tool-Level Memory, Episodic Memory).\n\n  - [**Tool-level Memory config**](#tool-level-memory-config)\n  <br/>Progress: [█████████░] 90%; Status: Done  \n  Specific configuration of Vector Store collection(s) for Tool-level Memory   \n\n  - [**Episodic Memory config**](#episodic-memory-config)\n  <br/>Progress: [███░░░░░░░] 30%; Status: Done  \n  Specific configuration of Vector Store collection(s) for Episodic Memory\n\n  - [**?Procedural Memory config**](#procedural-memory-config)\n  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  \n  Specific configuration of Vector Store collection(s) for Procedural Memory\n\n  - [**?Autobiographical / User-Personalized Memory config**](#autobiographical--user-personalized-memory-config)\n  <br/>Progress: [░░░░░░░░░░░] 0%; Status: None  \n  Specific configuration of Vector Store collection(s) for Autobiographical / User-Personalized Memory\n\n  - [**?Priming & Classical Conditioning & Non-Associative Memory config**](#priming--classical-conditioning--non-associative-memory-config)\n  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  \n  Specific configuration of Vector Store collection(s) for Priming & Classical Conditioning & Non-Associative Memory\n\n- [**Graph Store**](#vector-store)\n<br/>Progress: [░░░░░░░░░░] 0%; Status: None   \nGraph Store is a paragraph, which tells about graph store and its responsibilities for Semantic Memory.\n\n  - [**Semantic Memory config**](#semantic-memory-config)\n  <br/>Progress: [░░░░░░░░░░] 0%; Status: None  \n  Specific configuration of Graph Store for Semantic Memory"
+  },
+  {
+    "role": "assistant",
+    "content": "Here are a few clean, professional options depending on the tone you want:\n\n✅ Most balanced (recommended)\n\nShort description:\nInitialization and configuration of all database systems (Vector and Graph Stores) that support different memory subsystems.\n\n🧠 More “architectural” / system design style\n\nShort description:\nSetup and orchestration of storage backends, defining how each memory subsystem maps to Vector and Graph Stores.\n\n⚙️ More practical / implementation-focused\n\nShort description:\nInitial setup of databases and collections, including configurations for all memory types.\n\n🔬 More precise (if you want to emphasize memory system)\n\nShort description:\nFoundation layer for memory storage, configuring Vector and Graph Stores for all memory subsystems.\n\nIf I had to pick for your doc (given your structured + semi-formal style), I’d go with:\n\nInitialization and configuration of all database systems (Vector and Graph Stores) that support different memory subsystems.\n\nIf you want, I can also align all your section descriptions so they feel consistent (right now some are more casual, some more formal)."
+  },
+  {
+    "role": "user",
+    "content": "I need short description of Commit Mechanism\n\nThe Commit mechanism is wrapper mechanism over the agent's tool-calling. \nIt introduces a validation and reflection step before executing any state-modifying (write-access) tool.\nInstead of executing a generated tool call immediately, the system intercepts it and requires explicit confirmation from the agent after memory-based reflection."
+  },
+  {
+    "role": "assistant",
+    "content": "Here are several concise options depending on how sharp you want it:\n\n✅ Recommended (balanced & clear)\n\nShort description:\nWrapper over tool execution that enforces validation and reflection before any state-modifying actions.\n\n🧠 More architectural\n\nShort description:\nControl layer that intercepts tool calls and requires memory-based validation before committing changes.\n\n⚙️ More implementation-focused\n\nShort description:\nPre-execution checkpoint that validates and confirms write operations before they are applied.\n\n🔬 More precise / explicit\n\nShort description:\nMechanism that delays execution of write-access tools until explicit, reflection-based confirmation is given.\n\nIf you want it maximally consistent with your DB description style, go with:\n\nWrapper over tool execution that enforces validation and reflection before any state-modifying actions."
+  },
+  {
+    "role": "user",
+    "content": "Same for Accept Mechanism\n\n\nThe Accept Mechanism is a wrapper layer over read-access tool outputs in a ReAct-based agent architecture.\n\nIt introduces a validation and compression step after a read-access tool execution, but before the tool output is written into the agent’s working memory."
+  },
+  {
+    "role": "assistant",
+    "content": "Here are concise options matching your style:\n\n✅ Recommended (balanced & consistent)\n\nShort description:\nWrapper over read-access tools that validates and compresses outputs before storing them in working memory.\n\n🧠 More architectural\n\nShort description:\nControl layer that processes tool outputs, ensuring validation and compression before memory integration.\n\n⚙️ More implementation-focused\n\nShort description:\nPost-execution step that filters and compresses read results before writing to working memory.\n\n🔬 More precise\n\nShort description:\nMechanism that enforces validation and compression of read-access outputs prior to memory insertion.\n\nFor consistency with your Commit Mechanism, best pick:\n\nWrapper over read-access tools that validates and compresses outputs before storing them in working memory."
+  },
+  {
+    "role": "user",
+    "content": "Give me short description of Mechanism paragraph. Start with \"Mechanisms paragraph is about mechanisms over ReAct to improve reliability\". You can modify a bit the beginning of the sentence I give you.\n\n  - [**Commit Mechanism**](#commit-mechanism)\n  <br/>Progress: [██████████] 99%; Status: Done  \n  Wrapper over tool execution that enforces validation and reflection before any state-modifying actions.\n\n  - [**Accept Mechanism**](#accept-mechanism)\n  <br/>Progress: [██████████] 99%; Status: Done  \n  Wrapper over read-access tools that validates and compresses outputs before storing them in working memory."
+  },
+  {
+    "role": "assistant",
+    "content": "Short description:\nMechanisms paragraph describes extensions over ReAct to improve reliability, introducing control layers around tool usage such as validation, reflection, and output processing before interacting with memory or state."
+  },
+  {
+    "role": "user",
+    "content": "Rewrite this short description more correctly and understandable  \n\nFunctions are ordinary Python functions that have same logic over ReAct agent (like asking to make ReAct to do structured output) and after that calls corresponding endpoint in Memory Controller microservice."
+  },
+  {
+    "role": "assistant",
+    "content": "Here are a few clearer and more natural rewrites:\n\n✅ Recommended\n\nShort description:\nFunctions are standard Python wrappers that guide the ReAct agent’s behavior (e.g., enforcing structured output) and then call the corresponding Memory Controller endpoints.\n\n🧠 Slightly more explicit\n\nShort description:\nFunctions are regular Python abstractions that apply ReAct-specific logic (such as structured output generation) and trigger the appropriate Memory Controller API calls.\n\n⚙️ More implementation-focused\n\nShort description:\nFunctions are Python wrappers that enforce specific ReAct behaviors and map them to corresponding Memory Controller endpoints.\n\nIf you want it maximally clean and consistent with your style, go with the first one."
+  },
+  {
+    "role": "user",
+    "content": "Rewrite this short description more correctly and understandable  \n\nTools are functions that call corresponding Memory Controller endpoints mainly in order to retrieve some valuable information from storages, and these functions can be called by the agent whenever it wants to."
+  },
+  {
+    "role": "assistant",
+    "content": "Here are clearer and more natural versions:\n\n✅ Recommended\n\nShort description:\nTools are functions that call corresponding Memory Controller endpoints, primarily to retrieve useful information from storage, and can be invoked by the agent as needed.\n\n🧠 Slightly more formal\n\nShort description:\nTools are functions that interface with Memory Controller endpoints to access data from storage systems and can be called by the agent when required.\n\n⚙️ More implementation-focused\n\nShort description:\nTools are callable functions that map to Memory Controller endpoints, enabling the agent to retrieve data from storage on demand.\n\nBest fit for your style is the first one."
+  },
+  {
+    "role": "user",
+    "content": "Rewrite this short description more correctly and understandable\n\nSection which tells about Python code harness (which we need to add to) around implemented our ReAct agent (which has name Brains microservice)"
+  },
+  {
+    "role": "assistant",
+    "content": "Here are clearer and more natural rewrites:\n\n✅ Recommended\n\nShort description:\nSection describing the Python harness built around the implemented ReAct agent (Brains microservice) and the extensions to be added.\n\n🧠 Slightly more formal\n\nShort description:\nSection outlining the Python code harness surrounding the ReAct agent (Brains microservice) and planned additions.\n\n⚙️ More implementation-focused\n\nShort description:\nSection covering the Python wrapper around the ReAct agent (Brains microservice) and required integrations.\n\nBest fit for your style is the first one."
+  }
+]

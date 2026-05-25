@@ -1,0 +1,1035 @@
+Query: How to find a reputable car detailing service and select the best paint protection (wax or sealant) for a long road trip, considering budget and specific vehicle needs?
+Answers: [2, 3, 4]
+--- Memory 1 ---
+Memory: {'memory_id': 4, 'conversation_summary': 'Outlined reputable wax and detailing options to protect the car ahead of the Yellowstone trip.', 'what_worked': "Provided a mix of brands (Meguiar's, Chemical Guys, Autoglym) and service formats (DIY, local shops, mobile detailing) for flexible, actionable choices.", 'what_to_avoid': 'Avoid pushing premium options like ceramic coating as universally best without considering budget and needs.'}
+Score: 98.0
+Reasoning: Directly explains reputable wax, detailing options (DIY, local, mobile), with brands and budget considerations—answers both aspects of the query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 2, 'conversation_summary': "Provided actionable strategies to find a reputable car detailer in the user's area.", 'what_worked': 'A concise, step-by-step checklist (reviews, referrals, certifications, viewing work, and quotes) offered clear guidance for evaluating detailers.', 'what_to_avoid': "Relying on generic tips without tailoring to the user's location, preferences, or budget."}
+Score: 95.0
+Reasoning: Directly provides actionable strategies for finding reputable car detailers, highly relevant to the query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 3, 'conversation_summary': 'Compiled concise, practical tips for choosing a car detailer, GPS issues, advanced-paint-safe wax, fuel economy, safe-driver insurance discounts, and interior protection for transporting items, plus reminders to ask about services.', 'what_worked': 'Providing concise, actionable checklists and direct questions to ask the detailer enabled quick decision-making.', 'what_to_avoid': "Avoid generic or non-tailored advice that doesn't account for the user's specific car, finish, or transport needs."}
+Score: 88.0
+Reasoning: Touches on choosing a detailer and paint-safe wax, with checklists and tailored questions relevant to budget and needs.
+
+Query: What are the best car rental and insurance options for a trip to Maui, and what essential travel gear should I pack to ensure my devices stay charged while managing the total cost of my travel budget?
+Answers: [9, 10, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 95.0
+Reasoning: Directly answers on car rental options and rental insurance for Maui, plus trip-specific tips.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 95.0
+Reasoning: Directly addresses charging gear and packing essentials (including power adapters) for Hawaii travel.
+
+--- Memory 3 ---
+Memory: {'memory_id': 3, 'conversation_summary': 'Compiled concise, practical tips for choosing a car detailer, GPS issues, advanced-paint-safe wax, fuel economy, safe-driver insurance discounts, and interior protection for transporting items, plus reminders to ask about services.', 'what_worked': 'Providing concise, actionable checklists and direct questions to ask the detailer enabled quick decision-making.', 'what_to_avoid': "Avoid generic or non-tailored advice that doesn't account for the user's specific car, finish, or transport needs."}
+Score: 40.0
+Reasoning: Guidance on car detailing and insurance discounts (safe-driver), but not specific to Maui, rentals, or travel gear.
+
+Query: How can I organize a community food event that combines a charity drive with a menu featuring slow cooker chicken tacos (rich in peppers and onions) and coffee crème brûlée with a perfectly caramelized crust?
+Answers: [28, 29, 13]
+--- Memory 1 ---
+Memory: {'memory_id': 28, 'conversation_summary': 'Shared several slow cooker recipes featuring peppers and onions as main ingredients, including a pepper and onion chicken taco approach and related variations.', 'what_worked': 'Providing concrete, adaptable slow cooker recipes centered on peppers and onions, with a ready-to-use chicken taco template and multiple variations.', 'what_to_avoid': "Overcomplicating recipes or presenting dishes that don't foreground peppers and onions as the primary ingredients."}
+Score: 95.0
+Reasoning: Provides slow cooker chicken taco recipes centered on peppers and onions, directly answering part of the menu query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 29, 'conversation_summary': 'Provided practical, step-by-step tips to achieve a perfect caramelized sugar crust for Coffee Crème Brûlée.', 'what_worked': 'Delivering concise, actionable, step-by-step caramelization guidance with timing and color cues worked well.', 'what_to_avoid': 'Overcooking the sugar or stirring too much, which can lead to a bitter crust or uneven caramelization.'}
+Score: 95.0
+Reasoning: Gives step-by-step advice for achieving the perfect caramelized crust for coffee crème brûlée, directly answering part of the menu query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 80.0
+Reasoning: Planning a Bible-study-driven food drive with practical organizing steps is useful for charity-drive and event organization aspects, though no menu or recipe advice.
+
+Query: How can I properly clean and maintain the breathability of waterproof membranes like Keen.Dry or Merrell's technology in hiking boots, and what are the best actionable steps for drying and storing running shoes to prevent moisture buildup?
+Answers: [27, 24, 25]
+--- Memory 1 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Gives concise, actionable care steps for cleaning, drying, storing, and inspecting running shoes—directly relevant to the drying and moisture prevention part of the query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 24, 'conversation_summary': 'Helped the user compare boot membranes, advise on Keen.Dry care, and acknowledge their sneaker-cleaning experiences and evolving footwear choices.', 'what_worked': "Providing targeted membrane comparisons and practical care guidance aligned with the user's priorities and real-life examples.", 'what_to_avoid': "Overloading with unrelated product details or generic cleaning tips that don't address the user's current needs."}
+Score: 95.0
+Reasoning: Covers boot membrane comparisons (including Keen.Dry), sneaker cleaning, and targeted care guidance—highly relevant to the waterproof membrane cleaning/maintenance part of the query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 25, 'conversation_summary': 'Compared the breathability and moisture management of the Merrell Moab 2 Mid Waterproof and Keen Targhee II Mid WP and offered practical care tips to stay dry.', 'what_worked': 'Providing a concise, side-by-side comparison of membranes plus actionable moisture-management tips effectively addressed wet-foot concerns.', 'what_to_avoid': 'Avoid overpromising waterproof performance or implying sneakers are suitable for hiking in wet conditions.'}
+Score: 95.0
+Reasoning: Directly compares Merrell and Keen membranes and gives actionable moisture-management tips for hiking boots, fitting both parts of the query well.
+
+Query: What is the total cost of ownership for a 2018 Ford Mustang GT if I upgrade it with high-performance tires and track-ready suspension, and how do these modifications, along with track-day usage, impact insurance rates and long-term maintenance costs?
+Answers: [21, 22, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 21, 'conversation_summary': 'Compared all-season, high-performance, and track-focused tire options for the 2018 Ford Mustang GT, outlining differences and suitable use cases.', 'what_worked': 'Presented clear, category-based distinctions with practical pros, cons, and use-case guidance to help the user decide.', 'what_to_avoid': 'Suggesting track-focused tires for daily driving without addressing wear, comfort, or weather limitations.'}
+Score: 90.0
+Reasoning: Directly compares tire options for 2018 Ford Mustang GT, mentioning impact of different types (including high-performance and track-focused) on suitability—covers upgrades relevant to TCO.
+
+--- Memory 2 ---
+Memory: {'memory_id': 22, 'conversation_summary': 'Assisted the user with Mustang upgrades and track-day planning, providing exhaust and suspension options and guidance on finding local track days and shops.', 'what_worked': 'Providing branded upgrade options and proactive track-day resources while requesting location details to tailor shop referrals.', 'what_to_avoid': "Giving location-independent shop names or placeholder references without confirming the user's city."}
+Score: 80.0
+Reasoning: Addresses Mustang upgrades (includes suspension), mentions track-day planning, and considers upgrade choices (shops, track days), but not insurance or all TCO factors; very useful context.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 60.0
+Reasoning: Total cost of ownership and insurance impacts discussed for car trade-in, but not Mustang or upgrades.
+
+Query: What are the best car rental and insurance options for a trip to Hawaii, including essential travel gear for electronics and ways to get involved with local coral reef protection or marine debris projects during my visit?
+Answers: [9, 10, 30]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 95.0
+Reasoning: Directly gives car rental advice for a Hawaii trip (Maui), including insurance and preparation tips. Highly relevant.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 95.0
+Reasoning: Directly covers essential travel gear for electronics during a Hawaii trip, matching part of the query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 30, 'conversation_summary': 'Recommended California-based marine debris and coral reef projects with local chapters to support involvement.', 'what_worked': "Tailoring recommendations to the user's location by emphasizing California programs improved relevance.", 'what_to_avoid': 'Suggesting national programs without California presence, which would reduce local applicability.'}
+Score: 55.0
+Reasoning: Mentions marine debris and coral reef projects, but focuses on California. Slight weak relevance in marine project context.
+
+Query: What are the best online courses and platforms for mastering statistical visualization with Seaborn and Python integration, and how can I incorporate self-awareness practices like reflective journaling into my learning routine to improve my professional communication?
+Answers: [6, 11, 5]
+--- Memory 1 ---
+Memory: {'memory_id': 6, 'conversation_summary': 'Guided the user through choosing Seaborn for statistical visualization, evaluating dashboard tools, and planning hands-on trials with Python integration in Tableau and Power BI.', 'what_worked': 'Providing concise, action-oriented guidance with concrete steps and comparisons enabled efficient decision-making.', 'what_to_avoid': 'Assuming a single tool fits all or skipping hands-on trials with Python integrations.'}
+Score: 95.0
+Reasoning: Directly discusses choosing Seaborn for statistical visualization and Python integration, plus evaluation of dashboard tools—addresses the first part of the query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 11, 'conversation_summary': 'Explored why self-awareness matters in communication and outlined actionable steps to develop it.', 'what_worked': 'Providing clear rationale for self-awareness plus a concrete, repeatable development plan (reflect on interactions, seek feedback, practice mindfulness, and journaling) proved effective.', 'what_to_avoid': 'Avoid vague claims about self-awareness without practical, repeatable practices or timelines.'}
+Score: 95.0
+Reasoning: Directly addresses self-awareness in communication and practical steps, including journaling—answers the second part of the query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 5, 'conversation_summary': 'Provided a curated set of online platforms, courses, and resources to help the user learn new skills and expand knowledge.', 'what_worked': 'Categorizing recommendations into online platforms, specialized resources, podcasts, and blogs with concrete examples made the options actionable and easy to explore.', 'what_to_avoid': 'Overwhelming the user with too many options without tailoring to their interests or learning preferences.'}
+Score: 60.0
+Reasoning: Recommends online platforms and courses for skill-building, which is somewhat relevant to learning resources, but not specific to statistical visualization or Seaborn.
+
+Query: What is the best routine for cleaning and maintaining the lifespan of both running shoes and hiking boots, and how should I properly break in new footwear while also preparing leather dress shoes for a professional cobbler visit?
+Answers: [27, 23, 26]
+--- Memory 1 ---
+Memory: {'memory_id': 27, 'conversation_summary': 'Provided a concise, actionable guide for cleaning and maintaining hiking boots to extend their lifespan.', 'what_worked': 'Offering a clear, step-by-step cleaning routine with material-specific guidance and product examples made the advice practical.', 'what_to_avoid': 'Avoid harsh cleaners, high heat, and improper drying or footwear-specific waterproofing products that can damage boot materials.'}
+Score: 96.0
+Reasoning: Step-by-step, material-specific routine for cleaning hiking boots; directly answers part of query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Direct, step-by-step running shoe maintenance and cleaning advice. Highly relevant to part of query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 26, 'conversation_summary': 'User plans to try on both boots at a local outdoor gear store this weekend, begin a gradual break-in with indoor wear and short walks, and take brown leather dress shoes to the cobbler on Saturday.', 'what_worked': 'Providing a concrete, action-oriented plan (in-store try-ons, gradual break-in, and scheduled cobbler visit) to translate preferences into next steps.', 'what_to_avoid': 'Relying solely on online information or skipping in-store fittings and a structured break-in or maintenance plan.'}
+Score: 92.0
+Reasoning: Details specific break-in steps for new boots and leather dress shoe preparations for a cobbler visit—answers break-in and dress shoe parts of query.
+
+Query: How can I effectively organize a faith-based charity food drive, secure microloans or grants for the initiative through organizations like Catholic Charities, and implement a social media promotion strategy to maximize community engagement and donations?
+Answers: [13, 14, 19]
+--- Memory 1 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 95.0
+Reasoning: Directly addresses planning a faith-driven food drive, blending logistics and spiritual engagement.
+
+--- Memory 2 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 95.0
+Reasoning: Provides detailed, actionable steps on securing Catholic Charities microloans/grants—directly relevant to funding.
+
+--- Memory 3 ---
+Memory: {'memory_id': 19, 'conversation_summary': 'Provided practical social media promotion tips for a charity event, including platform-specific posts, engagement tactics, and shareable best practices for the team.', 'what_worked': 'Delivering concrete, platform-specific guidance plus general promotion strategies yielded actionable takeaways for the team.', 'what_to_avoid': 'Avoid vague or non-actionable advice and unnecessary personal context not relevant to the event planning.'}
+Score: 95.0
+Reasoning: Directly offers practical, actionable social media promotion tips for charity events.
+
+Query: How can I leverage microloans or grants from organizations like Catholic Charities to improve my financial standing for a home purchase in family-friendly Irvine neighborhoods, and what are the best strategies for submitting a strong offer with an inspection contingency and pre-approval letter through my agent, Rachel?
+Answers: [16, 15, 14]
+--- Memory 1 ---
+Memory: {'memory_id': 16, 'conversation_summary': 'Prepared and encouraged a strong offer strategy featuring an inspection contingency and pre-approval attachment, leading to submission with agent Rachel presenting it.', 'what_worked': 'Highlighting contingencies and documentation (inspection contingency, pre-approval letter) to reinforce credibility and negotiating leverage.', 'what_to_avoid': 'Avoid removing essential protections or missing documents that can weaken the offer.'}
+Score: 100.0
+Reasoning: Covers strong offer strategies with inspection contingency and pre-approval letter via agent Rachel—directly answers second part of the query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 95.0
+Reasoning: Directly details Catholic Charities' microloans and grants, including application steps and eligibility—addresses the first part of the query fully.
+
+--- Memory 3 ---
+Memory: {'memory_id': 15, 'conversation_summary': 'Provided Irvine-area, family-friendly neighborhood guidance within budget and outlined a plan to coordinate with Rachel on new construction listings and market trends.', 'what_worked': 'Delivering location-specific options and actionable questions about new construction and market trends enabled practical next steps with Rachel.', 'what_to_avoid': 'Avoid giving generic, non-local advice or assuming current inventory without consulting Rachel.'}
+Score: 90.0
+Reasoning: Provides Irvine-specific, family-friendly neighborhood advice, budget considerations, and agent (Rachel) collaboration—directly relevant to location and agent parts.
+
+Final Score: 28/30
+
+
+SECOND ROUNDQuery: How to find a reputable car detailing service and select the best paint protection (wax or sealant) for a long road trip, considering budget and specific vehicle needs?
+Answers: [2, 3, 4]
+--- Memory 1 ---
+Memory: {'memory_id': 2, 'conversation_summary': "Provided actionable strategies to find a reputable car detailer in the user's area.", 'what_worked': 'A concise, step-by-step checklist (reviews, referrals, certifications, viewing work, and quotes) offered clear guidance for evaluating detailers.', 'what_to_avoid': "Relying on generic tips without tailoring to the user's location, preferences, or budget."}
+Score: 100.0
+Reasoning: Directly addresses how to find a reputable car detailer, with actionable strategies that match the query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 4, 'conversation_summary': 'Outlined reputable wax and detailing options to protect the car ahead of the Yellowstone trip.', 'what_worked': "Provided a mix of brands (Meguiar's, Chemical Guys, Autoglym) and service formats (DIY, local shops, mobile detailing) for flexible, actionable choices.", 'what_to_avoid': 'Avoid pushing premium options like ceramic coating as universally best without considering budget and needs.'}
+Score: 100.0
+Reasoning: Directly discusses wax and detailing options, relevant brands, and budget consideration specific to protection for road trips.
+
+--- Memory 3 ---
+Memory: {'memory_id': 3, 'conversation_summary': 'Compiled concise, practical tips for choosing a car detailer, GPS issues, advanced-paint-safe wax, fuel economy, safe-driver insurance discounts, and interior protection for transporting items, plus reminders to ask about services.', 'what_worked': 'Providing concise, actionable checklists and direct questions to ask the detailer enabled quick decision-making.', 'what_to_avoid': "Avoid generic or non-tailored advice that doesn't account for the user's specific car, finish, or transport needs."}
+Score: 85.0
+Reasoning: Includes concise tips for choosing a detailer and evaluating protection options, partially relevant but broad.
+
+Query: What are the best car rental and insurance options for a trip to Maui, and what essential travel gear should I pack to ensure my devices stay charged while managing the total cost of my travel budget?
+Answers: [9, 10, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 95.0
+Reasoning: Directly discusses Maui car rental choices and practical tips including insurance and budget factors.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 90.0
+Reasoning: Directly addresses packing charging gear, power adapters, and essentials for Hawaii trips, balancing simplicity and cost.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 40.0
+Reasoning: Discusses cost of car ownership and insurance savings generically, weakly related to budget/insurance.
+
+Query: How can I organize a community food event that combines a charity drive with a menu featuring slow cooker chicken tacos (rich in peppers and onions) and coffee crème brûlée with a perfectly caramelized crust?
+Answers: [28, 29, 13]
+--- Memory 1 ---
+Memory: {'memory_id': 28, 'conversation_summary': 'Shared several slow cooker recipes featuring peppers and onions as main ingredients, including a pepper and onion chicken taco approach and related variations.', 'what_worked': 'Providing concrete, adaptable slow cooker recipes centered on peppers and onions, with a ready-to-use chicken taco template and multiple variations.', 'what_to_avoid': "Overcomplicating recipes or presenting dishes that don't foreground peppers and onions as the primary ingredients."}
+Score: 95.0
+Reasoning: Directly provides slow cooker chicken taco recipes with peppers and onions—answers menu part of the query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 29, 'conversation_summary': 'Provided practical, step-by-step tips to achieve a perfect caramelized sugar crust for Coffee Crème Brûlée.', 'what_worked': 'Delivering concise, actionable, step-by-step caramelization guidance with timing and color cues worked well.', 'what_to_avoid': 'Overcooking the sugar or stirring too much, which can lead to a bitter crust or uneven caramelization.'}
+Score: 95.0
+Reasoning: Explains how to perfect the coffee crème brûlée caramelized crust; directly addresses the dessert preparation in the query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 85.0
+Reasoning: Directly relevant as it details organizing a charity food drive event with actionable logistics.
+
+Query: How can I properly clean and maintain the breathability of waterproof membranes like Keen.Dry or Merrell's technology in hiking boots, and what are the best actionable steps for drying and storing running shoes to prevent moisture buildup?
+Answers: [27, 24, 25]
+--- Memory 1 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Gives practical care steps for cleaning, drying, and storing running shoes—directly answers part of the query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 24, 'conversation_summary': 'Helped the user compare boot membranes, advise on Keen.Dry care, and acknowledge their sneaker-cleaning experiences and evolving footwear choices.', 'what_worked': "Providing targeted membrane comparisons and practical care guidance aligned with the user's priorities and real-life examples.", 'what_to_avoid': "Overloading with unrelated product details or generic cleaning tips that don't address the user's current needs."}
+Score: 95.0
+Reasoning: Covers care of Keen.Dry membrane and compares boot membranes—directly addresses query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 25, 'conversation_summary': 'Compared the breathability and moisture management of the Merrell Moab 2 Mid Waterproof and Keen Targhee II Mid WP and offered practical care tips to stay dry.', 'what_worked': 'Providing a concise, side-by-side comparison of membranes plus actionable moisture-management tips effectively addressed wet-foot concerns.', 'what_to_avoid': 'Avoid overpromising waterproof performance or implying sneakers are suitable for hiking in wet conditions.'}
+Score: 90.0
+Reasoning: Side-by-side comparison of membranes and actionable moisture-management tips; directly relevant.
+
+Query: What is the total cost of ownership for a 2018 Ford Mustang GT if I upgrade it with high-performance tires and track-ready suspension, and how do these modifications, along with track-day usage, impact insurance rates and long-term maintenance costs?
+Answers: [21, 22, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 21, 'conversation_summary': 'Compared all-season, high-performance, and track-focused tire options for the 2018 Ford Mustang GT, outlining differences and suitable use cases.', 'what_worked': 'Presented clear, category-based distinctions with practical pros, cons, and use-case guidance to help the user decide.', 'what_to_avoid': 'Suggesting track-focused tires for daily driving without addressing wear, comfort, or weather limitations.'}
+Score: 95.0
+Reasoning: Directly compares tire types for 2018 Mustang GT, addresses upgrade impact and use-case (including track); closely matches query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 22, 'conversation_summary': 'Assisted the user with Mustang upgrades and track-day planning, providing exhaust and suspension options and guidance on finding local track days and shops.', 'what_worked': 'Providing branded upgrade options and proactive track-day resources while requesting location details to tailor shop referrals.', 'what_to_avoid': "Giving location-independent shop names or placeholder references without confirming the user's city."}
+Score: 80.0
+Reasoning: Covers Mustang upgrades (suspension, exhaust) and track-day planning, touching on aspects of modification and usage but lacks explicit insurance or TCO discussion.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 35.0
+Reasoning: Mentions TCO and insurance change for car trade-in, but not directly about Mustang or upgrades.
+
+Query: What are the best car rental and insurance options for a trip to Hawaii, including essential travel gear for electronics and ways to get involved with local coral reef protection or marine debris projects during my visit?
+Answers: [9, 10, 30]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 95.0
+Reasoning: Directly provides car rental and insurance advice for Maui, Hawaii, plus practical planning tips.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 90.0
+Reasoning: Addresses Hawaii trip, focusing on power adapters, charging gear, and essentials for electronics—directly relevant to travel gear portion of query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 30, 'conversation_summary': 'Recommended California-based marine debris and coral reef projects with local chapters to support involvement.', 'what_worked': "Tailoring recommendations to the user's location by emphasizing California programs improved relevance.", 'what_to_avoid': 'Suggesting national programs without California presence, which would reduce local applicability.'}
+Score: 45.0
+Reasoning: Recommends California-based marine debris/coral reef programs—some overlap with involvement topic, but not for Hawaii. Some weak usefulness.
+
+Query: What are the best online courses and platforms for mastering statistical visualization with Seaborn and Python integration, and how can I incorporate self-awareness practices like reflective journaling into my learning routine to improve my professional communication?
+Answers: [6, 11, 5]
+--- Memory 1 ---
+Memory: {'memory_id': 6, 'conversation_summary': 'Guided the user through choosing Seaborn for statistical visualization, evaluating dashboard tools, and planning hands-on trials with Python integration in Tableau and Power BI.', 'what_worked': 'Providing concise, action-oriented guidance with concrete steps and comparisons enabled efficient decision-making.', 'what_to_avoid': 'Assuming a single tool fits all or skipping hands-on trials with Python integrations.'}
+Score: 95.0
+Reasoning: Directly guides Seaborn selection for visualization, discusses Python integration and hands-on planning.
+
+--- Memory 2 ---
+Memory: {'memory_id': 11, 'conversation_summary': 'Explored why self-awareness matters in communication and outlined actionable steps to develop it.', 'what_worked': 'Providing clear rationale for self-awareness plus a concrete, repeatable development plan (reflect on interactions, seek feedback, practice mindfulness, and journaling) proved effective.', 'what_to_avoid': 'Avoid vague claims about self-awareness without practical, repeatable practices or timelines.'}
+Score: 95.0
+Reasoning: Explores self-awareness in professional communication, outlines reflective journaling as a concrete step; highly relevant.
+
+--- Memory 3 ---
+Memory: {'memory_id': 5, 'conversation_summary': 'Provided a curated set of online platforms, courses, and resources to help the user learn new skills and expand knowledge.', 'what_worked': 'Categorizing recommendations into online platforms, specialized resources, podcasts, and blogs with concrete examples made the options actionable and easy to explore.', 'what_to_avoid': 'Overwhelming the user with too many options without tailoring to their interests or learning preferences.'}
+Score: 75.0
+Reasoning: Offers curated online platforms and courses for skill learning, relevant to finding resources for data visualization.
+
+Query: What is the best routine for cleaning and maintaining the lifespan of both running shoes and hiking boots, and how should I properly break in new footwear while also preparing leather dress shoes for a professional cobbler visit?
+Answers: [27, 23, 26]
+--- Memory 1 ---
+Memory: {'memory_id': 26, 'conversation_summary': 'User plans to try on both boots at a local outdoor gear store this weekend, begin a gradual break-in with indoor wear and short walks, and take brown leather dress shoes to the cobbler on Saturday.', 'what_worked': 'Providing a concrete, action-oriented plan (in-store try-ons, gradual break-in, and scheduled cobbler visit) to translate preferences into next steps.', 'what_to_avoid': 'Relying solely on online information or skipping in-store fittings and a structured break-in or maintenance plan.'}
+Score: 100.0
+Reasoning: Directly covers trying on/breaking in boots and preparing leather dress shoes for a cobbler, matching query specifics.
+
+--- Memory 2 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Provides actionable care steps directly for maintaining running shoes.
+
+--- Memory 3 ---
+Memory: {'memory_id': 27, 'conversation_summary': 'Provided a concise, actionable guide for cleaning and maintaining hiking boots to extend their lifespan.', 'what_worked': 'Offering a clear, step-by-step cleaning routine with material-specific guidance and product examples made the advice practical.', 'what_to_avoid': 'Avoid harsh cleaners, high heat, and improper drying or footwear-specific waterproofing products that can damage boot materials.'}
+Score: 90.0
+Reasoning: Concise, actionable guide to cleaning and maintaining hiking boots, directly relevant to the query for boot care.
+
+Query: How can I effectively organize a faith-based charity food drive, secure microloans or grants for the initiative through organizations like Catholic Charities, and implement a social media promotion strategy to maximize community engagement and donations?
+Answers: [13, 14, 19]
+--- Memory 1 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 95.0
+Reasoning: Directly outlines planning a faith-based food drive with spiritual and practical organizing steps.
+
+--- Memory 2 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 95.0
+Reasoning: Detailed process for securing grants and microloans through Catholic Charities, highly relevant.
+
+--- Memory 3 ---
+Memory: {'memory_id': 19, 'conversation_summary': 'Provided practical social media promotion tips for a charity event, including platform-specific posts, engagement tactics, and shareable best practices for the team.', 'what_worked': 'Delivering concrete, platform-specific guidance plus general promotion strategies yielded actionable takeaways for the team.', 'what_to_avoid': 'Avoid vague or non-actionable advice and unnecessary personal context not relevant to the event planning.'}
+Score: 93.0
+Reasoning: Actionable social media strategy for a charity event—directly addresses a key aspect of the query.
+
+Query: How can I leverage microloans or grants from organizations like Catholic Charities to improve my financial standing for a home purchase in family-friendly Irvine neighborhoods, and what are the best strategies for submitting a strong offer with an inspection contingency and pre-approval letter through my agent, Rachel?
+Answers: [16, 15, 14]
+--- Memory 1 ---
+Memory: {'memory_id': 16, 'conversation_summary': 'Prepared and encouraged a strong offer strategy featuring an inspection contingency and pre-approval attachment, leading to submission with agent Rachel presenting it.', 'what_worked': 'Highlighting contingencies and documentation (inspection contingency, pre-approval letter) to reinforce credibility and negotiating leverage.', 'what_to_avoid': 'Avoid removing essential protections or missing documents that can weaken the offer.'}
+Score: 100.0
+Reasoning: Directly addresses submitting a strong offer, including inspection contingency and pre-approval with agent Rachel—core part of query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 95.0
+Reasoning: Directly details Catholic Charities' microloans/grants, application steps, and requirements—critical for the query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 15, 'conversation_summary': 'Provided Irvine-area, family-friendly neighborhood guidance within budget and outlined a plan to coordinate with Rachel on new construction listings and market trends.', 'what_worked': 'Delivering location-specific options and actionable questions about new construction and market trends enabled practical next steps with Rachel.', 'what_to_avoid': 'Avoid giving generic, non-local advice or assuming current inventory without consulting Rachel.'}
+Score: 85.0
+Reasoning: Covers Irvine family neighborhoods, budget, and agent coordination—useful for homebuying strategy context.
+
+Final Score: 29/30
+
+THIRDQuery: How to find a reputable car detailing service and select the best paint protection (wax or sealant) for a long road trip, considering budget and specific vehicle needs?
+Answers: [2, 3, 4]
+--- Memory 1 ---
+Memory: {'memory_id': 4, 'conversation_summary': 'Outlined reputable wax and detailing options to protect the car ahead of the Yellowstone trip.', 'what_worked': "Provided a mix of brands (Meguiar's, Chemical Guys, Autoglym) and service formats (DIY, local shops, mobile detailing) for flexible, actionable choices.", 'what_to_avoid': 'Avoid pushing premium options like ceramic coating as universally best without considering budget and needs.'}
+Score: 97.0
+Reasoning: Directly discusses reputable wax and detailing options for a long trip, including mix of brands and budget/service considerations.
+
+--- Memory 2 ---
+Memory: {'memory_id': 2, 'conversation_summary': "Provided actionable strategies to find a reputable car detailer in the user's area.", 'what_worked': 'A concise, step-by-step checklist (reviews, referrals, certifications, viewing work, and quotes) offered clear guidance for evaluating detailers.', 'what_to_avoid': "Relying on generic tips without tailoring to the user's location, preferences, or budget."}
+Score: 95.0
+Reasoning: Directly addresses how to find a reputable car detailer with actionable, location- and budget-aware strategies.
+
+--- Memory 3 ---
+Memory: {'memory_id': 3, 'conversation_summary': 'Compiled concise, practical tips for choosing a car detailer, GPS issues, advanced-paint-safe wax, fuel economy, safe-driver insurance discounts, and interior protection for transporting items, plus reminders to ask about services.', 'what_worked': 'Providing concise, actionable checklists and direct questions to ask the detailer enabled quick decision-making.', 'what_to_avoid': "Avoid generic or non-tailored advice that doesn't account for the user's specific car, finish, or transport needs."}
+Score: 85.0
+Reasoning: Offers practical decision steps for choosing a car detailer and matching to vehicle, transport, and protection needs, relevant but not specifically covering wax/sealant selection.
+
+Query: What are the best car rental and insurance options for a trip to Maui, and what essential travel gear should I pack to ensure my devices stay charged while managing the total cost of my travel budget?
+Answers: [9, 10, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 98.0
+Reasoning: Directly provides Maui car rental recommendations, price comparison tips, insurance coverage, and planning for driving in Maui.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 95.0
+Reasoning: Directly addresses Hawaii travel packing for device charging and related essentials—meets the travel gear requirement for Maui.
+
+--- Memory 3 ---
+Memory: {'memory_id': 3, 'conversation_summary': 'Compiled concise, practical tips for choosing a car detailer, GPS issues, advanced-paint-safe wax, fuel economy, safe-driver insurance discounts, and interior protection for transporting items, plus reminders to ask about services.', 'what_worked': 'Providing concise, actionable checklists and direct questions to ask the detailer enabled quick decision-making.', 'what_to_avoid': "Avoid generic or non-tailored advice that doesn't account for the user's specific car, finish, or transport needs."}
+Score: 45.0
+Reasoning: Tips about car detailers, GPS, and insurance discounts are weakly relevant but not specific to Maui rentals or travel tech.
+
+Query: How can I organize a community food event that combines a charity drive with a menu featuring slow cooker chicken tacos (rich in peppers and onions) and coffee crème brûlée with a perfectly caramelized crust?
+Answers: [28, 29, 13]
+--- Memory 1 ---
+Memory: {'memory_id': 29, 'conversation_summary': 'Provided practical, step-by-step tips to achieve a perfect caramelized sugar crust for Coffee Crème Brûlée.', 'what_worked': 'Delivering concise, actionable, step-by-step caramelization guidance with timing and color cues worked well.', 'what_to_avoid': 'Overcooking the sugar or stirring too much, which can lead to a bitter crust or uneven caramelization.'}
+Score: 100.0
+Reasoning: Provides detailed, actionable steps for achieving a perfect caramelized crust on coffee crème brûlée, matching the query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 28, 'conversation_summary': 'Shared several slow cooker recipes featuring peppers and onions as main ingredients, including a pepper and onion chicken taco approach and related variations.', 'what_worked': 'Providing concrete, adaptable slow cooker recipes centered on peppers and onions, with a ready-to-use chicken taco template and multiple variations.', 'what_to_avoid': "Overcomplicating recipes or presenting dishes that don't foreground peppers and onions as the primary ingredients."}
+Score: 95.0
+Reasoning: Direct, adaptable slow cooker chicken taco recipe with peppers and onions is a central part of the menu query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 90.0
+Reasoning: Directly addresses organizing a community food event with a charity drive, though not the specific menu.
+
+Query: How can I properly clean and maintain the breathability of waterproof membranes like Keen.Dry or Merrell's technology in hiking boots, and what are the best actionable steps for drying and storing running shoes to prevent moisture buildup?
+Answers: [27, 24, 25]
+--- Memory 1 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Provides actionable running shoe care, cleaning, drying, storing guidance. Directly relevant to second part of query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 24, 'conversation_summary': 'Helped the user compare boot membranes, advise on Keen.Dry care, and acknowledge their sneaker-cleaning experiences and evolving footwear choices.', 'what_worked': "Providing targeted membrane comparisons and practical care guidance aligned with the user's priorities and real-life examples.", 'what_to_avoid': "Overloading with unrelated product details or generic cleaning tips that don't address the user's current needs."}
+Score: 92.0
+Reasoning: Discusses Keen.Dry care and membrane comparison with cleaning tips; relevant to first part of query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 25, 'conversation_summary': 'Compared the breathability and moisture management of the Merrell Moab 2 Mid Waterproof and Keen Targhee II Mid WP and offered practical care tips to stay dry.', 'what_worked': 'Providing a concise, side-by-side comparison of membranes plus actionable moisture-management tips effectively addressed wet-foot concerns.', 'what_to_avoid': 'Avoid overpromising waterproof performance or implying sneakers are suitable for hiking in wet conditions.'}
+Score: 91.0
+Reasoning: Compares Merrell and Keen breathability with actionable moisture management for boots—highly relevant.
+
+Query: What is the total cost of ownership for a 2018 Ford Mustang GT if I upgrade it with high-performance tires and track-ready suspension, and how do these modifications, along with track-day usage, impact insurance rates and long-term maintenance costs?
+Answers: [21, 22, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 21, 'conversation_summary': 'Compared all-season, high-performance, and track-focused tire options for the 2018 Ford Mustang GT, outlining differences and suitable use cases.', 'what_worked': 'Presented clear, category-based distinctions with practical pros, cons, and use-case guidance to help the user decide.', 'what_to_avoid': 'Suggesting track-focused tires for daily driving without addressing wear, comfort, or weather limitations.'}
+Score: 95.0
+Reasoning: Directly details high-performance and track tire options for the 2018 Mustang GT, comparing wear, use-cases, and practical impact—very relevant to the query's modifications discussion.
+
+--- Memory 2 ---
+Memory: {'memory_id': 22, 'conversation_summary': 'Assisted the user with Mustang upgrades and track-day planning, providing exhaust and suspension options and guidance on finding local track days and shops.', 'what_worked': 'Providing branded upgrade options and proactive track-day resources while requesting location details to tailor shop referrals.', 'what_to_avoid': "Giving location-independent shop names or placeholder references without confirming the user's city."}
+Score: 85.0
+Reasoning: Directly covers Mustang upgrades (exhaust, suspension), track-day planning, and shop advice. Strongly useful for parts of the query, though not insurance or TCO analysis.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 45.0
+Reasoning: Discusses total cost of ownership and insurance impact for another vehicle scenario (Corolla/Hybrid), showing a relevant cost-evaluation framework but not Mustang-specific or about high-performance upgrades/track use. Some weak transferability.
+
+Query: What are the best car rental and insurance options for a trip to Hawaii, including essential travel gear for electronics and ways to get involved with local coral reef protection or marine debris projects during my visit?
+Answers: [9, 10, 30]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 95.0
+Reasoning: Directly addresses car rental options and preparation tips for a specific Hawaii trip, including insurance considerations and things to check for Road to Hana; highly relevant to part of query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 95.0
+Reasoning: Provides travel gear (power adapters, charging gear, packing essentials) guidance for Hawaii, directly relevant to electronics essentials part of question.
+
+--- Memory 3 ---
+Memory: {'memory_id': 30, 'conversation_summary': 'Recommended California-based marine debris and coral reef projects with local chapters to support involvement.', 'what_worked': "Tailoring recommendations to the user's location by emphasizing California programs improved relevance.", 'what_to_avoid': 'Suggesting national programs without California presence, which would reduce local applicability.'}
+Score: 60.0
+Reasoning: Focuses on California marine debris and coral reef projects, which is tangentially related to the Hawaii volunteer aspect of the query but is not Hawaii-specific; weak relevance to the volunteering portion.
+
+Query: What are the best online courses and platforms for mastering statistical visualization with Seaborn and Python integration, and how can I incorporate self-awareness practices like reflective journaling into my learning routine to improve my professional communication?
+Answers: [6, 11, 5]
+--- Memory 1 ---
+Memory: {'memory_id': 11, 'conversation_summary': 'Explored why self-awareness matters in communication and outlined actionable steps to develop it.', 'what_worked': 'Providing clear rationale for self-awareness plus a concrete, repeatable development plan (reflect on interactions, seek feedback, practice mindfulness, and journaling) proved effective.', 'what_to_avoid': 'Avoid vague claims about self-awareness without practical, repeatable practices or timelines.'}
+Score: 100.0
+Reasoning: Directly explores self-awareness in professional communication and gives repeatable practices such as journaling and reflection.
+
+--- Memory 2 ---
+Memory: {'memory_id': 6, 'conversation_summary': 'Guided the user through choosing Seaborn for statistical visualization, evaluating dashboard tools, and planning hands-on trials with Python integration in Tableau and Power BI.', 'what_worked': 'Providing concise, action-oriented guidance with concrete steps and comparisons enabled efficient decision-making.', 'what_to_avoid': 'Assuming a single tool fits all or skipping hands-on trials with Python integrations.'}
+Score: 95.0
+Reasoning: Directly advises on Seaborn for statistical visualization and Python integration; provides action steps for hands-on trials and tool comparison.
+
+--- Memory 3 ---
+Memory: {'memory_id': 5, 'conversation_summary': 'Provided a curated set of online platforms, courses, and resources to help the user learn new skills and expand knowledge.', 'what_worked': 'Categorizing recommendations into online platforms, specialized resources, podcasts, and blogs with concrete examples made the options actionable and easy to explore.', 'what_to_avoid': 'Overwhelming the user with too many options without tailoring to their interests or learning preferences.'}
+Score: 60.0
+Reasoning: Mentions curated online platforms and courses for learning new skills, partially relevant for course selection but not focused on statistical visualization with Seaborn.
+
+Query: What is the best routine for cleaning and maintaining the lifespan of both running shoes and hiking boots, and how should I properly break in new footwear while also preparing leather dress shoes for a professional cobbler visit?
+Answers: [27, 23, 26]
+--- Memory 1 ---
+Memory: {'memory_id': 26, 'conversation_summary': 'User plans to try on both boots at a local outdoor gear store this weekend, begin a gradual break-in with indoor wear and short walks, and take brown leather dress shoes to the cobbler on Saturday.', 'what_worked': 'Providing a concrete, action-oriented plan (in-store try-ons, gradual break-in, and scheduled cobbler visit) to translate preferences into next steps.', 'what_to_avoid': 'Relying solely on online information or skipping in-store fittings and a structured break-in or maintenance plan.'}
+Score: 100.0
+Reasoning: Covers breaking in new boots, gradual break-in methods, and preparing leather shoes for a cobbler—direct, multi-aspect answer for the user query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Provides concise care steps for running shoes—directly relevant to query about cleaning and maintaining running shoes.
+
+--- Memory 3 ---
+Memory: {'memory_id': 24, 'conversation_summary': 'Helped the user compare boot membranes, advise on Keen.Dry care, and acknowledge their sneaker-cleaning experiences and evolving footwear choices.', 'what_worked': "Providing targeted membrane comparisons and practical care guidance aligned with the user's priorities and real-life examples.", 'what_to_avoid': "Overloading with unrelated product details or generic cleaning tips that don't address the user's current needs."}
+Score: 90.0
+Reasoning: Includes practical cleaning and care advice for hiking boots and sneakers, matching the query's focus on cleaning and maintaining hiking boots.
+
+Query: How can I effectively organize a faith-based charity food drive, secure microloans or grants for the initiative through organizations like Catholic Charities, and implement a social media promotion strategy to maximize community engagement and donations?
+Answers: [13, 14, 19]
+--- Memory 1 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 100.0
+Reasoning: Directly answers about Catholic Charities microloans/grants, application, and eligibility.
+
+--- Memory 2 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 95.0
+Reasoning: Directly addresses faith-based food drive organization and integrates practical and spiritual elements.
+
+--- Memory 3 ---
+Memory: {'memory_id': 19, 'conversation_summary': 'Provided practical social media promotion tips for a charity event, including platform-specific posts, engagement tactics, and shareable best practices for the team.', 'what_worked': 'Delivering concrete, platform-specific guidance plus general promotion strategies yielded actionable takeaways for the team.', 'what_to_avoid': 'Avoid vague or non-actionable advice and unnecessary personal context not relevant to the event planning.'}
+Score: 95.0
+Reasoning: Practical social media promotion tips for a charity event; directly useful for maximizing community engagement and donations.
+
+Query: How can I leverage microloans or grants from organizations like Catholic Charities to improve my financial standing for a home purchase in family-friendly Irvine neighborhoods, and what are the best strategies for submitting a strong offer with an inspection contingency and pre-approval letter through my agent, Rachel?
+Answers: [16, 15, 14]
+--- Memory 1 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 95.0
+Reasoning: Direct overview of Catholic Charities' microloans and grants, including buy-in steps—key for first part of query.
+
+--- Memory 2 ---
+Memory: {'memory_id': 16, 'conversation_summary': 'Prepared and encouraged a strong offer strategy featuring an inspection contingency and pre-approval attachment, leading to submission with agent Rachel presenting it.', 'what_worked': 'Highlighting contingencies and documentation (inspection contingency, pre-approval letter) to reinforce credibility and negotiating leverage.', 'what_to_avoid': 'Avoid removing essential protections or missing documents that can weaken the offer.'}
+Score: 95.0
+Reasoning: Outlines home offer strategy, including inspection contingency, pre-approval, and agent Rachel—invaluable for second part of query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 15, 'conversation_summary': 'Provided Irvine-area, family-friendly neighborhood guidance within budget and outlined a plan to coordinate with Rachel on new construction listings and market trends.', 'what_worked': 'Delivering location-specific options and actionable questions about new construction and market trends enabled practical next steps with Rachel.', 'what_to_avoid': 'Avoid giving generic, non-local advice or assuming current inventory without consulting Rachel.'}
+Score: 90.0
+Reasoning: Gives detailed info on Irvine family-friendly neighborhoods, budget alignment, and agent Rachel—directly relevant.
+
+Final Score: 27/30
+
+
+# GPT-5.4!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+Query: How to find a reputable car detailing service and select the best paint protection (wax or sealant) for a long road trip, considering budget and specific vehicle needs?
+Answers: [2, 3, 4]
+--- Memory 1 ---
+Memory: {'memory_id': 4, 'conversation_summary': 'Outlined reputable wax and detailing options to protect the car ahead of the Yellowstone trip.', 'what_worked': "Provided a mix of brands (Meguiar's, Chemical Guys, Autoglym) and service formats (DIY, local shops, mobile detailing) for flexible, actionable choices.", 'what_to_avoid': 'Avoid pushing premium options like ceramic coating as universally best without considering budget and needs.'}
+Score: 96.0
+Reasoning: Directly covers wax/detailing options for trip prep and budget-sensitive protection choices.
+
+--- Memory 2 ---
+Memory: {'memory_id': 2, 'conversation_summary': "Provided actionable strategies to find a reputable car detailer in the user's area.", 'what_worked': 'A concise, step-by-step checklist (reviews, referrals, certifications, viewing work, and quotes) offered clear guidance for evaluating detailers.', 'what_to_avoid': "Relying on generic tips without tailoring to the user's location, preferences, or budget."}
+Score: 95.0
+Reasoning: Directly about finding a reputable car detailer with evaluation steps.
+
+--- Memory 3 ---
+Memory: {'memory_id': 3, 'conversation_summary': 'Compiled concise, practical tips for choosing a car detailer, GPS issues, advanced-paint-safe wax, fuel economy, safe-driver insurance discounts, and interior protection for transporting items, plus reminders to ask about services.', 'what_worked': 'Providing concise, actionable checklists and direct questions to ask the detailer enabled quick decision-making.', 'what_to_avoid': "Avoid generic or non-tailored advice that doesn't account for the user's specific car, finish, or transport needs."}
+Score: 93.0
+Reasoning: Includes choosing a car detailer and advanced-paint-safe wax plus questions to ask.
+
+Query: What are the best car rental and insurance options for a trip to Maui, and what essential travel gear should I pack to ensure my devices stay charged while managing the total cost of my travel budget?
+Answers: [9, 10, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 95.0
+Reasoning: Directly covers Maui car rental recommendations, Road to Hana driving prep, and insurance checks.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 94.0
+Reasoning: Directly covers Hawaii charging gear, adapters, packing essentials, and avoiding unnecessary gadgets.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 15.0
+Reasoning: Mentions insurance savings and total cost of ownership, but for trading cars, not Maui trip budgeting.
+
+Query: How can I organize a community food event that combines a charity drive with a menu featuring slow cooker chicken tacos (rich in peppers and onions) and coffee crème brûlée with a perfectly caramelized crust?
+Answers: [28, 29, 13]
+--- Memory 1 ---
+Memory: {'memory_id': 29, 'conversation_summary': 'Provided practical, step-by-step tips to achieve a perfect caramelized sugar crust for Coffee Crème Brûlée.', 'what_worked': 'Delivering concise, actionable, step-by-step caramelization guidance with timing and color cues worked well.', 'what_to_avoid': 'Overcooking the sugar or stirring too much, which can lead to a bitter crust or uneven caramelization.'}
+Score: 97.0
+Reasoning: Directly relevant dessert item: perfect caramelized crust for coffee crème brûlée.
+
+--- Memory 2 ---
+Memory: {'memory_id': 28, 'conversation_summary': 'Shared several slow cooker recipes featuring peppers and onions as main ingredients, including a pepper and onion chicken taco approach and related variations.', 'what_worked': 'Providing concrete, adaptable slow cooker recipes centered on peppers and onions, with a ready-to-use chicken taco template and multiple variations.', 'what_to_avoid': "Overcomplicating recipes or presenting dishes that don't foreground peppers and onions as the primary ingredients."}
+Score: 96.0
+Reasoning: Directly relevant menu item: slow cooker chicken tacos with peppers and onions.
+
+--- Memory 3 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 92.0
+Reasoning: Directly relevant: planning a food drive/community event with logistics and mission alignment.
+
+Query: How can I properly clean and maintain the breathability of waterproof membranes like Keen.Dry or Merrell's technology in hiking boots, and what are the best actionable steps for drying and storing running shoes to prevent moisture buildup?
+Answers: [27, 24, 25]
+--- Memory 1 ---
+Memory: {'memory_id': 24, 'conversation_summary': 'Helped the user compare boot membranes, advise on Keen.Dry care, and acknowledge their sneaker-cleaning experiences and evolving footwear choices.', 'what_worked': "Providing targeted membrane comparisons and practical care guidance aligned with the user's priorities and real-life examples.", 'what_to_avoid': "Overloading with unrelated product details or generic cleaning tips that don't address the user's current needs."}
+Score: 96.0
+Reasoning: Directly covers boot membrane comparisons and Keen.Dry care guidance.
+
+--- Memory 2 ---
+Memory: {'memory_id': 25, 'conversation_summary': 'Compared the breathability and moisture management of the Merrell Moab 2 Mid Waterproof and Keen Targhee II Mid WP and offered practical care tips to stay dry.', 'what_worked': 'Providing a concise, side-by-side comparison of membranes plus actionable moisture-management tips effectively addressed wet-foot concerns.', 'what_to_avoid': 'Avoid overpromising waterproof performance or implying sneakers are suitable for hiking in wet conditions.'}
+Score: 95.0
+Reasoning: Highly relevant: Merrell vs Keen waterproof membrane breathability and moisture-management tips.
+
+--- Memory 3 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 94.0
+Reasoning: Directly covers running shoe cleaning, drying, storing, rotating, and inspecting.
+
+Query: What is the total cost of ownership for a 2018 Ford Mustang GT if I upgrade it with high-performance tires and track-ready suspension, and how do these modifications, along with track-day usage, impact insurance rates and long-term maintenance costs?
+Answers: [21, 22, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 22, 'conversation_summary': 'Assisted the user with Mustang upgrades and track-day planning, providing exhaust and suspension options and guidance on finding local track days and shops.', 'what_worked': 'Providing branded upgrade options and proactive track-day resources while requesting location details to tailor shop referrals.', 'what_to_avoid': "Giving location-independent shop names or placeholder references without confirming the user's city."}
+Score: 91.0
+Reasoning: Highly relevant: Mustang upgrades, suspension options, and track-day planning directly inform modification and track-use cost considerations.
+
+--- Memory 2 ---
+Memory: {'memory_id': 21, 'conversation_summary': 'Compared all-season, high-performance, and track-focused tire options for the 2018 Ford Mustang GT, outlining differences and suitable use cases.', 'what_worked': 'Presented clear, category-based distinctions with practical pros, cons, and use-case guidance to help the user decide.', 'what_to_avoid': 'Suggesting track-focused tires for daily driving without addressing wear, comfort, or weather limitations.'}
+Score: 88.0
+Reasoning: Directly relevant: compares tire categories for a 2018 Mustang GT and notes use-case tradeoffs affecting wear and suitability.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 74.0
+Reasoning: Directly about total cost of ownership and insurance impact, though for a different vehicle decision.
+
+Query: What are the best car rental and insurance options for a trip to Hawaii, including essential travel gear for electronics and ways to get involved with local coral reef protection or marine debris projects during my visit?
+Answers: [9, 10, 30]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 95.0
+Reasoning: Directly relevant: Hawaii car rental recommendations and insurance/planning tips for Maui driving.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 94.0
+Reasoning: Directly relevant: Hawaii travel electronics gear, charging, adapters, and packing essentials.
+
+--- Memory 3 ---
+Memory: {'memory_id': 30, 'conversation_summary': 'Recommended California-based marine debris and coral reef projects with local chapters to support involvement.', 'what_worked': "Tailoring recommendations to the user's location by emphasizing California programs improved relevance.", 'what_to_avoid': 'Suggesting national programs without California presence, which would reduce local applicability.'}
+Score: 72.0
+Reasoning: Relevant to marine debris and coral reef project involvement, though California-specific rather than Hawaii-specific.
+
+Query: What are the best online courses and platforms for mastering statistical visualization with Seaborn and Python integration, and how can I incorporate self-awareness practices like reflective journaling into my learning routine to improve my professional communication?
+Answers: [6, 11, 5]
+--- Memory 1 ---
+Memory: {'memory_id': 6, 'conversation_summary': 'Guided the user through choosing Seaborn for statistical visualization, evaluating dashboard tools, and planning hands-on trials with Python integration in Tableau and Power BI.', 'what_worked': 'Providing concise, action-oriented guidance with concrete steps and comparisons enabled efficient decision-making.', 'what_to_avoid': 'Assuming a single tool fits all or skipping hands-on trials with Python integrations.'}
+Score: 95.0
+Reasoning: Directly about choosing Seaborn, statistical visualization, dashboard tools, and Python integration trials.
+
+--- Memory 2 ---
+Memory: {'memory_id': 11, 'conversation_summary': 'Explored why self-awareness matters in communication and outlined actionable steps to develop it.', 'what_worked': 'Providing clear rationale for self-awareness plus a concrete, repeatable development plan (reflect on interactions, seek feedback, practice mindfulness, and journaling) proved effective.', 'what_to_avoid': 'Avoid vague claims about self-awareness without practical, repeatable practices or timelines.'}
+Score: 94.0
+Reasoning: Directly about self-awareness in communication, including reflective practices like journaling and feedback.
+
+--- Memory 3 ---
+Memory: {'memory_id': 5, 'conversation_summary': 'Provided a curated set of online platforms, courses, and resources to help the user learn new skills and expand knowledge.', 'what_worked': 'Categorizing recommendations into online platforms, specialized resources, podcasts, and blogs with concrete examples made the options actionable and easy to explore.', 'what_to_avoid': 'Overwhelming the user with too many options without tailoring to their interests or learning preferences.'}
+Score: 76.0
+Reasoning: Directly about online platforms and courses for learning new skills; useful for recommending learning resources.
+
+Query: What is the best routine for cleaning and maintaining the lifespan of both running shoes and hiking boots, and how should I properly break in new footwear while also preparing leather dress shoes for a professional cobbler visit?
+Answers: [27, 23, 26]
+--- Memory 1 ---
+Memory: {'memory_id': 27, 'conversation_summary': 'Provided a concise, actionable guide for cleaning and maintaining hiking boots to extend their lifespan.', 'what_worked': 'Offering a clear, step-by-step cleaning routine with material-specific guidance and product examples made the advice practical.', 'what_to_avoid': 'Avoid harsh cleaners, high heat, and improper drying or footwear-specific waterproofing products that can damage boot materials.'}
+Score: 97.0
+Reasoning: Directly covers step-by-step cleaning and maintaining hiking boots, including material-specific care and lifespan extension.
+
+--- Memory 2 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 96.0
+Reasoning: Directly covers maintaining running shoes with cleaning, drying, storing, rotating, and inspection tips.
+
+--- Memory 3 ---
+Memory: {'memory_id': 26, 'conversation_summary': 'User plans to try on both boots at a local outdoor gear store this weekend, begin a gradual break-in with indoor wear and short walks, and take brown leather dress shoes to the cobbler on Saturday.', 'what_worked': 'Providing a concrete, action-oriented plan (in-store try-ons, gradual break-in, and scheduled cobbler visit) to translate preferences into next steps.', 'what_to_avoid': 'Relying solely on online information or skipping in-store fittings and a structured break-in or maintenance plan.'}
+Score: 94.0
+Reasoning: Directly addresses gradual break-in of new footwear and mentions taking brown leather dress shoes to cobbler.
+
+Query: How can I effectively organize a faith-based charity food drive, secure microloans or grants for the initiative through organizations like Catholic Charities, and implement a social media promotion strategy to maximize community engagement and donations?
+Answers: [13, 14, 19]
+--- Memory 1 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 98.0
+Reasoning: Directly about Catholic Charities microloans and grants, including application steps and eligibility.
+
+--- Memory 2 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 96.0
+Reasoning: Directly about a Bible-study-driven food drive with spiritual and logistical planning for a soup kitchen.
+
+--- Memory 3 ---
+Memory: {'memory_id': 19, 'conversation_summary': 'Provided practical social media promotion tips for a charity event, including platform-specific posts, engagement tactics, and shareable best practices for the team.', 'what_worked': 'Delivering concrete, platform-specific guidance plus general promotion strategies yielded actionable takeaways for the team.', 'what_to_avoid': 'Avoid vague or non-actionable advice and unnecessary personal context not relevant to the event planning.'}
+Score: 95.0
+Reasoning: Directly about social media promotion for a charity event, including platform-specific engagement tactics.
+
+Query: How can I leverage microloans or grants from organizations like Catholic Charities to improve my financial standing for a home purchase in family-friendly Irvine neighborhoods, and what are the best strategies for submitting a strong offer with an inspection contingency and pre-approval letter through my agent, Rachel?
+Answers: [16, 15, 14]
+--- Memory 1 ---
+Memory: {'memory_id': 16, 'conversation_summary': 'Prepared and encouraged a strong offer strategy featuring an inspection contingency and pre-approval attachment, leading to submission with agent Rachel presenting it.', 'what_worked': 'Highlighting contingencies and documentation (inspection contingency, pre-approval letter) to reinforce credibility and negotiating leverage.', 'what_to_avoid': 'Avoid removing essential protections or missing documents that can weaken the offer.'}
+Score: 99.0
+Reasoning: Directly addresses strong offer strategy, inspection contingency, pre-approval letter, and Rachel's role.
+
+--- Memory 2 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 96.0
+Reasoning: Directly covers Catholic Charities microloans/grants, application steps, and eligibility.
+
+--- Memory 3 ---
+Memory: {'memory_id': 15, 'conversation_summary': 'Provided Irvine-area, family-friendly neighborhood guidance within budget and outlined a plan to coordinate with Rachel on new construction listings and market trends.', 'what_worked': 'Delivering location-specific options and actionable questions about new construction and market trends enabled practical next steps with Rachel.', 'what_to_avoid': 'Avoid giving generic, non-local advice or assuming current inventory without consulting Rachel.'}
+Score: 94.0
+Reasoning: Directly relevant on Irvine family-friendly neighborhoods and coordinating with Rachel.
+
+Final Score: 29/30
+
+HighlightingQuery: How to find a reputable car detailing service and select the best paint protection (wax or sealant) for a long road trip, considering budget and specific vehicle needs?
+Answers: [2, 3, 4]
+--- Memory 1 ---
+Memory: {'memory_id': 4, 'conversation_summary': 'Outlined reputable wax and detailing options to protect the car ahead of the Yellowstone trip.', 'what_worked': "Provided a mix of brands (Meguiar's, Chemical Guys, Autoglym) and service formats (DIY, local shops, mobile detailing) for flexible, actionable choices.", 'what_to_avoid': 'Avoid pushing premium options like ceramic coating as universally best without considering budget and needs.'}
+Score: 96.0
+Reasoning: Directly relevant to wax/detailing options for trip prep, budget, and avoiding overprescribing ceramic coating.
+
+--- Memory 2 ---
+Memory: {'memory_id': 2, 'conversation_summary': "Provided actionable strategies to find a reputable car detailer in the user's area.", 'what_worked': 'A concise, step-by-step checklist (reviews, referrals, certifications, viewing work, and quotes) offered clear guidance for evaluating detailers.', 'what_to_avoid': "Relying on generic tips without tailoring to the user's location, preferences, or budget."}
+Score: 95.0
+Reasoning: Directly covers finding a reputable car detailer with actionable evaluation steps.
+
+--- Memory 3 ---
+Memory: {'memory_id': 3, 'conversation_summary': 'Compiled concise, practical tips for choosing a car detailer, GPS issues, advanced-paint-safe wax, fuel economy, safe-driver insurance discounts, and interior protection for transporting items, plus reminders to ask about services.', 'what_worked': 'Providing concise, actionable checklists and direct questions to ask the detailer enabled quick decision-making.', 'what_to_avoid': "Avoid generic or non-tailored advice that doesn't account for the user's specific car, finish, or transport needs."}
+Score: 93.0
+Reasoning: Strong match: choosing a car detailer plus advanced-paint-safe wax and questions to ask.
+
+Query: What are the best car rental and insurance options for a trip to Maui, and what essential travel gear should I pack to ensure my devices stay charged while managing the total cost of my travel budget?
+Answers: [9, 10, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 95.0
+Reasoning: Directly covers Maui car rental recommendations, Road to Hana prep, insurance checks, vehicle choice, and booking tips.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 94.0
+Reasoning: Directly covers Hawaii power adapters, charging gear, packing essentials, and practical trade-offs for device charging.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 22.0
+Reasoning: Discusses insurance savings and total cost of ownership, which loosely relates to budgeting, but not Maui travel specifics.
+
+Query: How can I organize a community food event that combines a charity drive with a menu featuring slow cooker chicken tacos (rich in peppers and onions) and coffee crème brûlée with a perfectly caramelized crust?
+Answers: [28, 29, 13]
+--- Memory 1 ---
+Memory: {'memory_id': 29, 'conversation_summary': 'Provided practical, step-by-step tips to achieve a perfect caramelized sugar crust for Coffee Crème Brûlée.', 'what_worked': 'Delivering concise, actionable, step-by-step caramelization guidance with timing and color cues worked well.', 'what_to_avoid': 'Overcooking the sugar or stirring too much, which can lead to a bitter crust or uneven caramelization.'}
+Score: 96.0
+Reasoning: Directly covers achieving a perfect caramelized crust for coffee crème brûlée; highly relevant to dessert portion.
+
+--- Memory 2 ---
+Memory: {'memory_id': 28, 'conversation_summary': 'Shared several slow cooker recipes featuring peppers and onions as main ingredients, including a pepper and onion chicken taco approach and related variations.', 'what_worked': 'Providing concrete, adaptable slow cooker recipes centered on peppers and onions, with a ready-to-use chicken taco template and multiple variations.', 'what_to_avoid': "Overcomplicating recipes or presenting dishes that don't foreground peppers and onions as the primary ingredients."}
+Score: 95.0
+Reasoning: Directly covers slow cooker chicken tacos with peppers and onions; highly relevant to menu portion.
+
+--- Memory 3 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 92.0
+Reasoning: Directly about planning a food drive with practical organizing steps; strong fit for charity/community event logistics.
+
+Query: How can I properly clean and maintain the breathability of waterproof membranes like Keen.Dry or Merrell's technology in hiking boots, and what are the best actionable steps for drying and storing running shoes to prevent moisture buildup?
+Answers: [27, 24, 25]
+--- Memory 1 ---
+Memory: {'memory_id': 24, 'conversation_summary': 'Helped the user compare boot membranes, advise on Keen.Dry care, and acknowledge their sneaker-cleaning experiences and evolving footwear choices.', 'what_worked': "Providing targeted membrane comparisons and practical care guidance aligned with the user's priorities and real-life examples.", 'what_to_avoid': "Overloading with unrelated product details or generic cleaning tips that don't address the user's current needs."}
+Score: 97.0
+Reasoning: Directly covers comparing boot membranes and practical Keen.Dry care, closely matching membrane cleaning and breathability maintenance.
+
+--- Memory 2 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Directly covers maintaining running shoes with cleaning, drying, storing, rotating, and inspecting steps.
+
+--- Memory 3 ---
+Memory: {'memory_id': 25, 'conversation_summary': 'Compared the breathability and moisture management of the Merrell Moab 2 Mid Waterproof and Keen Targhee II Mid WP and offered practical care tips to stay dry.', 'what_worked': 'Providing a concise, side-by-side comparison of membranes plus actionable moisture-management tips effectively addressed wet-foot concerns.', 'what_to_avoid': 'Avoid overpromising waterproof performance or implying sneakers are suitable for hiking in wet conditions.'}
+Score: 93.0
+Reasoning: Strongly relevant: compares Merrell and Keen waterproof membranes and gives moisture-management care tips.
+
+Query: What is the total cost of ownership for a 2018 Ford Mustang GT if I upgrade it with high-performance tires and track-ready suspension, and how do these modifications, along with track-day usage, impact insurance rates and long-term maintenance costs?
+Answers: [21, 22, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 22, 'conversation_summary': 'Assisted the user with Mustang upgrades and track-day planning, providing exhaust and suspension options and guidance on finding local track days and shops.', 'what_worked': 'Providing branded upgrade options and proactive track-day resources while requesting location details to tailor shop referrals.', 'what_to_avoid': "Giving location-independent shop names or placeholder references without confirming the user's city."}
+Score: 94.0
+Reasoning: Directly about Mustang upgrades, suspension options, and track-day planning; very relevant to costs and maintenance impacts of mods and track use.
+
+--- Memory 2 ---
+Memory: {'memory_id': 21, 'conversation_summary': 'Compared all-season, high-performance, and track-focused tire options for the 2018 Ford Mustang GT, outlining differences and suitable use cases.', 'what_worked': 'Presented clear, category-based distinctions with practical pros, cons, and use-case guidance to help the user decide.', 'what_to_avoid': 'Suggesting track-focused tires for daily driving without addressing wear, comfort, or weather limitations.'}
+Score: 90.0
+Reasoning: Directly about 2018 Mustang GT tire categories, including high-performance and track-focused options; highly relevant to modification and wear implications.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 45.0
+Reasoning: Discusses total cost of ownership and insurance impact in a car trade-in context; useful framework but wrong vehicle/scenario.
+
+Query: What are the best car rental and insurance options for a trip to Hawaii, including essential travel gear for electronics and ways to get involved with local coral reef protection or marine debris projects during my visit?
+Answers: [9, 10, 30]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 92.0
+Reasoning: Directly about Hawaii car rental recommendations and driving prep on Maui, including insurance checks.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 90.0
+Reasoning: Directly about Hawaii trip electronics charging gear, adapters, packing essentials, and weather prep.
+
+--- Memory 3 ---
+Memory: {'memory_id': 30, 'conversation_summary': 'Recommended California-based marine debris and coral reef projects with local chapters to support involvement.', 'what_worked': "Tailoring recommendations to the user's location by emphasizing California programs improved relevance.", 'what_to_avoid': 'Suggesting national programs without California presence, which would reduce local applicability.'}
+Score: 72.0
+Reasoning: Directly about marine debris and coral reef projects, though California-based rather than Hawaii-specific.
+
+Query: What are the best online courses and platforms for mastering statistical visualization with Seaborn and Python integration, and how can I incorporate self-awareness practices like reflective journaling into my learning routine to improve my professional communication?
+Answers: [6, 11, 5]
+--- Memory 1 ---
+Memory: {'memory_id': 6, 'conversation_summary': 'Guided the user through choosing Seaborn for statistical visualization, evaluating dashboard tools, and planning hands-on trials with Python integration in Tableau and Power BI.', 'what_worked': 'Providing concise, action-oriented guidance with concrete steps and comparisons enabled efficient decision-making.', 'what_to_avoid': 'Assuming a single tool fits all or skipping hands-on trials with Python integrations.'}
+Score: 95.0
+Reasoning: Directly relevant: Seaborn for statistical visualization, dashboard tools, and Python integration.
+
+--- Memory 2 ---
+Memory: {'memory_id': 11, 'conversation_summary': 'Explored why self-awareness matters in communication and outlined actionable steps to develop it.', 'what_worked': 'Providing clear rationale for self-awareness plus a concrete, repeatable development plan (reflect on interactions, seek feedback, practice mindfulness, and journaling) proved effective.', 'what_to_avoid': 'Avoid vague claims about self-awareness without practical, repeatable practices or timelines.'}
+Score: 94.0
+Reasoning: Directly relevant to self-awareness in communication, including journaling, reflection, feedback, and mindfulness.
+
+--- Memory 3 ---
+Memory: {'memory_id': 5, 'conversation_summary': 'Provided a curated set of online platforms, courses, and resources to help the user learn new skills and expand knowledge.', 'what_worked': 'Categorizing recommendations into online platforms, specialized resources, podcasts, and blogs with concrete examples made the options actionable and easy to explore.', 'what_to_avoid': 'Overwhelming the user with too many options without tailoring to their interests or learning preferences.'}
+Score: 78.0
+Reasoning: Directly about online platforms and courses for learning new skills; useful for course/platform recommendations, though not Seaborn-specific.
+
+Query: What is the best routine for cleaning and maintaining the lifespan of both running shoes and hiking boots, and how should I properly break in new footwear while also preparing leather dress shoes for a professional cobbler visit?
+Answers: [27, 23, 26]
+--- Memory 1 ---
+Memory: {'memory_id': 27, 'conversation_summary': 'Provided a concise, actionable guide for cleaning and maintaining hiking boots to extend their lifespan.', 'what_worked': 'Offering a clear, step-by-step cleaning routine with material-specific guidance and product examples made the advice practical.', 'what_to_avoid': 'Avoid harsh cleaners, high heat, and improper drying or footwear-specific waterproofing products that can damage boot materials.'}
+Score: 96.0
+Reasoning: Directly covers cleaning and maintaining hiking boots with step-by-step lifespan-extending guidance.
+
+--- Memory 2 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Directly covers maintaining running shoes with cleaning, drying, storing, rotating, and inspection tips.
+
+--- Memory 3 ---
+Memory: {'memory_id': 26, 'conversation_summary': 'User plans to try on both boots at a local outdoor gear store this weekend, begin a gradual break-in with indoor wear and short walks, and take brown leather dress shoes to the cobbler on Saturday.', 'what_worked': 'Providing a concrete, action-oriented plan (in-store try-ons, gradual break-in, and scheduled cobbler visit) to translate preferences into next steps.', 'what_to_avoid': 'Relying solely on online information or skipping in-store fittings and a structured break-in or maintenance plan.'}
+Score: 94.0
+Reasoning: Directly relevant to breaking in new footwear and taking leather dress shoes to a cobbler.
+
+Query: How can I effectively organize a faith-based charity food drive, secure microloans or grants for the initiative through organizations like Catholic Charities, and implement a social media promotion strategy to maximize community engagement and donations?
+Answers: [13, 14, 19]
+--- Memory 1 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 98.0
+Reasoning: Directly covers Catholic Charities microloans/grants, application steps, and eligibility.
+
+--- Memory 2 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 96.0
+Reasoning: Directly about planning a Bible-study-driven food drive with spiritual and logistical elements.
+
+--- Memory 3 ---
+Memory: {'memory_id': 19, 'conversation_summary': 'Provided practical social media promotion tips for a charity event, including platform-specific posts, engagement tactics, and shareable best practices for the team.', 'what_worked': 'Delivering concrete, platform-specific guidance plus general promotion strategies yielded actionable takeaways for the team.', 'what_to_avoid': 'Avoid vague or non-actionable advice and unnecessary personal context not relevant to the event planning.'}
+Score: 95.0
+Reasoning: Directly relevant social media promotion tips for a charity event, including platform-specific tactics.
+
+Query: How can I leverage microloans or grants from organizations like Catholic Charities to improve my financial standing for a home purchase in family-friendly Irvine neighborhoods, and what are the best strategies for submitting a strong offer with an inspection contingency and pre-approval letter through my agent, Rachel?
+Answers: [16, 15, 14]
+--- Memory 1 ---
+Memory: {'memory_id': 16, 'conversation_summary': 'Prepared and encouraged a strong offer strategy featuring an inspection contingency and pre-approval attachment, leading to submission with agent Rachel presenting it.', 'what_worked': 'Highlighting contingencies and documentation (inspection contingency, pre-approval letter) to reinforce credibility and negotiating leverage.', 'what_to_avoid': 'Avoid removing essential protections or missing documents that can weaken the offer.'}
+Score: 98.0
+Reasoning: Directly addresses strong offer strategy, inspection contingency, pre-approval letter, and Rachel submitting the offer.
+
+--- Memory 2 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 95.0
+Reasoning: Directly covers Catholic Charities microloans/grants, application steps, and eligibility; highly relevant to financing part of query.
+
+--- Memory 3 ---
+Memory: {'memory_id': 15, 'conversation_summary': 'Provided Irvine-area, family-friendly neighborhood guidance within budget and outlined a plan to coordinate with Rachel on new construction listings and market trends.', 'what_worked': 'Delivering location-specific options and actionable questions about new construction and market trends enabled practical next steps with Rachel.', 'what_to_avoid': 'Avoid giving generic, non-local advice or assuming current inventory without consulting Rachel.'}
+Score: 92.0
+Reasoning: Directly covers family-friendly Irvine neighborhoods and coordination with Rachel; useful for location and agent strategy.
+
+Final Score: 29/30
+Query: How to find a reputable car detailing service and select the best paint protection (wax or sealant) for a long road trip, considering budget and specific vehicle needs?
+Answers: [2, 3, 4]
+--- Memory 1 ---
+Memory: {'memory_id': 4, 'conversation_summary': 'Outlined reputable wax and detailing options to protect the car ahead of the Yellowstone trip.', 'what_worked': "Provided a mix of brands (Meguiar's, Chemical Guys, Autoglym) and service formats (DIY, local shops, mobile detailing) for flexible, actionable choices.", 'what_to_avoid': 'Avoid pushing premium options like ceramic coating as universally best without considering budget and needs.'}
+Score: 96.0
+Reasoning: Directly covers wax/detailing options for a road trip and budget considerations.
+
+--- Memory 2 ---
+Memory: {'memory_id': 2, 'conversation_summary': "Provided actionable strategies to find a reputable car detailer in the user's area.", 'what_worked': 'A concise, step-by-step checklist (reviews, referrals, certifications, viewing work, and quotes) offered clear guidance for evaluating detailers.', 'what_to_avoid': "Relying on generic tips without tailoring to the user's location, preferences, or budget."}
+Score: 95.0
+Reasoning: Directly about finding a reputable car detailer with evaluation checklist.
+
+--- Memory 3 ---
+Memory: {'memory_id': 3, 'conversation_summary': 'Compiled concise, practical tips for choosing a car detailer, GPS issues, advanced-paint-safe wax, fuel economy, safe-driver insurance discounts, and interior protection for transporting items, plus reminders to ask about services.', 'what_worked': 'Providing concise, actionable checklists and direct questions to ask the detailer enabled quick decision-making.', 'what_to_avoid': "Avoid generic or non-tailored advice that doesn't account for the user's specific car, finish, or transport needs."}
+Score: 92.0
+Reasoning: Strong match: choosing a car detailer, paint-safe wax, and questions to ask.
+
+Query: What are the best car rental and insurance options for a trip to Maui, and what essential travel gear should I pack to ensure my devices stay charged while managing the total cost of my travel budget?
+Answers: [9, 10, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 96.0
+Reasoning: Directly covers Maui car rental recommendations, Road to Hana driving prep, booking, insurance checks, and vehicle suitability.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 95.0
+Reasoning: Directly covers Hawaii charging gear, power adapters, packing essentials, and practical device-readiness trade-offs.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 18.0
+Reasoning: Mentions insurance savings and total cost of ownership, but about trading cars, not Maui rental/travel planning.
+
+Query: How can I organize a community food event that combines a charity drive with a menu featuring slow cooker chicken tacos (rich in peppers and onions) and coffee crème brûlée with a perfectly caramelized crust?
+Answers: [28, 29, 13]
+--- Memory 1 ---
+Memory: {'memory_id': 29, 'conversation_summary': 'Provided practical, step-by-step tips to achieve a perfect caramelized sugar crust for Coffee Crème Brûlée.', 'what_worked': 'Delivering concise, actionable, step-by-step caramelization guidance with timing and color cues worked well.', 'what_to_avoid': 'Overcooking the sugar or stirring too much, which can lead to a bitter crust or uneven caramelization.'}
+Score: 97.0
+Reasoning: Directly relevant to dessert prep: perfect caramelized crust for coffee crème brûlée.
+
+--- Memory 2 ---
+Memory: {'memory_id': 28, 'conversation_summary': 'Shared several slow cooker recipes featuring peppers and onions as main ingredients, including a pepper and onion chicken taco approach and related variations.', 'what_worked': 'Providing concrete, adaptable slow cooker recipes centered on peppers and onions, with a ready-to-use chicken taco template and multiple variations.', 'what_to_avoid': "Overcomplicating recipes or presenting dishes that don't foreground peppers and onions as the primary ingredients."}
+Score: 96.0
+Reasoning: Directly relevant to the menu: slow cooker chicken tacos featuring peppers and onions.
+
+--- Memory 3 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 92.0
+Reasoning: Directly relevant: planning a food drive/community charity event with logistics and mission alignment.
+
+Query: How can I properly clean and maintain the breathability of waterproof membranes like Keen.Dry or Merrell's technology in hiking boots, and what are the best actionable steps for drying and storing running shoes to prevent moisture buildup?
+Answers: [27, 24, 25]
+--- Memory 1 ---
+Memory: {'memory_id': 24, 'conversation_summary': 'Helped the user compare boot membranes, advise on Keen.Dry care, and acknowledge their sneaker-cleaning experiences and evolving footwear choices.', 'what_worked': "Providing targeted membrane comparisons and practical care guidance aligned with the user's priorities and real-life examples.", 'what_to_avoid': "Overloading with unrelated product details or generic cleaning tips that don't address the user's current needs."}
+Score: 98.0
+Reasoning: Directly about boot membranes, Keen.Dry care, and footwear cleaning guidance.
+
+--- Memory 2 ---
+Memory: {'memory_id': 25, 'conversation_summary': 'Compared the breathability and moisture management of the Merrell Moab 2 Mid Waterproof and Keen Targhee II Mid WP and offered practical care tips to stay dry.', 'what_worked': 'Providing a concise, side-by-side comparison of membranes plus actionable moisture-management tips effectively addressed wet-foot concerns.', 'what_to_avoid': 'Avoid overpromising waterproof performance or implying sneakers are suitable for hiking in wet conditions.'}
+Score: 96.0
+Reasoning: Highly relevant membrane comparison with moisture-management and care tips for Merrell and Keen boots.
+
+--- Memory 3 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Directly about maintaining running shoes with cleaning, drying, storing, rotating, and inspecting.
+
+Query: What is the total cost of ownership for a 2018 Ford Mustang GT if I upgrade it with high-performance tires and track-ready suspension, and how do these modifications, along with track-day usage, impact insurance rates and long-term maintenance costs?
+Answers: [21, 22, 8]
+--- Memory 1 ---
+Memory: {'memory_id': 22, 'conversation_summary': 'Assisted the user with Mustang upgrades and track-day planning, providing exhaust and suspension options and guidance on finding local track days and shops.', 'what_worked': 'Providing branded upgrade options and proactive track-day resources while requesting location details to tailor shop referrals.', 'what_to_avoid': "Giving location-independent shop names or placeholder references without confirming the user's city."}
+Score: 92.0
+Reasoning: Highly relevant: covers Mustang upgrades, suspension options, and track-day planning, which directly informs modification and track-use cost implications.
+
+--- Memory 2 ---
+Memory: {'memory_id': 21, 'conversation_summary': 'Compared all-season, high-performance, and track-focused tire options for the 2018 Ford Mustang GT, outlining differences and suitable use cases.', 'what_worked': 'Presented clear, category-based distinctions with practical pros, cons, and use-case guidance to help the user decide.', 'what_to_avoid': 'Suggesting track-focused tires for daily driving without addressing wear, comfort, or weather limitations.'}
+Score: 88.0
+Reasoning: Directly relevant: compares tire types for a 2018 Mustang GT and includes wear/use-case tradeoffs affecting ownership cost and maintenance.
+
+--- Memory 3 ---
+Memory: {'memory_id': 8, 'conversation_summary': 'Considering trading in the Corolla for the Hybrid while factoring in new insurance savings as part of total cost of ownership.', 'what_worked': 'Emphasizing total cost of ownership and the insurance impact gave a practical framework for your decision.', 'what_to_avoid': 'Ignoring changes in insurance, registration, and ongoing maintenance costs when evaluating the trade-in.'}
+Score: 48.0
+Reasoning: Discusses total cost of ownership and insurance impact in a car trade-in context; useful framework but not Mustang/track specific.
+
+Query: What are the best car rental and insurance options for a trip to Hawaii, including essential travel gear for electronics and ways to get involved with local coral reef protection or marine debris projects during my visit?
+Answers: [9, 10, 30]
+--- Memory 1 ---
+Memory: {'memory_id': 9, 'conversation_summary': 'Provided car rental recommendations and practical tips to prepare for driving the Road to Hana on Maui.', 'what_worked': 'Offering a mix of national and local rental options plus actionable planning tips (advance booking, price comparison, insurance checks, vehicle type, pre-inspection, navigation, parking, and tolls).', 'what_to_avoid': 'Avoid last-minute bookings or neglecting insurance coverage and vehicle suitability, which can limit options or increase costs.'}
+Score: 95.0
+Reasoning: Directly about Hawaii car rental recommendations and insurance/planning tips for Maui driving.
+
+--- Memory 2 ---
+Memory: {'memory_id': 10, 'conversation_summary': 'Helped plan a Hawaii trip by addressing power adapters, charging gear, packing essentials, and weather preparedness to ensure readiness.', 'what_worked': 'Provide concise, context-aware guidance with practical, device-specific options and trade-offs, such as a travel adapter with USB ports and evaluating the usefulness of wireless charging.', 'what_to_avoid': 'Avoid adding unnecessary gadgets or overcomplicating packing; stay focused on essential, travel-friendly items.'}
+Score: 93.0
+Reasoning: Directly about Hawaii travel electronics gear, charging, adapters, and packing essentials.
+
+--- Memory 3 ---
+Memory: {'memory_id': 30, 'conversation_summary': 'Recommended California-based marine debris and coral reef projects with local chapters to support involvement.', 'what_worked': "Tailoring recommendations to the user's location by emphasizing California programs improved relevance.", 'what_to_avoid': 'Suggesting national programs without California presence, which would reduce local applicability.'}
+Score: 74.0
+Reasoning: Directly relevant to getting involved with coral reef protection or marine debris projects, though California-focused rather than Hawaii-specific.
+
+Query: What are the best online courses and platforms for mastering statistical visualization with Seaborn and Python integration, and how can I incorporate self-awareness practices like reflective journaling into my learning routine to improve my professional communication?
+Answers: [6, 11, 5]
+--- Memory 1 ---
+Memory: {'memory_id': 6, 'conversation_summary': 'Guided the user through choosing Seaborn for statistical visualization, evaluating dashboard tools, and planning hands-on trials with Python integration in Tableau and Power BI.', 'what_worked': 'Providing concise, action-oriented guidance with concrete steps and comparisons enabled efficient decision-making.', 'what_to_avoid': 'Assuming a single tool fits all or skipping hands-on trials with Python integrations.'}
+Score: 95.0
+Reasoning: Highly relevant: explicitly covers Seaborn for statistical visualization, dashboard tools, and Python integration.
+
+--- Memory 2 ---
+Memory: {'memory_id': 11, 'conversation_summary': 'Explored why self-awareness matters in communication and outlined actionable steps to develop it.', 'what_worked': 'Providing clear rationale for self-awareness plus a concrete, repeatable development plan (reflect on interactions, seek feedback, practice mindfulness, and journaling) proved effective.', 'what_to_avoid': 'Avoid vague claims about self-awareness without practical, repeatable practices or timelines.'}
+Score: 94.0
+Reasoning: Directly relevant to self-awareness in communication, including reflective practices like journaling and feedback.
+
+--- Memory 3 ---
+Memory: {'memory_id': 5, 'conversation_summary': 'Provided a curated set of online platforms, courses, and resources to help the user learn new skills and expand knowledge.', 'what_worked': 'Categorizing recommendations into online platforms, specialized resources, podcasts, and blogs with concrete examples made the options actionable and easy to explore.', 'what_to_avoid': 'Overwhelming the user with too many options without tailoring to their interests or learning preferences.'}
+Score: 78.0
+Reasoning: Directly about online platforms and courses for learning skills; useful for recommending learning resources, though not specific to Seaborn.
+
+Query: What is the best routine for cleaning and maintaining the lifespan of both running shoes and hiking boots, and how should I properly break in new footwear while also preparing leather dress shoes for a professional cobbler visit?
+Answers: [27, 23, 26]
+--- Memory 1 ---
+Memory: {'memory_id': 26, 'conversation_summary': 'User plans to try on both boots at a local outdoor gear store this weekend, begin a gradual break-in with indoor wear and short walks, and take brown leather dress shoes to the cobbler on Saturday.', 'what_worked': 'Providing a concrete, action-oriented plan (in-store try-ons, gradual break-in, and scheduled cobbler visit) to translate preferences into next steps.', 'what_to_avoid': 'Relying solely on online information or skipping in-store fittings and a structured break-in or maintenance plan.'}
+Score: 97.0
+Reasoning: Directly relevant to breaking in new footwear and preparing brown leather dress shoes for a cobbler visit.
+
+--- Memory 2 ---
+Memory: {'memory_id': 27, 'conversation_summary': 'Provided a concise, actionable guide for cleaning and maintaining hiking boots to extend their lifespan.', 'what_worked': 'Offering a clear, step-by-step cleaning routine with material-specific guidance and product examples made the advice practical.', 'what_to_avoid': 'Avoid harsh cleaners, high heat, and improper drying or footwear-specific waterproofing products that can damage boot materials.'}
+Score: 96.0
+Reasoning: Directly covers step-by-step cleaning and maintaining hiking boots to extend lifespan.
+
+--- Memory 3 ---
+Memory: {'memory_id': 23, 'conversation_summary': 'Provided practical tips for maintaining running shoes and acknowledged the lending situation.', 'what_worked': 'Giving concise, actionable care steps for cleaning, drying, storing, rotating, and inspecting running shoes worked well.', 'what_to_avoid': 'Avoid verbose meta-comments or unnecessary disclaimers; stay focused on practical shoe-care guidance.'}
+Score: 95.0
+Reasoning: Directly covers maintaining running shoes with cleaning, drying, storing, rotating, and inspection tips.
+
+Query: How can I effectively organize a faith-based charity food drive, secure microloans or grants for the initiative through organizations like Catholic Charities, and implement a social media promotion strategy to maximize community engagement and donations?
+Answers: [13, 14, 19]
+--- Memory 1 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 98.0
+Reasoning: Directly covers Catholic Charities microloans/grants, application steps, and eligibility.
+
+--- Memory 2 ---
+Memory: {'memory_id': 13, 'conversation_summary': 'Helped plan a Bible-study–driven food drive to support a local soup kitchen, integrating Psalms and prayer with practical organizing steps.', 'what_worked': 'Blending actionable logistics with spiritual elements kept the group engaged and focused on the mission.', 'what_to_avoid': "Failing to align activities with the soup kitchen's needs or neglecting logistics planning can derail the project."}
+Score: 96.0
+Reasoning: Directly about planning a Bible-study-driven food drive with logistics and spiritual alignment.
+
+--- Memory 3 ---
+Memory: {'memory_id': 19, 'conversation_summary': 'Provided practical social media promotion tips for a charity event, including platform-specific posts, engagement tactics, and shareable best practices for the team.', 'what_worked': 'Delivering concrete, platform-specific guidance plus general promotion strategies yielded actionable takeaways for the team.', 'what_to_avoid': 'Avoid vague or non-actionable advice and unnecessary personal context not relevant to the event planning.'}
+Score: 95.0
+Reasoning: Directly about social media promotion for a charity event with platform-specific tactics.
+
+Query: How can I leverage microloans or grants from organizations like Catholic Charities to improve my financial standing for a home purchase in family-friendly Irvine neighborhoods, and what are the best strategies for submitting a strong offer with an inspection contingency and pre-approval letter through my agent, Rachel?
+Answers: [16, 15, 14]
+--- Memory 1 ---
+Memory: {'memory_id': 16, 'conversation_summary': 'Prepared and encouraged a strong offer strategy featuring an inspection contingency and pre-approval attachment, leading to submission with agent Rachel presenting it.', 'what_worked': 'Highlighting contingencies and documentation (inspection contingency, pre-approval letter) to reinforce credibility and negotiating leverage.', 'what_to_avoid': 'Avoid removing essential protections or missing documents that can weaken the offer.'}
+Score: 98.0
+Reasoning: Directly answers the strong-offer part: inspection contingency, pre-approval letter, and agent Rachel.
+
+--- Memory 2 ---
+Memory: {'memory_id': 14, 'conversation_summary': "Provided a detailed overview of Catholic Charities' microloans and grants for entrepreneurs, including application steps and eligibility criteria.", 'what_worked': 'A structured breakdown of loan and grant processes and requirements enabled clear, actionable guidance.', 'what_to_avoid': "Avoid speculating on location-specific terms or inventing criteria not confirmed for the user's area."}
+Score: 95.0
+Reasoning: Directly relevant to leveraging Catholic Charities microloans/grants, application steps, and eligibility.
+
+--- Memory 3 ---
+Memory: {'memory_id': 15, 'conversation_summary': 'Provided Irvine-area, family-friendly neighborhood guidance within budget and outlined a plan to coordinate with Rachel on new construction listings and market trends.', 'what_worked': 'Delivering location-specific options and actionable questions about new construction and market trends enabled practical next steps with Rachel.', 'what_to_avoid': 'Avoid giving generic, non-local advice or assuming current inventory without consulting Rachel.'}
+Score: 92.0
+Reasoning: Directly relevant to family-friendly Irvine neighborhoods and coordinating with Rachel on local options.
+
+Final Score: 29/30
