@@ -4,5 +4,4 @@ __pycache__/
 node_modules/
 venv/
 output.json
-
-agent_memory/graphrag/
+agent_memory/graphrag

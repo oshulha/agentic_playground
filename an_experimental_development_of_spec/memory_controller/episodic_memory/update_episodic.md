@@ -74,7 +74,7 @@ Example:
 ```
 
 3. Insert Into Episodic Memory Collection
-Each of the seven semantic fields is embedded, using text-embedding-3-large. Seven semantic fields are: "user_query", "who", "what", "when", "where", "why", "how".
+Each of the seven semantic fields is embedded, using text-embedding-3-large(3072 embedding dimensions). Seven semantic fields are: "user_query", "who", "what", "when", "where", "why", "how".
 These embeddings are automatically indexed by the vector database according to the Named Vector schema.
 ```python
 collection = client.collections.get("episodic_memory")

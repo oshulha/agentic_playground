@@ -55,4 +55,4 @@ client.collections.create(
 ```
 Each string parameter is vectorized independently. During retrieval the system performs independent vector searches for each parameter vector and merges the results using weighted similarity scoring to produce the final ranking.
 
-Parameter embeddings have to be generated using text-embedding-3-large.
+Parameter embeddings have to be generated using text-embedding-3-large(3072 embedding dimensions).

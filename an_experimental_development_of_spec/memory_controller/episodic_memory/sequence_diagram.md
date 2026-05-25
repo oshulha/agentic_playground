@@ -16,6 +16,8 @@ sequenceDiagram
     ReAct->>MC: recall_episodic(user_query)
     Note right of ReAct: HTTP POST /memory/recall_episodic
 
+    MC->>MC: Generate 5W&1H<br/>according to user_query
+
     MC->>VS: Episodic Memory search<br/>using user_query and 5W1H<br/>Hybrid (Vector search / BM25)
     VS-->>MC: top-10 relevant reflections<br/>(what_worked, what_to_avoid)
 
@@ -33,7 +35,7 @@ sequenceDiagram
 
     ReAct-->>ReAct: ... more tool-call & tool-output pairs ...
 
-    ReAct->>MC: POST structured output<br/>what_worked, what_to_avoid
+    ReAct->>MC: POST structured output<br/>what_worked, what_to_avoid<br/>update_episodic(structured_output)
 
     MC->>MC: 1. Combine recall_episodic_payload<br/>and update_episodic_payload<br/><br/>2. Inject system fields<br/>memory_id, timestamp<br/>Generate embeddings
 

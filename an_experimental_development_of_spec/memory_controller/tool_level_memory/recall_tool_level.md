@@ -39,7 +39,7 @@ toolname = "run_cmd"
 
 def embed(text):
     response = client.embeddings.create(
-        model="text-embedding-3-large",
+        model="text-embedding-3-large", #3072 embedding dimensions should be
         input=text
     )
     return response.data[0].embedding

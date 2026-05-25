@@ -102,4 +102,4 @@ client.collections.create(
 ```
 During retrieval, the system(Memory Controller) performs independent similarity searches for each named vector and merges the results using weighted similarity scoring.
 
-Embeddings for episodic memory fields have to be generated, using text-embedding-3-large.
+Embeddings for episodic memory fields have to be generated, using text-embedding-3-large(3072 embedding dimensions).

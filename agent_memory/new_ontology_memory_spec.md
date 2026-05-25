@@ -14,7 +14,7 @@ Memory subsystem is the information storage and retrieval part of our AI Agent. 
 Memory Controller is a stateless microservice responsible for managing the lifecycle of agent memories. It exposes an HTTP API and serves as the abstraction layer between the cognitive system (ReAct/Brains) and persistent memory storage systems.
 
 - [**Explicit & Implicit Memory**](#explicit-memory-conscious--implicit-memory-subconscious)
-<br/>Progress: [██████████] 99%; Status: Done  
+<br/>Progress: [█████░░░░░] 50%; Status: Done  
 Division of the memory subsystem into two major categories: Explicit and Implicit. Explains how they differ, which memory types belong to each category, and discusses their trade-offs in latency, architectural separation, and update mechanisms.
 
 - [**Working Memory**](#working-memory)
@@ -28,13 +28,13 @@ Stores structured reflections about individual tool executions.
 (10% - PRD? Forgetting? other questions..)
 
   - [**Sequence Diagram**](#sequence-diagram)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**/recall_tool_level**](#recall_tool_level)
-  <br/>Progress: [█████████░] 90%; Status: Done   
+  <br/>Progress: [██████████] 99%; Status: Done   
 
   - [**/update_tool_level**](#update_tool_level)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**/forget_tool_level**](#forget_tool_level)
   <br/>Progress: [░░░░░░░░░░] 1%; Status: None   
@@ -43,17 +43,17 @@ Stores structured reflections about individual tool executions.
   <br/>Progress: [████████░░] 80%; Status: Done   
 
 - [**Episodic Memory**](#episodic-memory)
-<br/>Progress: [███░░░░░░░] 30%; Status: In Progress   
+<br/>Progress: [████████░░] 80%; Status: In Progress   
 Stores past experiences and task executions. Includes structured reflections such as `what_worked`, `what_to_avoid`, summaries, and context tags.
 
   - [**Sequence Diagram**](#sequence-diagram-1)
-  <br/>Progress: [████████░░] 80%; Status: Done (small changes will be needed)  
+  <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**/recall_episodic**](#recall_episodic)
-  <br/>Progress: [█████░░░░░] 50%; Status: In Progress   
+  <br/>Progress: [██████████] 99%; Status: Done   
 
   - [**/update_episodic**](#update_episodic)
-  <br/>Progress: [█████░░░░░] 50%; Status: In Progress  
+  <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**/forget_episodic**](#forget_episodic)
   <br/>Progress: [░░░░░░░░░░] 0%; Status: None   
@@ -127,14 +127,14 @@ Exploration of cognitive-inspired mechanisms and whether they are practically ne
 Section describing the Python harness built around the implemented ReAct agent (Brains microservice) and the extensions to be added.
 
 - [**Tools**](#tools)
-  <br/>Progress: [██░░░░░░░░] 20%; Status: Done  
+  <br/>Progress: [███░░░░░░░] 30%; Status: Started  
   Tools are functions that call corresponding Memory Controller endpoints, primarily to retrieve useful information from storage, and can be invoked by the agent as needed.
 
   - [**recall_tool_level**](#recall_tool_level-1)
     <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**recall_episodic**](#recall_episodic-1)
-    <br/>Progress: [███░░░░░░░] 30%; Status: Started  
+    <br/>Progress: [██████████] 99%; Status: Done  
 
   - [**recall_semantic**](#recall_semantic-1)
     <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
@@ -149,7 +149,7 @@ Section describing the Python harness built around the implemented ReAct agent (
     <br/>Progress: [░░░░░░░░░░] 0%; Status: None  
 
 - [**Functions**](#functions)
-  <br/>Progress: [██░░░░░░░░] 20%; Status: Done  
+  <br/>Progress: [██░░░░░░░░] 20%; Status: Started  
   Functions are standard Python wrappers that guide the ReAct agent’s behavior (e.g., enforcing structured output) and then call the corresponding Memory Controller endpoints.
 
   - [**update_tool_level**](#update_tool_level-1)
@@ -205,15 +205,15 @@ Section describing the Python harness built around the implemented ReAct agent (
 Initialization and configuration of all database systems (Vector and Graph Stores) that support different memory subsystems.
 
 - [**Vector Store**](#vector-store)
-<br/>Progress: [███░░░░░░░] 30?%; Status: In Progress   
+<br/>Progress: [████░░░░░░] 40%; Status: In Progress   
 Vector Store is a paragraph, which tells about vector store and its responsibilities for different memory subsystems (Tool-Level Memory, Episodic Memory).
 
   - [**Tool-level Memory config**](#tool-level-memory-config)
-  <br/>Progress: [█████████░] 90%; Status: Done  
+  <br/>Progress: [██████████] 99%; Status: Done  
   Specific configuration of Vector Store collection(s) for Tool-level Memory   
 
   - [**Episodic Memory config**](#episodic-memory-config)
-  <br/>Progress: [███░░░░░░░] 30%; Status: Done  
+  <br/>Progress: [██████████] 99%; Status: Done  
   Specific configuration of Vector Store collection(s) for Episodic Memory
 
   - [**?Procedural Memory config**](#procedural-memory-config)
@@ -373,6 +373,7 @@ The agent fills struсtured output fields such as: `what worked`, `what to avoid
 sequenceDiagram
     title Tool-Level Memory Flow
 
+    actor User
     actor ReAct
     participant MC as Memory Controller
     participant VS as Vector Store
@@ -380,7 +381,7 @@ sequenceDiagram
     activate ReAct
 
     ReAct->>ReAct: System Prompt
-    ReAct->>ReAct: User Prompt
+    User->>ReAct: User Query
     ReAct->>ReAct: tool-call: python("sum(2, 2)")
     ReAct->>ReAct: Commit Mechanism initiated
 
@@ -446,6 +447,7 @@ sequenceDiagram
     MC->>VS: sends final JSONs to Vector Store(Tool-Level Memory)
     VS->>MC: {success: True}
     MC->>ReAct: {success: True}
+    ReAct->>User: AI Agent Response
 ```
 
 ### /recall_tool_level
@@ -489,7 +491,7 @@ toolname = "run_cmd"
 
 def embed(text):
     response = client.embeddings.create(
-        model="text-embedding-3-large",
+        model="text-embedding-3-large", #3072 embedding dimensions should be
         input=text
     )
     return response.data[0].embedding
@@ -993,10 +995,12 @@ The described rewriting approach assumes that the number of memories processed i
 Episodic memory is a historical collection of prior experiences, or episodes. It includes what happened, how it happened, and the lessons or insights learned from those experiences, even if they were never clearly stated.
 
 ### Sequence Diagram
+### Sequence Diagram
 ```mermaid
 sequenceDiagram
     title Episodic Memory: Recall & Store Flow
 
+    actor User
     actor ReAct
     participant MC as Memory Controller
     participant VS as Vector Store
@@ -1004,12 +1008,14 @@ sequenceDiagram
     activate ReAct
 
     ReAct->>ReAct: System Prompt
-    ReAct->>ReAct: User Prompt
+    User->>ReAct: User Query
 
-    ReAct->>MC: recall_episodic(user_input)
+    ReAct->>MC: recall_episodic(user_query)
     Note right of ReAct: HTTP POST /memory/recall_episodic
 
-    MC->>VS: Episodic Memory search<br/>using context_tags and trajectory_summary<br/>Vector search / BM25 (still in progress)
+    MC->>MC: Generate 5W&1H<br/>according to user_query
+
+    MC->>VS: Episodic Memory search<br/>using user_query and 5W1H<br/>Hybrid (Vector search / BM25)
     VS-->>MC: top-10 relevant reflections<br/>(what_worked, what_to_avoid)
 
     MC->>MC: LLM selects top-3 most relevant out of 10
@@ -1026,20 +1032,41 @@ sequenceDiagram
 
     ReAct-->>ReAct: ... more tool-call & tool-output pairs ...
 
-    ReAct->>MC: POST structured output<br/>context_tags, trajectory_summary,<br/>what_worked, what_to_avoid
+    ReAct->>MC: POST structured output<br/>what_worked, what_to_avoid<br/>update_episodic(structured_output)
 
-    MC->>MC: Inject system fields<br/>memory_id, timestamp<br/>Generate embeddings
+    MC->>MC: 1. Combine recall_episodic_payload<br/>and update_episodic_payload<br/><br/>2. Inject system fields<br/>memory_id, timestamp<br/>Generate embeddings
 
-    MC->>VS: Insert full memory object<br/>(4 Named Vectors + metadata)
+    MC->>VS: Insert full memory object
 
     VS-->>MC: {success: True}
 
     MC-->>ReAct: {success: True}
 
+    ReAct-->>User: AI Agent Response
+
     deactivate ReAct
 ```
 
 ### /recall_episodic
+
+Memory Controller listens for the HTTP endpoint:
+```code
+POST /memory/recall_episodic
+```
+When this endpoint is invoked, the Memory Controller understands that the agent wants to retrieve relevant memories from an episodic memory thought generated after the completion of a task.
+
+The request payload must look like this:
+```python
+payload = {
+    "user_query": "Add a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+    "who": "Visitors and potential donors of the animal shelter website",
+    "what": "Integration of a donation feature into an existing static website",
+    "when": "During a website update aimed at improving fundraising capability",
+    "where": "On the existing static website of a frontline animal shelter",
+    "why": "To enable fundraising and clearly communicate the urgency of supporting the shelter",
+    "how": "By embedding a prominent call-to-action that redirects users to an external donation service without modifying backend logic"
+}
+```
 
 During recall, the system embeds the query context and performs independent vector searches for each semantic field. The results are merged using weighted similarity scoring.
 
@@ -1050,17 +1077,10 @@ from openai import OpenAI
 
 client = OpenAI()
 
-def embed(text):
-    response = client.embeddings.create(
-        model="text-embedding-3-large",
-        input=text
-    )
-    return response.data[0].embedding
-
 collection = client.collections.get("episodic_memory")
 
 user_query_memories = collection.query.hybrid(
-    query=query,
+    query=payload["user_query"],
     alpha=0.7,
     limit=5,
     target_vector="user_query_vector",
@@ -1068,7 +1088,7 @@ user_query_memories = collection.query.hybrid(
 )
 
 who_memories = collection.query.hybrid(
-    query=query,
+    query=payload["who"],
     alpha=0.7,
     limit=5,
     target_vector="who_vector",
@@ -1076,7 +1096,7 @@ who_memories = collection.query.hybrid(
 )
 
 what_memories = collection.query.hybrid(
-    query=query,
+    query=payload["what"],
     alpha=0.7,
     limit=5,
     target_vector="what_vector",
@@ -1084,7 +1104,7 @@ what_memories = collection.query.hybrid(
 )
 
 when_memories = collection.query.hybrid(
-    query=query,
+    query=payload["when"],
     alpha=0.7,
     limit=5,
     target_vector="when_vector",
@@ -1092,7 +1112,7 @@ when_memories = collection.query.hybrid(
 )
 
 where_memories = collection.query.hybrid(
-    query=query,
+    query=payload["where"],
     alpha=0.7,
     limit=5,
     target_vector="where_vector",
@@ -1100,7 +1120,7 @@ where_memories = collection.query.hybrid(
 )
 
 why_memories = collection.query.hybrid(
-    query=query,
+    query=payload["why"],
     alpha=0.7,
     limit=5,
     target_vector="why_vector",
@@ -1108,7 +1128,7 @@ why_memories = collection.query.hybrid(
 )
 
 how_memories = collection.query.hybrid(
-    query=query,
+    query=payload["how"],
     alpha=0.7,
     limit=5,
     target_vector="how_vector",
@@ -1134,22 +1154,6 @@ add_scores(when_memories, 0.125)
 add_scores(where_memories, 0.125)
 add_scores(why_memories, 0.125)
 add_scores(how_memories, 0.125)
-
-# Temporal weightening (based on number of days)
-decay_hours = 720  # 30 days
-
-for id in list(scores.keys()):
-  memory = collection.query.fetch_object_by_id(id)
-  
-  timestamp_str = memory.properties['timestamp']
-  timestamp = datetime.fromisoformat(timestamp_str)
-
-  hours_old = (datetime.now() - timestamp).total_seconds() / 3600
-  
-  weight = 0.5 ** (hours_old / decay_hours)
-  final_weight = max(0.25, weight) # 60 days ago: hours_old = 1440 weight = 0.5 ** (1440/720) = 0.5^2 = 0.25
-
-  scores[id] *= final_weight
 
 top_k = 10
 best = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
@@ -1238,6 +1242,8 @@ print(result)
 
 Then Memory Controller sends top-3 memories to ReAct. Then these top-3 memories are inserted into ReAct's system prompt.
 
+Also, you need to save payload for update_episodic endpoint.
+
 ### /update_episodic 
 
 Memory Controller listens for the HTTP endpoint:
@@ -1246,7 +1252,37 @@ POST /memory/update_episodic
 ```
 When this endpoint is invoked, the Memory Controller understands that the agent wants to persist an episodic memory thought generated after the completion of a task.
 
-The request payload must look like this:
+Preconditions:
+- The Episodic Memory Vector Store collection must already exist.
+- The schema must define seven Named Vectors corresponding to the following semantic fields: user_query, who, what, when, where, why, how.
+More details can be found in `Initialization of DBs / Vector Store / Episodic Memory config` paragraph.
+
+Upon receiving the request, Memory Controller:
+1. Combines payload from `recall_episodic` endpoint and payload from `update_episodic` endpoint
+
+The request payload must look like this example:
+```python
+payload = {
+    "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.",
+    "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+}
+```
+
+Before invoking an `update_episodic` endpoint was invoked `recall_episodic` endpoint, which needed to save a `payload` for update_episodic endpoint. 
+Let's call it recall_episodic_payload. It has to look like this exaample:
+```python
+recall_episodic_payload = {
+    "user_query": "Add a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
+    "who": "Visitors and potential donors of the animal shelter website",
+    "what": "Integration of a donation feature into an existing static website",
+    "when": "During a website update aimed at improving fundraising capability",
+    "where": "On the existing static website of a frontline animal shelter",
+    "why": "To enable fundraising and clearly communicate the urgency of supporting the shelter",
+    "how": "By embedding a prominent call-to-action that redirects users to an external donation service without modifying backend logic",
+}
+``` 
+
+So final combined dict has to look like this.
 ```python
 payload = {
     "user_query": "Add a donation feature to an existing static website for a frontline animal shelter to enable fundraising and communicate the urgency of support.",
@@ -1261,13 +1297,7 @@ payload = {
 }
 ```
 
-Preconditions:
-- The Episodic Memory Vector Store collection must already exist.
-- The schema must define seven Named Vectors corresponding to the following semantic fields: user_query, who, what, when, where, why, how.
-More details can be found in `Initialization of DBs / Vector Store / Episodic Memory config` paragraph
-
-Upon receiving the request, Memory Controller:
-1. Inject System Fields
+2. Inject System Fields
 Before storing the memory, the system enriches it with internal metadata fields: memory_id, timestamp.
 memory_id is generated automatically by the Memory Controller.  
 timestamp records the exact time when the memory is stored.
@@ -1289,8 +1319,8 @@ Example:
 }
 ```
 
-2. Insert Into Episodic Memory Collection
-Each of the seven semantic fields is embedded, using text-embedding-3-large. Seven semantic fields are: "user_query", "who", "what", "when", "where", "why", "how".
+3. Insert Into Episodic Memory Collection
+Each of the seven semantic fields is embedded, using text-embedding-3-large(3072 embedding dimensions). Seven semantic fields are: "user_query", "who", "what", "when", "where", "why", "how".
 These embeddings are automatically indexed by the vector database according to the Named Vector schema.
 ```python
 collection = client.collections.get("episodic_memory")
@@ -1752,12 +1782,11 @@ def recall_episodic(
 
   Fields user_query, what, who, when, where, why, how is embedded separately inside the Memory Controller and searched against its corresponding named vector index. The Memory Controller aggregates similarity scores across Fields user_query, what, who, when, where, why, how and returns the most relevant memories.
 
-  This function is a wrapper over the Memory Controller API (e.g., POST /memory/recall_tool_level). It retrieves previously stored tool-call experiences related to the given tool.
+  This function is a wrapper over the Memory Controller API (e.g., POST /memory/recall_episodic).
 
   Purpose:
     The goal of recall is to provide the agent with past 
-    experiences (successes, failures, security alerts, rate limits, etc.) related to similar tool calls, so that the agent can adapt 
-    its reasoning before continuing execution.
+    experiences (reflections, successes, failures, security alerts, rate limits, etc.), so that the agent can adapt.
 
   Args:
     query (str):
@@ -1767,7 +1796,7 @@ def recall_episodic(
         List:
             API response containing a list_of_relevant_memories.
     Example of tool usage:
-      recall_tool_level(user_query="How to optimize Vector DB? Identify top-3 insights/solutions and then send it to the Ihor")
+      recall_episodic(user_query="How to optimize Vector DB? Identify top-3 insights/solutions and then send it to the Ihor")
 """
     structured_5w1h_system_prompt = f"""
     You are an AI system that converts a user query into a structured episodic memory representation.
@@ -1873,9 +1902,6 @@ Third:
     What to avoid: {memories[2]["what_to_avoid"]}
 Use these memories as context for your response to the user."""
 ```
-
-[To_Do]Also, episodic memory can be trigerred on some words like "always do like this", "good workflow to make this" and save it what user want to mention. That's examples I saw in [Introducing /remember](https://www.youtube.com/watch?v=6XXH5XecVp4&pp=ygUZL3JlbWVtYmVyIGxhbmdjaGFpbiB2aWRlbw%3D%3D) video from langchain. Their agent saves such replics to agents.md. I hope their Deep Agent is open-source.]
-
 
 ### recall_semantic
 ### recall_procedural
@@ -2087,6 +2113,55 @@ Example of what I want to see as a result of structured output by ReAct:
 
 Then this structured output is sent to the Memory Controller through the /memory/update_episodic API endpoint.
 
+```python
+import os
+
+MEMORY_CONTROLLER_URL = os.getenv("MEMORY_CONTROLLER_URL")
+
+def update_episodic() -> dict:
+  """This function updates Episodic memory.
+  This function is a wrapper over the Memory Controller API (e.g., POST /memory/update_episodic). 
+
+  Args:
+    query (str):
+        User query or input provided to the ReAct agent
+
+    Returns:
+        Bool:
+            API response containing a boolean answer, which means if updating was successful or not.
+    Example of tool usage:
+      update_episodic()
+"""
+    url = f"{MEMORY_CONTROLLER_URL}/memory/update_episodic"
+
+    payload = {
+        "what_worked": "Embedding a prominent donation call-to-action inside the existing page layout allowed the fundraising feature to be added without restructuring the site.", 
+        "what_to_avoid": "Implementing custom payment logic or backend processing when an external donation link is sufficient for a static charity website."
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        response.raise_for_status()
+
+        data = response.json()
+
+        # Expected format:
+        # {
+        #     "success": bool
+        # }
+
+        return data.get("success", False)
+
+    except requests.exceptions.RequestException as e:
+        print(f"[Episodic Memory Update Error] {e}")
+        return []
+```
+
+Example usage:
+```python
+status = update_episodic()
+```
+
 ### forget_episodic 
 -
 
@@ -2275,7 +2350,15 @@ I decided to use Weaviate as the vector database.
 Example schema:
 ```python
 import weaviate
-from weaviate.classes.config import Configure, Property, DataType
+from weaviate.classes.config import Property, DataType, Configure
+import time
+from episodic_memory_thoughts import episodic_memories
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
 client = weaviate.connect_to_local()
 
@@ -2283,12 +2366,14 @@ client.collections.create(
     name="run_cmd",
     
     vectorizer_config=[
-        Configure.NamedVectors.text2vec_transformers(
+        Configure.NamedVectors.text2vec_openai(
             name="shell_vector",
+            model="text-embedding-3-large",
             source_properties=["shell"]
         ),
-        Configure.NamedVectors.text2vec_transformers(
+        Configure.NamedVectors.text2vec_openai(
             name="command_vector",
+            model="text-embedding-3-large",
             source_properties=["command"]
         )
     ],
@@ -2306,10 +2391,9 @@ client.collections.create(
     ]
 )
 ```
-Each string parameter is vectorized independently. During retrieval the system performs independent vector searches for each parameter vector and merges the results using weighted similarity scoring.
-The results are then merged using weighted similarity scoring to produce the final ranking.
+Each string parameter is vectorized independently. During retrieval the system performs independent vector searches for each parameter vector and merges the results using weighted similarity scoring to produce the final ranking.
 
-Parameter embeddings have to be generated using text-embedding-3-large.
+Parameter embeddings have to be generated using text-embedding-3-large(3072 embedding dimensions).
 
 ### Episodic Memory config
 
@@ -2318,12 +2402,15 @@ Therefore, Episodic Memory uses **one dedicated collection** named `episodic_mem
 Each memory thought contains several semantic fields describing the context of the task and the outcome of the reasoning process.
 
 To enable semantic retrieval, the system generates embeddings for the following fields:
-- context_tag1  
-- context_tag2  
-- context_tag3  
-- trajectory_summary 
+- "user_query": query provided by user
+- "who": concrete actors, users, or stakeholders involved
+- "what": exact action/task performed
+- "when": the context, situation, or triggering condition (do not include date/time, as timestamps are stored separately in the format DD.MM.YYYY HH:MM)
+- "where": environment, platform, or context (e.g., static website, backend system)
+- "why": underlying goal, motivation, or problem being solved
+- "how": concrete method, approach, or implementation strategy
 
-The remaining fields (`what_worked`, `what_to_avoid`) are stored as metadata and are returned to the agent when a relevant memory is retrieved.
+The remaining fields (`memory_id`, `timestamp`, `what_worked`, `what_to_avoid`) are stored as metadata and are returned to the agent when a relevant memory is retrieved.
 
 Since the system uses **Weaviate** as the vector database, this architecture is implemented using **Named Vectors**.
 
@@ -2335,7 +2422,15 @@ Example schema:
 
 ```python
 import weaviate
-from weaviate.classes.config import Configure, Property, DataType
+from weaviate.classes.config import Property, DataType, Configure
+import time
+from episodic_memory_thoughts import episodic_memories
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
 client = weaviate.connect_to_local()
 
@@ -2343,33 +2438,60 @@ client.collections.create(
     name="episodic_memory",
 
     vectorizer_config=[
-        Configure.NamedVectors.text2vec_transformers(
-            name="context_tag1_vector",
-            source_properties=["context_tag1"]
+        Configure.NamedVectors.text2vec_openai(
+            name="user_query_vector",
+            model="text-embedding-3-large",
+            source_properties=["user_query"]
         ),
-        Configure.NamedVectors.text2vec_transformers(
-            name="context_tag2_vector",
-            source_properties=["context_tag2"]
+        Configure.NamedVectors.text2vec_openai(
+            name="who_vector",
+            model="text-embedding-3-large",
+            source_properties=["who"]
         ),
-        Configure.NamedVectors.text2vec_transformers(
-            name="context_tag3_vector",
-            source_properties=["context_tag3"]
+        Configure.NamedVectors.text2vec_openai(
+            name="what_vector",
+            model="text-embedding-3-large",
+            source_properties=["what"]
         ),
-        Configure.NamedVectors.text2vec_transformers(
-            name="trajectory_summary_vector",
-            source_properties=["trajectory_summary"]
+        Configure.NamedVectors.text2vec_openai(
+            name="when_vector",
+            model="text-embedding-3-large",
+            source_properties=["when"]
+        ),
+        Configure.NamedVectors.text2vec_openai(
+            name="where_vector",
+            model="text-embedding-3-large",
+            source_properties=["where"]
+        ),
+        Configure.NamedVectors.text2vec_openai(
+            name="why_vector",
+            model="text-embedding-3-large",
+            source_properties=["why"]
+        ),
+        Configure.NamedVectors.text2vec_openai(
+            name="what_worked_vector",
+            model="text-embedding-3-large",
+            source_properties=["what_worked"]
+        ),
+        Configure.NamedVectors.text2vec_openai(
+            name="what_to_avoid_vector",
+            model="text-embedding-3-large",
+            source_properties=["what_to_avoid"]
         )
     ],
 
     properties=[
-        Property(name="memory_id", data_type=DataType.TEXT),
+        Property(name="memory_id", data_type=DataType.INT),
         Property(name="timestamp", data_type=DataType.TEXT),
 
-        Property(name="context_tag1", data_type=DataType.TEXT),
-        Property(name="context_tag2", data_type=DataType.TEXT),
-        Property(name="context_tag3", data_type=DataType.TEXT),
+        Property(name="user_query", data_type=DataType.TEXT),
+        Property(name="who", data_type=DataType.TEXT),
+        Property(name="what", data_type=DataType.TEXT),
+        Property(name="when", data_type=DataType.TEXT),
+        Property(name="where", data_type=DataType.TEXT),
+        Property(name="why", data_type=DataType.TEXT),
+        Property(name="how", data_type=DataType.TEXT),
 
-        Property(name="trajectory_summary", data_type=DataType.TEXT),
         Property(name="what_worked", data_type=DataType.TEXT),
         Property(name="what_to_avoid", data_type=DataType.TEXT)
     ]
@@ -2377,7 +2499,7 @@ client.collections.create(
 ```
 During retrieval, the system(Memory Controller) performs independent similarity searches for each named vector and merges the results using weighted similarity scoring.
 
-Embeddings for episodic memory fields have to be generated, using text-embedding-3-large.
+Embeddings for episodic memory fields have to be generated, using text-embedding-3-large(3072 embedding dimensions).
 
 ### *Procedural Memory config
 ### *Autobiographical / User-Personalized Memory config
@@ -2603,3 +2725,21 @@ memory_score = similarity * recency * success_rate
 
 importance - це просто питати в ReAct, а потім PlanExecutor має можливість відкоригувати важливість? РеАкт ставить від 0 до 10, потім ПланЕкзекьютор може додати, відняти скільки забажає, тільки, щоб не було більше 10 і менше 0 відповідно до планів і тд. 
 Коли це робити? - В кінці РеАкта створюється епізодична пам'ять. І там же PlanExecutor теж ставить. Яким чином? Чи можна буде зробити structured output для PlanExecutor, коли закінчить роботу ReAct.
+
+```python
+# Temporal weightening (based on number of days)
+decay_hours = 720  # 30 days
+
+for id in list(scores.keys()):
+  memory = collection.query.fetch_object_by_id(id)
+  
+  timestamp_str = memory.properties['timestamp']
+  timestamp = datetime.fromisoformat(timestamp_str)
+
+  hours_old = (datetime.now() - timestamp).total_seconds() / 3600
+  
+  weight = 0.5 ** (hours_old / decay_hours)
+  final_weight = max(0.25, weight) # 60 days ago: hours_old = 1440 weight = 0.5 ** (1440/720) = 0.5^2 = 0.25
+
+  scores[id] *= final_weight
+```
