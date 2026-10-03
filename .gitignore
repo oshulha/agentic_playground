@@ -5,3 +5,5 @@ node_modules/
 venv/
 output.json
 agent_memory/graphrag
+
+agent_memory/experiment/docker-compose.yml

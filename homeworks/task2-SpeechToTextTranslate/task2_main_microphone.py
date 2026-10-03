@@ -83,7 +83,7 @@ audio_file.name = "audio.wav"  # The Whisper API requires a .name
 
 start = time.perf_counter()
 client = OpenAI(
-    api_key="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"
+    api_key="OPENAI_API_KEY"
 )
 
 translation = client.audio.translations.create(model="whisper-1", file=audio_file)

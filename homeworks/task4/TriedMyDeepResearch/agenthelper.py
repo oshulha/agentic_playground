@@ -11,7 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 from bs4 import BeautifulSoup  
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="OPENAI_API_KEY")
 
 reasoning_model = "o3-mini"#do not support temperature parameter
 fast_model = "gpt-4o"#$5 - input $20 - output - the most expensive model here

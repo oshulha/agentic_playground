@@ -53,7 +53,7 @@ def listen_keys():
 listen_keys()
 
 # client = OpenAI(
-#    api_key="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"
+#    api_key="OPENAI_API_KEY"
 # )
 
 # audio_file= open(filename, "rb")
@@ -74,7 +74,7 @@ listen_keys()
 
 # print("Translation" + translation.text)
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="OPENAI_API_KEY")
 audio_file = open(filename, "rb")
 
 translation = client.audio.translations.create(

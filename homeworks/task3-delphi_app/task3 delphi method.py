@@ -8,7 +8,7 @@ encoding = tiktoken.encoding_for_model(model)
 
 global system_prompts
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="OPENAI_API_KEY")
 
 system_prompt_gen = (
     "You are a system that simulates the Delphi method. "
