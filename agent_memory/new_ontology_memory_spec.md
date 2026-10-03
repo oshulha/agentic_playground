@@ -995,7 +995,6 @@ The described rewriting approach assumes that the number of memories processed i
 Episodic memory is a historical collection of prior experiences, or episodes. It includes what happened, how it happened, and the lessons or insights learned from those experiences, even if they were never clearly stated.
 
 ### Sequence Diagram
-### Sequence Diagram
 ```mermaid
 sequenceDiagram
     title Episodic Memory: Recall & Store Flow
@@ -1019,8 +1018,6 @@ sequenceDiagram
     VS-->>MC: top-10 relevant reflections<br/>(what_worked, what_to_avoid)
 
     MC->>MC: LLM selects top-3 most relevant out of 10
-
-    MC->>VS: Reward top-3 memories<br/>Penalty for remaining 7
 
     MC-->>ReAct: You recall memories:<br/>{relevant_memories}<br/>Use them as context
 
